@@ -1,0 +1,9 @@
+$min-contrast-ratio: 3;
+
+$font-weight-bolder: 600;
+$btn-font-weight: $font-weight-bolder;
+
+$purple: #6f42c1;
+$primary: $purple;
+
+@import "../../node_modules/bootstrap/scss/bootstrap.scss";

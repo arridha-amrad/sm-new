@@ -1,0 +1,38 @@
+.notification-container {
+  position: absolute;
+  background-color: #fff;
+  z-index: 99;
+  top: 50px;
+  right: 0;
+  max-height: 400px;
+  overflow-y: auto;
+  width: 400px;
+  border-radius: 5px;
+}
+
+/* .notification-container::-webkit-scrollbar {
+  display: none;
+} */
+
+.notif-pill {
+  border: none;
+  outline: none;
+  border-radius: 50%;
+  height: 20px;
+  width: 20px;
+  background-color: red;
+  position: absolute;
+  top: 0;
+  left: 10px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.unseen {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: rgb(0, 60, 255);
+}
