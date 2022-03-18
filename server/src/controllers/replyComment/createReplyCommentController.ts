@@ -6,10 +6,6 @@ import { findOneReply, makeReply } from '../../services/ReplyService';
 
 export default async (req: Request, res: Response) => {
   const { isReplyToReply, answeredReplyId } = req.query;
-
-  console.log('isReply to Reply : ', isReplyToReply);
-  console.log('answeredReplyId : ', answeredReplyId);
-
   const { body, receiverId } = req.body;
   const { commentId } = req.params;
   const replySender = req.userId;
