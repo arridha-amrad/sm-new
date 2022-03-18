@@ -1,7 +1,8 @@
 import { FC } from "react";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
+import { toast } from "react-toastify";
 import { useAppDispatch } from "../../app/hooks";
-import { deleteReplyAction, deleteReplyComment } from "../post/postSlice";
+import { deleteReplyAction } from "../post/postSlice";
 import { ReplyComment } from "./IReply";
 
 interface Props {
@@ -14,15 +15,23 @@ const DeleteReplyButton: FC<Props> = ({ reply, commentIndex, postIndex }) => {
   const dispatch = useAppDispatch();
 
   const deleteReply = async () => {
-    const res = await dispatch(deleteReplyAction(reply._id));
+    const res = await dispatch(
+      deleteReplyAction({
+        replyId: reply._id,
+        commentIndex,
+        postIndex,
+      })
+    );
     if (res.meta.requestStatus === "fulfilled") {
-      dispatch(
-        deleteReplyComment({
-          commentIndex,
-          postIndex,
-          reply,
-        })
-      );
+      toast.success("Reply deleted successfully", {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: false,
+        pauseOnHover: false,
+        draggable: false,
+        progress: undefined,
+      });
     }
   };
 

@@ -21,6 +21,7 @@ import {
   deleteReplyAPI,
 } from "../replyComment/replyCommentApi";
 import {
+  DeleteReplyDTO,
   LikeReplyDTO,
   ReplyComment,
   ReplyCommentDTO,
@@ -130,9 +131,10 @@ export const replyCommentAction = createAsyncThunk(
 
 export const deleteReplyAction = createAsyncThunk(
   "post/deleteReply",
-  async (replyId: string, thunkAPI) => {
+  async (dto: DeleteReplyDTO, thunkAPI) => {
     try {
-      await deleteReplyAPI(replyId);
+      await deleteReplyAPI(dto.replyId);
+      return dto;
     } catch (err: any) {
       return thunkAPI.rejectWithValue(err.response.data);
     }
@@ -179,41 +181,6 @@ export const postSlice = createSlice({
     setPosts: (state, action: PayloadAction<Post[]>) => {
       const posts = action.payload as WritableDraft<Post[]>;
       state.posts = posts;
-    },
-    deleteReplyComment: (state, action: PayloadAction<ReplyCommentResult>) => {
-      const { commentIndex, postIndex, reply } = action.payload;
-      const comment = state.posts[postIndex].comments[commentIndex];
-      comment.replies = comment.replies.filter(
-        (rply) => rply._id !== reply._id
-      );
-    },
-    replyCommentResult: (state, action: PayloadAction<ReplyCommentResult>) => {
-      const { commentIndex, postIndex, reply } = action.payload;
-      state.posts[postIndex].comments[commentIndex].replies.push(
-        reply as WritableDraft<ReplyComment>
-      );
-    },
-    setShowReplyCommentInput: (state, action: PayloadAction<IComment>) => {
-      const comment = action.payload;
-      const indexPost = state.posts.findIndex(
-        (post) => post._id === comment.post
-      );
-      state.posts[indexPost].comments = state.posts[indexPost].comments.map(
-        (cmt) => ({
-          ...cmt,
-          isShowInput: cmt._id === comment._id,
-        })
-      );
-    },
-    unsetReplyCommentForm: (
-      state,
-      action: PayloadAction<UnsetReplyCommentForm>
-    ) => {
-      const { comment, commentIndex } = action.payload;
-      const indexPost = state.posts.findIndex(
-        (post) => post._id === comment.post
-      );
-      state.posts[indexPost].comments[commentIndex].isShowInput = false;
     },
     toggleIsEdit: (state, action: PayloadAction<number>) => {
       state.posts[action.payload].isEdit = !state.posts[action.payload].isEdit;
@@ -264,6 +231,12 @@ export const postSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    // Reply Action
+    builder.addCase(deleteReplyAction.fulfilled, (state, action) => {
+      const { commentIndex, postIndex, replyId } = action.payload;
+      const comment = state.posts[postIndex].comments[commentIndex];
+      comment.replies = comment.replies.filter((rply) => rply._id !== replyId);
+    });
     builder.addCase(replyCommentAction.fulfilled, (state, action) => {
       const { reply, commentIndex, postIndex } = action.payload;
       state.posts[postIndex].comments[commentIndex].replies.push(reply);
@@ -303,16 +276,12 @@ export const postSlice = createSlice({
 
 export const {
   setLikeReply,
-  deleteReplyComment,
-  replyCommentResult,
   setLikePost,
   setComment,
   removeComment,
   toggleIsEdit,
   unsetIsEdit,
   setLikeComment,
-  setShowReplyCommentInput,
-  unsetReplyCommentForm,
   setPosts,
 } = postSlice.actions;
 

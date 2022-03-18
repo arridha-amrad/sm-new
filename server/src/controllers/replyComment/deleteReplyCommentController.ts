@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { findOneComment } from '../../services/CommentService';
+import { deleteNotifications } from '../../services/NotificationService';
 import { deleteReply, findOneReply } from '../../services/ReplyService';
 
 export default async (req: Request, res: Response) => {
@@ -10,6 +11,9 @@ export default async (req: Request, res: Response) => {
     if (reply) {
       if (reply.sender.toString() === loginUser) {
         const comment = await findOneComment(reply.comment.toString());
+        await deleteNotifications({
+          reply: replyId,
+        });
         if (comment) {
           comment.replies.filter((reply) => reply.id !== replyId);
           await comment.save();

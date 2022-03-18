@@ -35,3 +35,9 @@ export interface ReplyCommentResult {
   commentIndex: number;
   reply: ReplyComment;
 }
+
+export interface DeleteReplyDTO {
+  replyId: string;
+  commentIndex: number;
+  postIndex: number;
+}

@@ -47,3 +47,9 @@ export const findOneNotificationAndDelete = async (
 ) => {
   return NotificationModel.findOneAndDelete(filter);
 };
+
+export const deleteNotifications = async (
+  filter: FilterQuery<INotificationModel>
+) => {
+  return NotificationModel.deleteMany(filter);
+};
