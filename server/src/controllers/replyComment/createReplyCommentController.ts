@@ -2,9 +2,14 @@ import { Request, Response } from 'express';
 import { NotificationType } from '../../models/notification/INotificationModel';
 import { findOneComment } from '../../services/CommentService';
 import { createNotification } from '../../services/NotificationService';
-import { makeReply } from '../../services/ReplyService';
+import { findOneReply, makeReply } from '../../services/ReplyService';
 
 export default async (req: Request, res: Response) => {
+  const { isReplyToReply, answeredReplyId } = req.query;
+
+  console.log('isReply to Reply : ', isReplyToReply);
+  console.log('answeredReplyId : ', answeredReplyId);
+
   const { body, receiverId } = req.body;
   const { commentId } = req.params;
   const replySender = req.userId;
@@ -22,13 +27,29 @@ export default async (req: Request, res: Response) => {
       await comment.save();
 
       // create notification for receiver of reply
-      const notification = await createNotification({
-        reply: newReply,
-        sender: replySender,
-        comment: comment.id,
-        type: NotificationType.REPLY_COMMENT,
-        owner: receiverId,
-      });
+      let notification;
+      if (isReplyToReply === 'true') {
+        console.log('making reply to reply');
+
+        const reply = await findOneReply(answeredReplyId as string);
+        notification = await createNotification({
+          reply,
+          replyTwo: newReply,
+          sender: replySender,
+          comment: comment.id,
+          type: NotificationType.REPLY_REPLY,
+          owner: receiverId,
+        });
+      } else {
+        notification = await createNotification({
+          reply: newReply,
+          sender: replySender,
+          comment: comment.id,
+          type: NotificationType.REPLY_COMMENT,
+          owner: receiverId,
+        });
+      }
+
       return res.status(200).json({ reply: newReply, notification });
     }
     return res.sendStatus(404);

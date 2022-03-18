@@ -57,6 +57,7 @@ const CommentCard: FC<Props> = ({ comment, postIndex, commentIndex }) => {
         </div>
 
         <ReplyCommentForm
+          isReplyToReply={false}
           tagUser={comment.owner}
           ref={ref}
           isShow={isShowReplyForm}

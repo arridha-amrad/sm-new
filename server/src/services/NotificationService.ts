@@ -9,7 +9,8 @@ export const createNotification = async (data: AnyKeys<INotificationModel>) => {
     .populate('sender', 'username avatarURL')
     .populate('comment', 'body createdAt')
     .populate('post', 'body createdAt')
-    .populate('reply', 'body createdAt');
+    .populate('reply', 'body createdAt')
+    .populate('replyTwo', 'body createdAt');
 };
 
 export const findOneNotification = async (
@@ -32,7 +33,8 @@ export const findNotificationsOfOneUser = async (userId: string) => {
     .populate('sender', 'username avatarURL')
     .populate('comment', 'body createdAt')
     .populate('post', 'body createdAt')
-    .populate('reply', 'body createdAt');
+    .populate('reply', 'body createdAt')
+    .populate('replyTwo', 'body createdAt');
 };
 
 export const findByIdAndUpdate = async (

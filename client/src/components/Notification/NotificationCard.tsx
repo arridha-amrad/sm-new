@@ -52,6 +52,15 @@ const NotificationCard: FC<Props> = ({ notification, notifIndex }) => {
       />
     );
   }
+  if (notification.type === NotificationType.REPLY_REPLY) {
+    return (
+      <NotificationOfComment
+        type="replyOfReply"
+        loginUser={loginUser!}
+        notification={notification}
+      />
+    );
+  }
   return (
     <NotificationOfLike
       loginUser={loginUser!}

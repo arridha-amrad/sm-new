@@ -9,12 +9,7 @@ import {
   likePostAPI,
   updatePostAPI,
 } from "./postApi";
-import {
-  IComment,
-  DeleteCommentDTO,
-  LikeCommentDTO,
-  UnsetReplyCommentForm,
-} from "../comment/IComment";
+import { DeleteCommentDTO, LikeCommentDTO } from "../comment/IComment";
 import { WritableDraft } from "immer/dist/internal";
 import {
   createReplyAPI,
@@ -23,9 +18,7 @@ import {
 import {
   DeleteReplyDTO,
   LikeReplyDTO,
-  ReplyComment,
   ReplyCommentDTO,
-  ReplyCommentResult,
 } from "../replyComment/IReply";
 import { likeReplyAPI } from "../replyComment/replyApi";
 import { getSocket } from "../../mySocket";
@@ -113,7 +106,9 @@ export const replyCommentAction = createAsyncThunk(
       const { data } = await createReplyAPI(
         dto.body,
         dto.receiverId,
-        dto.commentId
+        dto.commentId,
+        dto.isReplyToReply!,
+        dto.answeredReplyId!
       );
       if (data.notification) {
         socket?.emit("createReplyCS", data.notification, dto.toUsername);

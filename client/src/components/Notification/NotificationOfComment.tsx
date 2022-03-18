@@ -5,35 +5,38 @@ import timeSetter from "../../utils/timeSetter";
 
 interface Props {
   notification: INotification;
-  type: "comment" | "reply";
+  type: "comment" | "reply" | "replyOfReply";
   loginUser: User;
 }
 
 const NotificationOfReply: FC<Props> = ({ notification, type, loginUser }) => {
-  const content =
-    type === "comment" ? "commented your post" : "replied your comment";
-
-  const setContentDate = () => {
-    let result;
-    if (type === "comment") {
-      result = timeSetter(new Date(notification.comment!.createdAt));
-    }
-    if (type === "reply") {
-      result = timeSetter(new Date(notification.reply!.createdAt));
-    }
-    return result;
-  };
-
-  const setContentBody = () => {
+  const setContent = () => {
+    let time;
     let body;
+    let bodyTwo;
+    let content;
+
     if (type === "comment") {
+      content = "commented your post";
+      bodyTwo = notification.comment?.body;
       body = notification.post?.body;
+      time = timeSetter(new Date(notification.comment!.createdAt));
     }
     if (type === "reply") {
+      content = "replied your comment";
+      time = timeSetter(new Date(notification.reply!.createdAt));
       body = notification.comment?.body;
+      bodyTwo = notification.reply?.body;
     }
-    return body;
+    if (type === "replyOfReply") {
+      content = "answer your replied comment";
+      time = timeSetter(new Date(notification.reply!.createdAt));
+      body = notification.reply?.body;
+      bodyTwo = notification.replyTwo?.body;
+    }
+    return { time, body, bodyTwo, content };
   };
+
   return (
     <div className="d-flex align-items-start p-3 gap-3">
       <div className="d-flex flex-column gap-2 align-items-center">
@@ -54,7 +57,7 @@ const NotificationOfReply: FC<Props> = ({ notification, type, loginUser }) => {
       </div>
       <div className="d-flex flex-column gap-1">
         <div>
-          {notification.sender.username} {content}
+          {notification.sender.username} {setContent().content}
         </div>
         <small className="text-secondary">
           {timeSetter(new Date(notification.updatedAt))}
@@ -70,10 +73,10 @@ const NotificationOfReply: FC<Props> = ({ notification, type, loginUser }) => {
             <div>
               you
               <span className="ms-2">
-                <small className="text-secondary">{setContentDate()}</small>
+                <small className="text-secondary">{setContent().time}</small>
               </span>
             </div>
-            <div>{setContentBody()}</div>
+            <div>{setContent().body}</div>
             <div className="d-flex align-items-start gap-2">
               <div className="mt-2">
                 <svg
@@ -106,11 +109,7 @@ const NotificationOfReply: FC<Props> = ({ notification, type, loginUser }) => {
                       </small>
                     </span>
                   </small>
-                  <small>
-                    {type === "comment"
-                      ? notification.comment?.body
-                      : notification.reply?.body}
-                  </small>
+                  <small>{setContent().bodyTwo}</small>
                 </div>
               </div>
             </div>

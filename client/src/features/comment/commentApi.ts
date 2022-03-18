@@ -1,5 +1,5 @@
 import axiosInstance from "../../utils/axiosInterceptor";
-import { CreateCommentDTO, IComment } from "./IComment";
+import { CreateCommentDTO } from "./IComment";
 
 const url = "/api/comment";
 

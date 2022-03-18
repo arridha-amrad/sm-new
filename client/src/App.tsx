@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "./app/hooks";
 import ProtectedRoute from "./components/ProtectedRoutes";
@@ -67,6 +67,7 @@ const App = () => {
     socket?.on("likeReplySC", (notification) => {
       dispatch(addNotification(notification));
     });
+    // eslint-disable-next-line
   }, [socket]);
 
   if (isLoading) {

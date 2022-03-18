@@ -13,6 +13,8 @@ interface Props {
   comment: IComment;
   isShow: boolean;
   setIsShow: React.Dispatch<React.SetStateAction<boolean>>;
+  isReplyToReply: boolean;
+  answeredReplyId?: string;
 }
 
 const CreateReplyFeature = React.forwardRef<HTMLInputElement, Props>(
@@ -25,6 +27,8 @@ const CreateReplyFeature = React.forwardRef<HTMLInputElement, Props>(
       setIsShow,
       tagUser,
       isNarrow = false,
+      isReplyToReply,
+      answeredReplyId = "",
     },
     ref
   ) => {
@@ -44,6 +48,8 @@ const CreateReplyFeature = React.forwardRef<HTMLInputElement, Props>(
     const createReply = async () => {
       const res = await dispatch(
         replyCommentAction({
+          answeredReplyId,
+          isReplyToReply,
           commentId: comment._id,
           body: state.body,
           receiverId: tagUser._id,

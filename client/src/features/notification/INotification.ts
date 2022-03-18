@@ -9,6 +9,7 @@ export enum NotificationType {
   LIKE_REPLY = "likeReply",
   COMMENT_POST = "commentPost",
   REPLY_COMMENT = "replyComment",
+  REPLY_REPLY = "replyOfReply",
 }
 
 export interface INotification {
@@ -17,6 +18,7 @@ export interface INotification {
   post?: Post;
   comment?: IComment;
   reply?: ReplyComment;
+  replyTwo?: ReplyComment;
   owner: User;
   sender: User;
   isRead: boolean;

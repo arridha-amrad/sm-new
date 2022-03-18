@@ -4,7 +4,6 @@ import {
   readNotificationAction,
   selectNotification,
 } from "../../features/notification/notificationSlice";
-import { getSocket } from "../../mySocket";
 import NotificationCard from "./NotificationCard";
 import "./style.css";
 

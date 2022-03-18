@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { selectUserState } from "../authentication/authSlice";
-import { likeReplyAction, setLikeReply } from "../post/postSlice";
+import { likeReplyAction } from "../post/postSlice";
 import { ReplyComment } from "./IReply";
 
 interface Props {

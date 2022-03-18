@@ -1,17 +1,21 @@
 import axiosInstance from "../../utils/axiosInterceptor";
-import { ReplyComment } from "./IReply";
 
 const url = "/api/reply";
 
 export const createReplyAPI = async (
   data: string,
   receiverId: string,
-  commentId: string
+  commentId: string,
+  isReplyToReply: boolean,
+  answeredReplyId: string
 ) => {
-  return axiosInstance.post(`${url}/${commentId}`, {
-    body: data,
-    receiverId: receiverId,
-  });
+  return axiosInstance.post(
+    `${url}/${commentId}?isReplyToReply=${isReplyToReply}&answeredReplyId=${answeredReplyId}`,
+    {
+      body: data,
+      receiverId: receiverId,
+    }
+  );
 };
 
 export const deleteReplyAPI = async (replyId: string) => {

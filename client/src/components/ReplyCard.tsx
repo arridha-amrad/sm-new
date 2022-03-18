@@ -81,6 +81,8 @@ const ReplyCard: FC<Props> = ({
         </div>
 
         <CreateReplyFeature
+          isReplyToReply={true}
+          answeredReplyId={reply._id}
           isNarrow={true}
           ref={ref}
           tagUser={reply.sender}

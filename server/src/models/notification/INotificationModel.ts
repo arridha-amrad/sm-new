@@ -6,6 +6,7 @@ export enum NotificationType {
   LIKE_REPLY = 'likeReply',
   COMMENT_POST = 'commentPost',
   REPLY_COMMENT = 'replyComment',
+  REPLY_REPLY = 'replyOfReply',
 }
 
 export interface INotificationModel {
@@ -13,6 +14,7 @@ export interface INotificationModel {
   post: Types.ObjectId;
   comment: Types.ObjectId;
   reply: Types.ObjectId;
+  replyTwo: Types.ObjectId;
   owner: Types.ObjectId;
   sender: Types.ObjectId;
   isRead: boolean;

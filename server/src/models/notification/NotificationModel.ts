@@ -41,6 +41,10 @@ const NotificationSchema = new Schema<
       type: Schema.Types.ObjectId,
       ref: 'Reply',
     },
+    replyTwo: {
+      type: Schema.Types.ObjectId,
+      ref: 'Reply',
+    },
   },
   {
     timestamps: true,

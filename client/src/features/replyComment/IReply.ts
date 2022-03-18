@@ -22,6 +22,8 @@ export interface LikeReplyDTO {
 }
 
 export interface ReplyCommentDTO {
+  isReplyToReply?: boolean;
+  answeredReplyId?: string;
   commentId: string;
   body: string;
   receiverId: string;

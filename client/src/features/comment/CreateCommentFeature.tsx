@@ -1,6 +1,5 @@
-import React, { FormEvent, HTMLProps } from "react";
+import React, { HTMLProps } from "react";
 import { useAppDispatch } from "../../app/hooks";
-import useForm from "../../utils/useForm";
 import { createCommentAction } from "./commentSlice";
 import { Post } from "../post/IPost";
 import useFormHooks from "../../utils/useFormHooks";
