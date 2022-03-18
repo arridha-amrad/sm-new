@@ -4,15 +4,13 @@ import { CreateCommentDTO, IComment } from "./IComment";
 const url = "/api/comment";
 
 export const createCommentAPI = async (dto: CreateCommentDTO) => {
-  console.log("dto : ", dto);
-
-  return axiosInstance.post<{ comment: IComment }>(`${url}/${dto.postId}`, {
+  return axiosInstance.post(`${url}/${dto.postId}`, {
     body: dto.data,
   });
 };
 
 export const likeCommentAPI = async (commentId: string) => {
-  return axiosInstance.post<{ comment: IComment }>(`${url}/like/${commentId}`);
+  return axiosInstance.post(`${url}/like/${commentId}`);
 };
 
 export const deleteCommentAPI = async (commentId: string) => {
@@ -20,5 +18,5 @@ export const deleteCommentAPI = async (commentId: string) => {
 };
 
 export const updateCommentAPI = async (data: string, commentId: string) => {
-  return axiosInstance.put<{ comment: IComment }>(`${url}/${commentId}`, data);
+  return axiosInstance.put(`${url}/${commentId}`, data);
 };

@@ -16,6 +16,7 @@ export interface IComment {
 export interface CreateCommentDTO {
   data: string;
   postId: string;
+  toUsername: string;
 }
 
 export interface DeleteCommentDTO {
@@ -23,10 +24,11 @@ export interface DeleteCommentDTO {
   commentId: string;
 }
 
-export interface LikeComment {
+export interface LikeCommentDTO {
   comment: IComment;
   isLiked: boolean;
   user: User;
+  toUsername: string;
 }
 
 export interface UnsetReplyCommentForm {

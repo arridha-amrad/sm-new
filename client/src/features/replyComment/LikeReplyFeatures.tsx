@@ -20,18 +20,21 @@ const LikeReplyFeature: FC<Props> = ({
   const { loginUser } = useAppSelector(selectUserState);
   const isLiked = reply.likes.find((user) => user._id === loginUser?._id);
   const dispatch = useAppDispatch();
+
   const handleLikeReply = async () => {
-    dispatch(
-      setLikeReply({
+    await dispatch(
+      likeReplyAction({
         commentIndex,
         isLiked: !!isLiked,
         loginUser: loginUser!,
         postIndex,
+        replyId: reply._id,
         replyIndex,
+        toUsername: reply.sender.username,
       })
     );
-    await dispatch(likeReplyAction(reply._id));
   };
+
   return (
     <button
       onClick={handleLikeReply}

@@ -1,11 +1,9 @@
 import { Request, Response } from 'express';
-import mongoose from 'mongoose';
 import { NotificationType } from '../../models/notification/INotificationModel';
 import { editComment, findOneComment } from '../../services/CommentService';
 import {
   createNotification,
-  deleteNotification,
-  findOneNotification,
+  findOneNotificationAndDelete,
 } from '../../services/NotificationService';
 
 export default async (req: Request, res: Response) => {
@@ -28,9 +26,25 @@ export default async (req: Request, res: Response) => {
             }
       );
       // create notification if likeSender is not the postOwner
+      let notification;
       if (likeSender !== comment.owner._id.toString()) {
+        if (isLiked) {
+          await findOneNotificationAndDelete({
+            owner: comment.owner,
+            comment: comment.id,
+            sender: likeSender,
+            type: NotificationType.LIKE_COMMENT,
+          });
+        } else {
+          notification = await createNotification({
+            owner: comment.owner,
+            comment: comment.id,
+            sender: likeSender,
+            type: NotificationType.LIKE_COMMENT,
+          });
+        }
       }
-      return res.status(200).json({ comment: updatedComment });
+      return res.status(200).json({ comment: updatedComment, notification });
     }
   } catch (err) {
     console.log(err);

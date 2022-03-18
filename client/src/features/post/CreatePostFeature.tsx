@@ -73,16 +73,26 @@ const PostMaker = () => {
     const files = e.target.files;
 
     if (files) {
-      if (files.length > 4) {
-        notify("Maximum file is 4", "error");
-      } else {
-        setFileObj2(files);
-        fileObj.push(files);
-        for (let i = 0; i < fileObj[0].length; i++) {
-          const obj = URL.createObjectURL(fileObj[0][i]);
-          fileArray.push(obj);
+      let isLarge = false;
+      for (let i = 0; i < files.length; i++) {
+        if (files[i].size > 1000000) {
+          notify("Maximum size of a file is 1MB", "error");
+          isLarge = true;
+          break;
         }
-        setPreviewImages(fileArray);
+      }
+      if (!isLarge) {
+        if (files.length > 4) {
+          notify("Maximum file is 4", "error");
+        } else {
+          setFileObj2(files);
+          fileObj.push(files);
+          for (let i = 0; i < fileObj[0].length; i++) {
+            const obj = URL.createObjectURL(fileObj[0][i]);
+            fileArray.push(obj);
+          }
+          setPreviewImages(fileArray);
+        }
       }
     }
   };

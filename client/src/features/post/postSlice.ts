@@ -12,7 +12,7 @@ import {
 import {
   IComment,
   DeleteCommentDTO,
-  LikeComment,
+  LikeCommentDTO,
   UnsetReplyCommentForm,
 } from "../comment/IComment";
 import { WritableDraft } from "immer/dist/internal";
@@ -38,9 +38,14 @@ const initialState: PostState = {
 
 export const likeReplyAction = createAsyncThunk(
   "reply/likeReply",
-  async (replyId: string, thunkAPI) => {
+  async (dto: LikeReplyDTO, thunkAPI) => {
+    const socket = getSocket();
     try {
-      await likeReplyAPI(replyId);
+      const { data } = await likeReplyAPI(dto.replyId);
+      thunkAPI.dispatch(setLikeReply(dto));
+      if (data.notification) {
+        socket?.emit("likeReplyCS", data.notification, dto.toUsername);
+      }
     } catch (err: any) {
       return thunkAPI.rejectWithValue(err.response.data);
     }
@@ -99,16 +104,24 @@ export const likePostAction = createAsyncThunk(
   }
 );
 
-export const replyComment = createAsyncThunk(
+export const replyCommentAction = createAsyncThunk(
   "post/replyComment",
-  async (body: ReplyCommentDTO, thunkAPI) => {
+  async (dto: ReplyCommentDTO, thunkAPI) => {
+    const socket = getSocket();
     try {
       const { data } = await createReplyAPI(
-        body.body,
-        body.receiver,
-        body.commentId
+        dto.body,
+        dto.receiverId,
+        dto.commentId
       );
-      return data.reply;
+      if (data.notification) {
+        socket?.emit("createReplyCS", data.notification, dto.toUsername);
+      }
+      return {
+        reply: data.reply,
+        commentIndex: dto.commentIndex,
+        postIndex: dto.postIndex,
+      };
     } catch (err: any) {
       return thunkAPI.rejectWithValue(err.response.data);
     }
@@ -218,7 +231,7 @@ export const postSlice = createSlice({
         state.posts[postIndex].likes.push(user);
       }
     },
-    setLikeComment: (state, action: PayloadAction<LikeComment>) => {
+    setLikeComment: (state, action: PayloadAction<LikeCommentDTO>) => {
       const { comment, isLiked, user } = action.payload;
       for (let i = 0; i < state.posts.length; i++) {
         if (state.posts[i]._id === comment.post) {
@@ -251,6 +264,10 @@ export const postSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    builder.addCase(replyCommentAction.fulfilled, (state, action) => {
+      const { reply, commentIndex, postIndex } = action.payload;
+      state.posts[postIndex].comments[commentIndex].replies.push(reply);
+    });
     builder.addCase(deletePostAction.fulfilled, (state, action) => {
       state.posts = state.posts.filter((p) => p._id !== action.payload._id);
     });

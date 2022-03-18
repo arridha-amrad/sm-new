@@ -37,17 +37,11 @@ const notificationSlice = createSlice({
       const notification = action.payload as INotification;
 
       const filter = (ntf: INotification) => {
-        let res;
-        if (
-          notification.type === NotificationType.LIKE_POST ||
-          notification.type === NotificationType.COMMENT_POST
-        ) {
+        let res = false;
+        if (notification.type === NotificationType.LIKE_POST) {
           res = ntf.post?._id === notification.post?._id;
         }
-        if (
-          notification.type === NotificationType.LIKE_COMMENT ||
-          notification.type === NotificationType.REPLY_COMMENT
-        ) {
+        if (notification.type === NotificationType.LIKE_COMMENT) {
           res = ntf.comment?._id === notification.comment?._id;
         }
         if (notification.type === NotificationType.LIKE_REPLY) {
@@ -64,6 +58,11 @@ const notificationSlice = createSlice({
       );
 
       if (index < 0) {
+        state.notifications.unshift(
+          notification as WritableDraft<INotification>
+        );
+      } else {
+        state.notifications.splice(index, 1);
         state.notifications.unshift(
           notification as WritableDraft<INotification>
         );

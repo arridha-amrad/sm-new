@@ -1,15 +1,11 @@
 import { Request, Response } from 'express';
-import mongoose from 'mongoose';
 import { NotificationType } from '../../models/notification/INotificationModel';
 import { findOneComment } from '../../services/CommentService';
-import {
-  createNotification,
-  findOneNotification,
-} from '../../services/NotificationService';
+import { createNotification } from '../../services/NotificationService';
 import { makeReply } from '../../services/ReplyService';
 
 export default async (req: Request, res: Response) => {
-  const { body, receiver } = req.body;
+  const { body, receiverId } = req.body;
   const { commentId } = req.params;
   const replySender = req.userId;
 
@@ -17,7 +13,7 @@ export default async (req: Request, res: Response) => {
     const newReply = await makeReply({
       body,
       comment: commentId,
-      receiver,
+      receiver: receiverId,
       sender: replySender,
     });
     const comment = await findOneComment(commentId);
@@ -26,13 +22,16 @@ export default async (req: Request, res: Response) => {
       await comment.save();
 
       // create notification for receiver of reply
-      const notification = await findOneNotification({
+      const notification = await createNotification({
+        reply: newReply,
+        sender: replySender,
         comment: comment.id,
         type: NotificationType.REPLY_COMMENT,
-        owner: receiver,
+        owner: receiverId,
       });
+      return res.status(200).json({ reply: newReply, notification });
     }
-    return res.status(200).json({ reply: newReply });
+    return res.sendStatus(404);
   } catch (err) {
     console.log(err);
     return res.sendStatus(500);

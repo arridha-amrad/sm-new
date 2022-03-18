@@ -17,12 +17,17 @@ export interface LikeReplyDTO {
   replyIndex: number;
   isLiked: boolean;
   loginUser: User;
+  toUsername: string;
+  replyId: string;
 }
 
 export interface ReplyCommentDTO {
   commentId: string;
   body: string;
-  receiver: string;
+  receiverId: string;
+  postIndex: number;
+  commentIndex: number;
+  toUsername: string;
 }
 
 export interface ReplyCommentResult {

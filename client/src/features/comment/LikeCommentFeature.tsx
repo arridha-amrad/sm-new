@@ -20,6 +20,7 @@ const LikeCommentButton: FC<Props> = ({ comment }) => {
         comment: comment,
         isLiked: !!isLiked,
         user: loginUser!,
+        toUsername: comment.owner.username,
       })
     );
   };

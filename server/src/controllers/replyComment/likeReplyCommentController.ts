@@ -5,6 +5,7 @@ import {
   createNotification,
   deleteNotification,
   findOneNotification,
+  findOneNotificationAndDelete,
 } from '../../services/NotificationService';
 import { findOneReply, updateReply } from '../../services/ReplyService';
 
@@ -27,9 +28,25 @@ export default async (req: Request, res: Response) => {
           : { $push: { likes: likeSender } }
       );
 
+      let notification;
       if (likeSender !== reply.sender._id.toString()) {
+        if (isLiked) {
+          await findOneNotificationAndDelete({
+            owner: reply.sender,
+            reply: reply.id,
+            sender: likeSender,
+            type: NotificationType.LIKE_REPLY,
+          });
+        } else {
+          notification = await createNotification({
+            owner: reply.sender,
+            reply: reply.id,
+            sender: likeSender,
+            type: NotificationType.LIKE_REPLY,
+          });
+        }
       }
-      return res.status(200).json({ reply: updatedReply });
+      return res.status(200).json({ reply: updatedReply, notification });
     }
     return res.sendStatus(404);
   } catch (err) {

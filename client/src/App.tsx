@@ -50,9 +50,21 @@ const App = () => {
     if (loginUser) {
       socket?.emit("addUserCS", loginUser.username);
     }
+    socket?.on("createReplySC", (notification) => {
+      dispatch(addNotification(notification));
+    });
+    socket?.on("createCommentSC", (notification) => {
+      dispatch(addNotification(notification));
+    });
     socket?.on("likePostSC", (notification) => {
-      console.log("receive : ", notification);
+      dispatch(addNotification(notification));
+    });
+    socket?.on("likeCommentSC", (notification) => {
+      console.log("like comm noti : ", notification);
 
+      dispatch(addNotification(notification));
+    });
+    socket?.on("likeReplySC", (notification) => {
       dispatch(addNotification(notification));
     });
   }, [socket]);

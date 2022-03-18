@@ -5,12 +5,12 @@ const url = "/api/reply";
 
 export const createReplyAPI = async (
   data: string,
-  receiver: string,
+  receiverId: string,
   commentId: string
 ) => {
-  return axiosInstance.post<{ reply: ReplyComment }>(`${url}/${commentId}`, {
+  return axiosInstance.post(`${url}/${commentId}`, {
     body: data,
-    receiver,
+    receiverId: receiverId,
   });
 };
 

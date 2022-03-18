@@ -9,7 +9,7 @@ interface Props {
   loginUser: User;
 }
 
-const NotificationOfLikeComment: FC<Props> = ({
+const NotificationOfLike: FC<Props> = ({
   notification,
   typeOfLike,
   loginUser,
@@ -89,4 +89,4 @@ const NotificationOfLikeComment: FC<Props> = ({
   );
 };
 
-export default NotificationOfLikeComment;
+export default NotificationOfLike;

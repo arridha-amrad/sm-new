@@ -1,11 +1,9 @@
-import React, { FormEvent } from "react";
+import React from "react";
 import { useAppDispatch } from "../../app/hooks";
-import useForm from "../../utils/useForm";
+import useFormHooks from "../../utils/useFormHooks";
 import { User } from "../authentication/IAuthentication";
 import { IComment } from "../comment/IComment";
-import { replyComment, replyCommentResult } from "../post/postSlice";
-
-import { ReplyComment } from "./IReply";
+import { replyCommentAction } from "../post/postSlice";
 
 interface Props {
   isNarrow?: boolean;
@@ -17,7 +15,7 @@ interface Props {
   setIsShow: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const ReplyCommentForm = React.forwardRef<HTMLInputElement, Props>(
+const CreateReplyFeature = React.forwardRef<HTMLInputElement, Props>(
   (
     {
       comment,
@@ -32,34 +30,44 @@ const ReplyCommentForm = React.forwardRef<HTMLInputElement, Props>(
   ) => {
     const dispatch = useAppDispatch();
 
-    const { onChange, state, setState } = useForm({
-      body: `@${tagUser.username}`,
-    });
+    const checkField = () => {
+      let errors: { body?: string } = {};
+      if (state.body.trim() === "") {
+        errors.body = "Identity field is required";
+      }
+      return {
+        errors,
+        isValid: Object.keys(errors).length <= 0,
+      };
+    };
 
-    const onSubmit = async (e: FormEvent) => {
-      e.preventDefault();
+    const createReply = async () => {
       const res = await dispatch(
-        replyComment({
+        replyCommentAction({
           commentId: comment._id,
           body: state.body,
-          receiver: tagUser._id,
+          receiverId: tagUser._id,
+          toUsername: tagUser.username,
+          commentIndex: stateIndex,
+          postIndex,
         })
       );
       if (res.meta.requestStatus === "fulfilled") {
-        const newReply = res.payload as ReplyComment;
-        dispatch(
-          replyCommentResult({
-            commentIndex: stateIndex,
-            postIndex: postIndex,
-            reply: newReply,
-          })
-        );
         setState({
-          body: `@${tagUser}`,
+          body: `@${tagUser.username}`,
         });
         setIsShow(false);
       }
     };
+
+    const { fieldErrors, isLoading, onChange, onSubmit, setState, state } =
+      useFormHooks(
+        {
+          body: `@${tagUser.username}`,
+        },
+        createReply,
+        checkField
+      );
 
     return (
       <div
@@ -71,15 +79,22 @@ const ReplyCommentForm = React.forwardRef<HTMLInputElement, Props>(
         className="mt-2 w-100"
       >
         <form className="d-flex gap-2 flex-grow-1" onSubmit={onSubmit}>
-          <input
-            ref={ref}
-            onChange={onChange}
-            name="body"
-            value={state.body}
-            placeholder="reply..."
-            className="form-control form-control-sm w-100"
-          />
-          <button type="submit" className="btn btn-primary btn-sm">
+          <div className="flex-grow-1">
+            <input
+              ref={ref}
+              onChange={onChange}
+              name="body"
+              value={state.body}
+              placeholder="reply..."
+              className="form-control form-control-sm w-100"
+            />
+            <small className="text-danger">{fieldErrors?.body}</small>
+          </div>
+          <button
+            disabled={isLoading || !state.body}
+            type="submit"
+            className="btn btn-primary btn-sm"
+          >
             reply
           </button>
           <button
@@ -95,4 +110,4 @@ const ReplyCommentForm = React.forwardRef<HTMLInputElement, Props>(
   }
 );
 
-export default ReplyCommentForm;
+export default CreateReplyFeature;

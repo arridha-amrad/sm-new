@@ -47,19 +47,35 @@ export const initIo = (httpServer: HTTPServer) => {
   io.on('connection', (socket) => {
     socket.on('addUserCS', (username) => {
       addUser(username, socket.id);
-      console.log('addUsers : ', onlineUsers);
     });
 
     socket.on('createCommentCS', (notification, toUsername) => {
       console.log('comment...');
+      console.log('notif : ', notification);
+      console.log('toUsername : ', toUsername);
+
       const user = getUser(toUsername);
       if (user) {
         io.to(user.socketId).emit('createCommentSC', notification);
       }
     });
 
+    socket.on('createReplyCS', (notification, toUsername) => {
+      console.log('reply...');
+      console.log('notif : ', notification);
+      console.log('toUsername : ', toUsername);
+
+      const user = getUser(toUsername);
+      if (user) {
+        io.to(user.socketId).emit('createReplySC', notification);
+      }
+    });
+
     socket.on('likeCommentCS', (notification, toUsername) => {
       console.log('like comment...');
+      console.log('noti : ', notification);
+      console.log('to : ', toUsername);
+
       const user = getUser(toUsername);
       if (user) {
         io.to(user.socketId).emit('likeCommentSC', notification);
@@ -73,8 +89,18 @@ export const initIo = (httpServer: HTTPServer) => {
 
       const user = getUser(toUsername);
       if (user) {
-        console.log('ntf : ', notification);
         io.to(user.socketId).emit('likePostSC', notification);
+      }
+    });
+
+    socket.on('likeReplyCS', (notification, toUsername) => {
+      console.log('like reply...');
+      console.log('noti : ', notification);
+      console.log('username : ', toUsername);
+
+      const user = getUser(toUsername);
+      if (user) {
+        io.to(user.socketId).emit('likeReplySC', notification);
       }
     });
 

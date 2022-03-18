@@ -25,9 +25,17 @@ export default async (req: Request, res: Response) => {
       await post.save();
 
       // create notification if the commentUser is not the postOwner
+      let notification;
       if (post.owner._id.toString() !== commentUser) {
+        notification = await createNotification({
+          comment: newComment,
+          owner: post.owner,
+          post: post,
+          sender: commentUser,
+          type: NotificationType.COMMENT_POST,
+        });
       }
-      return res.status(200).json({ comment: newComment });
+      return res.status(200).json({ comment: newComment, notification });
     }
     return res.sendStatus(404);
   } catch (err) {

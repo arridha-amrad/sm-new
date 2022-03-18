@@ -1,19 +1,24 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
+import { getSocket } from "../../mySocket";
 import { removeComment, setComment, setLikeComment } from "../post/postSlice";
 import {
   createCommentAPI,
   deleteCommentAPI,
   likeCommentAPI,
 } from "./commentApi";
-import { CreateCommentDTO, DeleteCommentDTO, LikeComment } from "./IComment";
+import { CreateCommentDTO, DeleteCommentDTO, LikeCommentDTO } from "./IComment";
 
 export const likeCommentAction = createAsyncThunk(
   "comment/like",
-  async (props: LikeComment, thunkAPI) => {
+  async (props: LikeCommentDTO, thunkAPI) => {
+    const socket = getSocket();
     try {
       const { data } = await likeCommentAPI(props.comment._id);
       thunkAPI.dispatch(setLikeComment(props));
+      if (data.notification) {
+        socket?.emit("likeCommentCS", data.notification, props.toUsername);
+      }
       return data.comment;
     } catch (err: any) {
       return thunkAPI.rejectWithValue(err.response.data);
@@ -24,9 +29,13 @@ export const likeCommentAction = createAsyncThunk(
 export const createCommentAction = createAsyncThunk(
   "comment/create",
   async (dto: CreateCommentDTO, thunkAPI) => {
+    const socket = getSocket();
     try {
       const { data } = await createCommentAPI(dto);
       thunkAPI.dispatch(setComment(data.comment));
+      if (data.notification) {
+        socket?.emit("createCommentCS", data.notification, dto.toUsername);
+      }
       return data.comment;
     } catch (err: any) {
       return thunkAPI.rejectWithValue(err.response.data);
