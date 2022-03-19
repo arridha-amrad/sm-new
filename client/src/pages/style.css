@@ -1,5 +1,4 @@
 .grid-container {
-  margin-top: 5rem;
   display: grid;
   grid-template-columns: 1fr;
 }
@@ -32,4 +31,20 @@
     display: grid;
     grid-template-columns: 3fr 1fr;
   }
+}
+
+.chat-page__container {
+  display: grid;
+  grid-gap: 1rem;
+  grid-template-columns: 2fr 3fr;
+}
+
+.partners {
+  border: 1px;
+}
+
+.chats {
+  display: flex;
+  flex-direction: column;
+  background-color: blueviolet;
 }

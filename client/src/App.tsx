@@ -16,6 +16,7 @@ import {
   addNotification,
   setNotifications,
 } from "./features/notification/notificationSlice";
+import ChatPage from "./pages/ChatPage";
 
 const App = () => {
   const dispatch = useAppDispatch();
@@ -82,6 +83,7 @@ const App = () => {
     <Routes>
       <Route element={<ProtectedRoute />}>
         <Route path="/" element={<Home />} />
+        <Route path="/chats" element={<ChatPage />} />
       </Route>
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />

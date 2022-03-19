@@ -30,3 +30,7 @@ export const findUserByIdAndUpdate = async (
 export const findUser = async (query: FilterQuery<IUserModel>) => {
   return UserModel.findOne(query);
 };
+
+export const findUsers = async (filter: FilterQuery<IUserModel>) => {
+  return UserModel.find(filter).select('_id username avatarURL fullName');
+};

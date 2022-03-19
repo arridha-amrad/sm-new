@@ -1,0 +1,11 @@
+.search-input {
+  border: none;
+}
+
+.search-input:focus {
+  outline: none;
+}
+
+.search-card:hover {
+  background-color: aquamarine;
+}

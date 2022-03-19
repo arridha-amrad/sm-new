@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Container from "react-bootstrap/esm/Container";
 import Nav from "react-bootstrap/esm/Nav";
 import Navbar from "react-bootstrap/esm/Navbar";
+import { Link } from "react-router-dom";
 import LogoutButton from "../features/authentication/LogoutFeature";
 import NotificationButton from "./Notification/NotificationButton";
 
@@ -18,6 +19,7 @@ const AppBar = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, [scrollPosition]);
+
   return (
     <Navbar
       className={scrollPosition > 10 ? "shadow-sm" : ""}
@@ -26,12 +28,17 @@ const AppBar = () => {
       expand="lg"
     >
       <Container>
-        <Navbar.Brand href="#home">Social Media</Navbar.Brand>
+        <Navbar.Brand as={"div"}>
+          <Link to="/" className="text-decoration-none">
+            Social Media
+          </Link>
+        </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
-            <Nav.Link href="#home">Home</Nav.Link>
-            <Nav.Link href="#link">Link</Nav.Link>
+          <Nav className="me-auto d-flex align-items-center">
+            <Link className=" text-decoration-none" to="/chats">
+              Chats
+            </Link>
           </Nav>
           <Nav className="d-flex gap-5">
             <NotificationButton />

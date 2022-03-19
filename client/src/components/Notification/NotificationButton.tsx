@@ -26,6 +26,7 @@ const NotificationButton = () => {
   return (
     <div style={{ position: "relative", paddingTop: "4px", cursor: "pointer" }}>
       <button
+        onBlur={() => console.log("blur")}
         ref={ref}
         onClick={async () => {
           setIsShow((prev) => !prev);

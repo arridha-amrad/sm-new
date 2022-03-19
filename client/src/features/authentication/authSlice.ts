@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
 import { setToken } from "../../utils/axiosInterceptor";
 import { AuthState, LoginDTO, RegisterDTO, User } from "./IAuthentication";
-import { loginAPI, logoutAPI, registerAPI } from "./userApi";
+import { loginAPI, logoutAPI, registerAPI } from "./authApi";
 
 const initialState: AuthState = {
   isLoadingAuth: true,
