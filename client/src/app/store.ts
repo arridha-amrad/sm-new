@@ -4,6 +4,7 @@ import postReducer from "../features/post/postSlice";
 import commentReducer from "../features/comment/commentSlice";
 import notifReducer from "../features/notification/notificationSlice";
 import userReducer from "../features/user/userSlice";
+import chatReducer from "../features/chats/chatSlice";
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     comment: commentReducer,
     notification: notifReducer,
     user: userReducer,
+    chat: chatReducer,
   },
 });
 

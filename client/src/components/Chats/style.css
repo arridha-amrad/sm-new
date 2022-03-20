@@ -1,0 +1,25 @@
+.chat-partner {
+  cursor: pointer;
+}
+
+.chat-partner:hover {
+  background-color: rgba(204, 45, 204, 0.233);
+}
+
+.search-card:hover {
+  background-color: rgba(204, 45, 204, 0.233);
+}
+
+.bg-pink {
+  background-color: rgba(204, 45, 204, 0.233);
+}
+
+.chat-input {
+  resize: none;
+  border: none;
+  width: 100%;
+}
+
+.chat-input:focus {
+  outline: none;
+}
