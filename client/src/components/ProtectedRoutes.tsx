@@ -1,10 +1,10 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useAppSelector } from "../app/hooks";
-import { selectUserState } from "../features/authentication/authSlice";
+import { selectAuthState } from "../features/authentication/authSlice";
 import AppBar from "./AppBar";
 
 const ProtectedRoute = () => {
-  const { loginUser, isLoadingAuth } = useAppSelector(selectUserState);
+  const { loginUser, isLoadingAuth } = useAppSelector(selectAuthState);
 
   return !isLoadingAuth && loginUser ? (
     <>

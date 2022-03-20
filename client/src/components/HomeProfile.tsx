@@ -1,8 +1,8 @@
 import { useAppSelector } from "../app/hooks";
-import { selectUserState } from "../features/authentication/authSlice";
+import { selectAuthState } from "../features/authentication/authSlice";
 
 const HomeProfile = () => {
-  const { loginUser } = useAppSelector(selectUserState);
+  const { loginUser } = useAppSelector(selectAuthState);
   return (
     <div className="d-flex flex-column justify-content-center align-items-center border p-3 rounded">
       <div>

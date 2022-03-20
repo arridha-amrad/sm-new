@@ -3,7 +3,7 @@ import Carousel from "react-bootstrap/esm/Carousel";
 import Dropdown from "react-bootstrap/esm/Dropdown";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import CommentIcon from "../../components/CommentIcon";
-import { selectUserState } from "../authentication/authSlice";
+import { selectAuthState } from "../authentication/authSlice";
 import CommentMaker from "../comment/CreateCommentFeature";
 import Comments from "../comment/Comments";
 import DeletePostButton from "./DeletePostFeature";
@@ -24,7 +24,7 @@ const PostCard: FC<Props> = ({ post, stateIndex }) => {
 
   const dispatch = useAppDispatch();
 
-  const { loginUser } = useAppSelector(selectUserState);
+  const { loginUser } = useAppSelector(selectAuthState);
 
   const setEdit = () => {
     dispatch(toggleIsEdit(stateIndex));

@@ -2,14 +2,6 @@
   cursor: pointer;
 }
 
-.chat-partner:hover {
-  background-color: rgba(204, 45, 204, 0.233);
-}
-
-.search-card:hover {
-  background-color: rgba(204, 45, 204, 0.233);
-}
-
 .bg-pink {
   background-color: rgba(204, 45, 204, 0.233);
 }

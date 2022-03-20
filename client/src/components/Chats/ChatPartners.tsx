@@ -1,5 +1,4 @@
 import { Fragment } from "react";
-import { useLocation, useParams, useSearchParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { User } from "../../features/authentication/IAuthentication";
 import { selectChatState, selectPartner } from "../../features/chats/chatSlice";
@@ -12,6 +11,7 @@ const ChatPartners = () => {
   const select = (user: User) => {
     dispatch(selectPartner(user));
   };
+
   return (
     <Fragment>
       {partners.map((user) => (

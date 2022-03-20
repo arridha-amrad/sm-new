@@ -3,7 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "./app/hooks";
 import ProtectedRoute from "./components/ProtectedRoutes";
 import {
-  selectUserState,
+  selectAuthState,
   setLoginUser,
 } from "./features/authentication/authSlice";
 import Home from "./pages/Home";
@@ -21,7 +21,7 @@ import ChatPage from "./pages/ChatPage";
 const App = () => {
   const dispatch = useAppDispatch();
   const [isLoading, setIsLoading] = useState(true);
-  const { loginUser } = useAppSelector(selectUserState);
+  const { loginUser } = useAppSelector(selectAuthState);
   const socket = getSocket();
 
   useEffect(() => {

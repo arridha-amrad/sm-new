@@ -5,13 +5,13 @@ import InputPassword from "../../components/InputPassword";
 import MyAlert from "../../components/MyAlert";
 import useFormHooks from "../../utils/useFormHooks";
 import { LoginDTO } from "./IAuthentication";
-import { loginAction, selectUserState } from "./authSlice";
+import { loginAction, selectAuthState } from "./authSlice";
 
 const Login = () => {
   type LoginFieldValidator = Partial<LoginDTO>;
 
   const dispatch = useAppDispatch();
-  const { loginUser } = useAppSelector(selectUserState);
+  const { loginUser } = useAppSelector(selectAuthState);
   const navigate = useNavigate();
 
   const checkField = () => {

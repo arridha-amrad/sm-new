@@ -5,3 +5,12 @@
 .search-input:focus {
   outline: none;
 }
+
+.search-card:hover {
+  background-color: rgba(137, 43, 226, 0.144);
+  cursor: pointer;
+}
+
+.bg-purple-overlay {
+  background-color: rgba(137, 43, 226, 0.144);
+}

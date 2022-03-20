@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { selectUserState } from "../authentication/authSlice";
+import { selectAuthState } from "../authentication/authSlice";
 import { likeReplyAction } from "../post/postSlice";
 import { ReplyComment } from "./IReply";
 
@@ -17,7 +17,7 @@ const LikeReplyFeature: FC<Props> = ({
   commentIndex,
   replyIndex,
 }) => {
-  const { loginUser } = useAppSelector(selectUserState);
+  const { loginUser } = useAppSelector(selectAuthState);
   const isLiked = reply.likes.find((user) => user._id === loginUser?._id);
   const dispatch = useAppDispatch();
 

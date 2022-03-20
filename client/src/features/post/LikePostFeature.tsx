@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { selectUserState } from "../authentication/authSlice";
+import { selectAuthState } from "../authentication/authSlice";
 import { Post } from "./IPost";
 import { likePostAction, setLikePost } from "./postSlice";
 
@@ -10,7 +10,7 @@ interface Props {
 }
 
 const LikePostButton: FC<Props> = ({ post, stateIndex }) => {
-  const { loginUser } = useAppSelector(selectUserState);
+  const { loginUser } = useAppSelector(selectAuthState);
   const dispatch = useAppDispatch();
   const isLiked = post.likes.find((user) => user._id === loginUser?._id);
 

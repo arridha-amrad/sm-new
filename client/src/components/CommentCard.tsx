@@ -1,6 +1,6 @@
 import { FC, useRef, useState } from "react";
 import { useAppSelector } from "../app/hooks";
-import { selectUserState } from "../features/authentication/authSlice";
+import { selectAuthState } from "../features/authentication/authSlice";
 import DeleteCommentButton from "../features/comment/DeleteCommentFeature";
 import { IComment } from "../features/comment/IComment";
 import LikeCommentButton from "../features/comment/LikeCommentFeature";
@@ -15,7 +15,7 @@ interface Props {
 }
 
 const CommentCard: FC<Props> = ({ comment, postIndex, commentIndex }) => {
-  const { loginUser } = useAppSelector(selectUserState);
+  const { loginUser } = useAppSelector(selectAuthState);
   const [isShowReplyForm, setIsShowReplyForm] = useState(false);
   const ref = useRef<HTMLInputElement>(null);
 

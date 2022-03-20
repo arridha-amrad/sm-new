@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { selectUserState } from "../authentication/authSlice";
+import { selectAuthState } from "../authentication/authSlice";
 import { likeCommentAction } from "./commentSlice";
 import { IComment } from "./IComment";
 
@@ -10,7 +10,7 @@ interface Props {
 
 const LikeCommentButton: FC<Props> = ({ comment }) => {
   const dispatch = useAppDispatch();
-  const { loginUser } = useAppSelector(selectUserState);
+  const { loginUser } = useAppSelector(selectAuthState);
 
   const isLiked = comment.likes.find((user) => user._id === loginUser?._id);
 

@@ -8,6 +8,7 @@ import cookieParser from 'cookie-parser';
 import AuthRoutes from './routes/AuthRoutes';
 import UserRoutes from './routes/UserRoutes';
 import PostRoutes from './routes/PostRoutes';
+import ChatRoutes from './routes/ChatRoutes';
 import fileUpload from 'express-fileupload';
 
 import { connect } from './database/mongo';
@@ -42,6 +43,7 @@ export const runServer = () => {
   app.use('/api/reply', ReplyRoutes);
   app.use('/api/comment', CommentRoutes);
   app.use('/api/notification', NotificationRoutes);
+  app.use('/api/chat', ChatRoutes);
 
   const PORT = process.env.PORT;
 

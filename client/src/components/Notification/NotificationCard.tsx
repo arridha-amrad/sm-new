@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { useAppSelector } from "../../app/hooks";
-import { selectUserState } from "../../features/authentication/authSlice";
+import { selectAuthState } from "../../features/authentication/authSlice";
 
 import NotificationOfLike from "./NotificationOfLike";
 import NotificationOfComment from "./NotificationOfComment";
@@ -15,7 +15,7 @@ interface Props {
 }
 
 const NotificationCard: FC<Props> = ({ notification, notifIndex }) => {
-  const { loginUser } = useAppSelector(selectUserState);
+  const { loginUser } = useAppSelector(selectAuthState);
   if (notification.type === NotificationType.LIKE_POST) {
     return (
       <NotificationOfLike

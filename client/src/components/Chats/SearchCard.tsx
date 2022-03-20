@@ -1,37 +1,35 @@
-import { FC } from "react";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { selectUserState } from "../../features/authentication/authSlice";
+import { FC, useState } from "react";
 import { User } from "../../features/authentication/IAuthentication";
-import { addChattingPartner } from "../../features/chats/chatSlice";
 
 interface Props {
-  searchUser: User;
+  pickUser: (user: User) => void;
+  user: User;
 }
 
-const SearchCard: FC<Props> = ({ searchUser }) => {
-  const dispatch = useAppDispatch();
-  const { loginUser } = useAppSelector(selectUserState);
-
+const SearchCard: FC<Props> = ({ pickUser, user }) => {
+  const [isSelected, setIsSelected] = useState(false);
   return (
     <div
+      className={` ${
+        isSelected ? "bg-purple-overlay" : ""
+      } d-flex flex-column border my-3 p-3 rounded search search-card`}
       onClick={() => {
-        if (loginUser?._id !== searchUser._id) {
-          dispatch(addChattingPartner(searchUser));
-        }
+        setIsSelected((prev) => !prev);
+        pickUser(user);
       }}
-      className="d-flex align-items-center gap-3 p-3 search-card"
-      style={{ cursor: "pointer" }}
     >
-      <img
-        src={searchUser.avatarURL}
-        className="rounded-circle img-fluid"
-        alt="avatar"
-        height="30px"
-        width="30px"
-      />
-      <div className="d-flex flex-column">
-        <div>{searchUser.username}</div>
-        <small className=" text-muted">{searchUser.fullName}</small>
+      <div className="d-flex align-items-start gap-3">
+        <img
+          alt="avatar"
+          src={user.avatarURL}
+          width="30px"
+          height="30px"
+          className="img-fluid rounded-circle"
+        />
+        <div className="d-flex flex-column">
+          <div>{user.username}</div>
+          <div>{user.fullName}</div>
+        </div>
       </div>
     </div>
   );

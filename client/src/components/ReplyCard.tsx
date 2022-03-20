@@ -1,6 +1,6 @@
 import { FC, useRef, useState } from "react";
 import { useAppSelector } from "../app/hooks";
-import { selectUserState } from "../features/authentication/authSlice";
+import { selectAuthState } from "../features/authentication/authSlice";
 import { IComment } from "../features/comment/IComment";
 import CreateReplyFeature from "../features/replyComment/CreateReplyFeature";
 import DeleteReplyButton from "../features/replyComment/DeleteReplyFeature";
@@ -23,7 +23,7 @@ const ReplyCard: FC<Props> = ({
   comment,
   replyIndex,
 }) => {
-  const { loginUser } = useAppSelector(selectUserState);
+  const { loginUser } = useAppSelector(selectAuthState);
   const [isShow, setIsShow] = useState(false);
   const ref = useRef<HTMLInputElement>(null);
   return (
