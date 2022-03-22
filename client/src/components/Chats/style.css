@@ -2,14 +2,16 @@
   cursor: pointer;
 }
 
-.bg-pink {
-  background-color: rgba(204, 45, 204, 0.233);
+.bg-gray {
+  background-color: rgb(230, 230, 230);
 }
 
-.chat-input {
-  resize: none;
-  border: none;
-  width: 100%;
+.bg-pink {
+  background-color: rgba(212, 114, 180, 0.356);
+}
+
+.conversation:hover {
+  background-color: rgb(230, 230, 230);
 }
 
 .chat-input:focus {

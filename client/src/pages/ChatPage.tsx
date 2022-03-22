@@ -1,34 +1,43 @@
-import { Fragment, useState } from "react";
 import { Container } from "react-bootstrap";
 import { useAppSelector } from "../app/hooks";
-import ChatHeader from "../components/Chats/ChatHeader";
-import ChatPartners from "../components/Chats/ChatPartners";
-import Chats from "../components/Chats/Chats";
+import ChatHeader from "../components/Chats/ConversationHeader";
+import Conversations from "../components/Chats/Conversations";
+import Messages from "../components/Chats/Messages";
 import { selectChatState } from "../features/chats/chatSlice";
-import CreateChat from "../features/chats/CreateChatFeature";
+import CreateChat from "../features/chats/SendMessageFeature";
 import CreateGroupChat from "../features/chats/CreateGroupChat";
 import SearchUser from "../features/chats/SearchUserFeature";
 import "./style.css";
 
 const ChatPage = () => {
-  const { selectedPartner } = useAppSelector(selectChatState);
+  const { selectedConversation } = useAppSelector(selectChatState);
   return (
     <div style={{ overflowY: "hidden", marginTop: "4rem" }}>
       <Container>
         <div className="chat-page__container">
-          <div className="sidebar">
+          <div className="sidebar border-end">
             <div
-              className="d-flex align-items-center p-3 gap-2 border-bottom"
+              className="d-flex align-items-center p-3 gap-2 border-bottom justify-content-center"
               style={{ height: "60px" }}
             >
               <SearchUser />
               <CreateGroupChat />
             </div>
-            <ChatPartners />
+            <Conversations />
           </div>
-          <div className="partner-info"></div>
-          <div className="chats"></div>
-          <div className="chat-input"></div>
+          {selectedConversation && (
+            <>
+              <div className="partner-info">
+                <ChatHeader selectedConversation={selectedConversation} />
+              </div>
+              <div className="chats">
+                <Messages />
+              </div>
+              <div className="chat-input">
+                <CreateChat />
+              </div>
+            </>
+          )}
         </div>
       </Container>
     </div>
@@ -36,22 +45,3 @@ const ChatPage = () => {
 };
 
 export default ChatPage;
-
-{
-  /* <div className="d-flex flex-column w-100">
-<div className="flex-grow-1 border d-flex">
-  <div className="w-25 border-end">
-    <SearchUser />
-  </div>
-  <div className="w-100">
-    {selectedPartner && (
-      <div className="d-flex flex-column h-100">
-        <ChatHeader selectedPartner={selectedPartner} />
-        <Chats />
-        <CreateChat />
-      </div>
-    )}
-  </div>
-</div>
-</div> */
-}

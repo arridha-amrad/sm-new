@@ -1,6 +1,8 @@
+import "./style.css";
+
 const CreateGroupChat = () => {
   return (
-    <button className="btn btn-primary">
+    <button className="btn btn-primary group-btn">
       <svg
         style={{ marginTop: "-4px" }}
         xmlns="http://www.w3.org/2000/svg"

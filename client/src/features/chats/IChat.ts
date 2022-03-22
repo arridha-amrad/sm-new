@@ -3,8 +3,27 @@ import { User } from "../authentication/IAuthentication";
 export interface SendChatDTO {
   message: string;
   receiverId: string;
-  chatId?: string;
+  conversationId?: string;
   isGroup: boolean;
 }
 
-export type SelectedPartner = User & { chatId?: string };
+export interface Conversation {
+  _id?: string;
+  users: User[];
+  lastMessage?: string;
+  groupName?: string;
+  isGroup: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface Message {
+  _id: string;
+  text: string;
+  conversationId: string;
+  sender: User;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export type SelectedConversation = Conversation & { receiverId: string };

@@ -1,11 +1,10 @@
 import { Types } from 'mongoose';
-import { IChatMessage } from '../chatMessages/IChatMessages';
 import { IUserModel } from '../user/IUserModel';
 
-export interface IChatModel {
+export interface IConversation {
   users: Types.DocumentArray<IUserModel>;
-  chatMessages: Types.DocumentArray<IChatMessage>;
   lastMessage: string;
+  groupName: string;
   isGroup: boolean;
   createdAt: Date;
   updatedAt: Date;

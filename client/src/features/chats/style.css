@@ -14,3 +14,29 @@
 .bg-purple-overlay {
   background-color: rgba(137, 43, 226, 0.144);
 }
+
+.text-input {
+  resize: none;
+  height: 100%;
+  border: none;
+  width: 100%;
+}
+.text-input:focus {
+  outline: none;
+}
+
+.search-btn span {
+  display: none;
+}
+.group-btn span {
+  display: none;
+}
+
+@media screen and (min-width: 1200px) {
+  .search-btn span {
+    display: inline;
+  }
+  .group-btn span {
+    display: inline;
+  }
+}

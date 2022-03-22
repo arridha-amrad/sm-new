@@ -1,11 +1,15 @@
 import express from 'express';
-import getChatPartnersController from '../controllers/chat/getChatPartnersController';
-import sendChatController from '../controllers/chat/sendChatController';
+import getConversationController from '../controllers/chat/getConversationController';
+import getConversationsController from '../controllers/chat/getConversationsController';
+import getMessagesController from '../controllers/chat/getMessagesController';
+import sendMessageController from '../controllers/chat/sendMessageController';
 import { verifyAccessToken } from '../services/JwtServices';
 
 const router = express.Router();
 
-router.post('/send', verifyAccessToken, sendChatController);
-router.get('/partners', verifyAccessToken, getChatPartnersController);
+router.post('/send', verifyAccessToken, sendMessageController);
+router.get('/conversations', verifyAccessToken, getConversationsController);
+router.get('/', verifyAccessToken, getConversationController);
+router.get('/messages', verifyAccessToken, getMessagesController);
 
 export default router;

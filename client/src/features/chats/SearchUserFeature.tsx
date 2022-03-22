@@ -1,19 +1,17 @@
 import { Fragment, useEffect, useRef, useState } from "react";
-import { Button } from "react-bootstrap";
 import Modal from "react-bootstrap/esm/Modal";
 import Spinner from "react-bootstrap/esm/Spinner";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import SearchCard from "../../components/Chats/SearchCard";
+import SearchResultCard from "../../components/Chats/SearchResultCard";
 import { selectAuthState } from "../authentication/authSlice";
 import { User } from "../authentication/IAuthentication";
 import { searchUserAction, user } from "../user/userSlice";
-import { addChattingPartner } from "./chatSlice";
+import { addConversation } from "./chatSlice";
 import "./style.css";
 
 const SearchUser = () => {
   const dispatch = useAppDispatch();
   const { loginUser } = useAppSelector(selectAuthState);
-  const [selectUser, setSelectUser] = useState<User[]>([]);
   const [show, setShow] = useState(false);
   const [searchKey, setSearchKey] = useState("");
   const ref = useRef<HTMLInputElement>(null);
@@ -23,9 +21,7 @@ const SearchUser = () => {
     await dispatch(searchUserAction(searchKey));
   };
 
-  useEffect(() => {
-    dispatch(searchUserAction(searchKey));
-  }, []);
+  const [isShowResult, setIsShowResult] = useState(false);
 
   useEffect(() => {
     ref.current?.focus();
@@ -35,20 +31,12 @@ const SearchUser = () => {
   const handleShow = () => setShow(true);
 
   const pickUser = (user: User) => {
-    const idx = selectUser.findIndex((usr) => usr._id === user._id);
-    if (idx < 0) {
-      setSelectUser([...selectUser, user]);
-    } else {
-      selectUser.splice(idx, 1);
-    }
-  };
-
-  const addChatPartner = () => {
-    selectUser.forEach((usr) => {
-      if (usr._id !== loginUser?._id) {
-        dispatch(addChattingPartner(usr));
-      }
-    });
+    dispatch(
+      addConversation({
+        users: [user, loginUser!],
+        isGroup: false,
+      })
+    );
     handleClose();
   };
 
@@ -56,7 +44,7 @@ const SearchUser = () => {
     <Fragment>
       <button
         style={{ cursor: "pointer" }}
-        className="block bg-primary text-white btn"
+        className="block bg-primary text-white btn search-btn"
         onClick={handleShow}
       >
         <svg
@@ -78,6 +66,7 @@ const SearchUser = () => {
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 search();
+                setIsShowResult(true);
               }
             }}
             ref={ref}
@@ -106,32 +95,26 @@ const SearchUser = () => {
             />
           </svg>
         </Modal.Header>
-        <Modal.Body style={{ maxHeight: "400px", overflowY: "auto" }}>
-          {isLoadingSearchUser && (
-            <div className="d-flex justify-content-center">
-              <Spinner animation="border" />
-            </div>
-          )}
-          {searchUser.length === 0 ? (
-            <div className="d-flex justify-content-center">
-              <div>User not found</div>
-            </div>
-          ) : (
-            searchUser.map((user) => (
-              <Fragment key={user._id}>
-                <SearchCard pickUser={pickUser} user={user} />
-              </Fragment>
-            ))
-          )}
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={addChatPartner}>
-            Add
-          </Button>
-        </Modal.Footer>
+        {isShowResult && (
+          <Modal.Body style={{ maxHeight: "400px", overflowY: "auto" }}>
+            {isLoadingSearchUser && (
+              <div className="d-flex justify-content-center">
+                <Spinner animation="border" />
+              </div>
+            )}
+            {searchUser.length === 0 ? (
+              <div className="d-flex justify-content-center">
+                <div>User not found</div>
+              </div>
+            ) : (
+              searchUser.map((user) => (
+                <Fragment key={user._id}>
+                  <SearchResultCard pickUser={pickUser} user={user} />
+                </Fragment>
+              ))
+            )}
+          </Modal.Body>
+        )}
       </Modal>
     </Fragment>
   );

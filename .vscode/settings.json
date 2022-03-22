@@ -5,6 +5,7 @@
     "autoclose",
     "autohide",
     "Cloudinary",
+    "conv",
     "fileupload",
     "immer",
     "reduxjs"

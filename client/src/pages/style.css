@@ -40,7 +40,7 @@
   height: calc(100vh - 6rem);
   display: grid;
   grid-template-columns: 1fr 3fr;
-  grid-template-rows: 60px auto 120px;
+  grid-template-rows: 60px calc(100vh - 60px - 120px - 6rem) 120px;
   border-radius: 0.7rem;
   border: 1px solid #ddd;
 }
@@ -53,7 +53,6 @@
 .partner-info {
   grid-column: 2 / 3;
   grid-row: 1 / 2;
-  background-color: rgb(163, 47, 167);
 }
 
 .partners {
@@ -63,11 +62,14 @@
 .chats {
   grid-column: 2 / 3;
   grid-row: 2 / 3;
-  background-color: aquamarine;
+  overflow: auto;
 }
 
 .chat-input {
   grid-column: 2 / 3;
   grid-row: 3 / 4;
-  background-color: rgb(119, 168, 55);
+}
+
+.spacer {
+  height: 1rem;
 }
