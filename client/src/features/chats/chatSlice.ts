@@ -14,6 +14,7 @@ interface ChatState {
   selectedConversation: Conversation | null;
   selectedReceiverId: string | null;
   messages: Message[];
+  selectedConversationIndex: number | null;
 }
 
 const initialState: ChatState = {
@@ -21,6 +22,7 @@ const initialState: ChatState = {
   selectedConversation: null,
   messages: [],
   selectedReceiverId: null,
+  selectedConversationIndex: null,
 };
 
 export const sendMessageAction = createAsyncThunk(
@@ -47,35 +49,18 @@ const chatSlice = createSlice({
       state,
       action: PayloadAction<SelectedConversation>
     ) => {
-      const { receiverId, ...props } = action.payload;
+      const { receiverId, conversationIndex, ...props } = action.payload;
       state.selectedConversation = props;
       state.selectedReceiverId = receiverId;
+      state.selectedConversationIndex = conversationIndex;
     },
     updateConversations: (
       state,
       action: PayloadAction<SelectedConversation>
     ) => {
-      const { receiverId, ...conv } = action.payload;
-
-      // const convUser = conv.users.map((user) => user.username);
-      // const users = state.conversations[0].users.map((user) => user.username);
-
-      const getUsername = (users: User[]) => {
-        let res: string[] = [];
-        users.map((user) => res.push(user.username));
-        return res.sort().join(",");
-      };
-
-      const cIdx = state.conversations.findIndex(
-        (c) => getUsername(c.users) === getUsername(conv.users)
-      );
-
-      console.log("cIdx : ", cIdx);
-
-      if (cIdx >= 0) {
-        state.conversations.splice(cIdx, 1, conv);
-        state.selectedConversation = action.payload;
-      }
+      const { conversationIndex, ...conv } = action.payload;
+      state.conversations[state.selectedConversationIndex!] = conv;
+      state.selectedConversation = conv;
     },
     setConversations: (state, action: PayloadAction<Conversation[]>) => {
       state.conversations = action.payload;

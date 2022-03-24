@@ -36,6 +36,7 @@ const Conversations = () => {
       {conversations.map((conversation, index) => (
         <SingleConversation
           key={index}
+          conversationIndex={index}
           user={conversation.users.find((user) => user._id !== loginUser?._id)!}
           conversation={conversation}
         />
@@ -46,10 +47,11 @@ const Conversations = () => {
 
 export default Conversations;
 
-const SingleConversation: FC<{ user: User; conversation: Conversation }> = ({
-  user,
-  conversation,
-}) => {
+const SingleConversation: FC<{
+  user: User;
+  conversation: Conversation;
+  conversationIndex: number;
+}> = ({ user, conversation, conversationIndex }) => {
   const { selectedReceiverId } = useAppSelector(selectChatState);
   const isSelected = user._id === selectedReceiverId;
   const dispatch = useAppDispatch();
@@ -60,6 +62,7 @@ const SingleConversation: FC<{ user: User; conversation: Conversation }> = ({
           selectConversation({
             ...conversation,
             receiverId: user._id,
+            conversationIndex,
           })
         );
       }}

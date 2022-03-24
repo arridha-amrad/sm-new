@@ -26,4 +26,7 @@ export interface Message {
   updatedAt: Date;
 }
 
-export type SelectedConversation = Conversation & { receiverId: string };
+export type SelectedConversation = Conversation & {
+  receiverId: string;
+  conversationIndex: number;
+};
