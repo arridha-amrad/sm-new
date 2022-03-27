@@ -48,6 +48,13 @@ export const initIo = (httpServer: HTTPServer) => {
       addUser(username, socket.id);
     });
 
+    socket.on('sendMessageCS', (conversation, message, toUsername) => {
+      const user = getUser(toUsername);
+      if (user) {
+        io.to(user.socketId).emit('sendMessageSC', conversation, message);
+      }
+    });
+
     socket.on('createCommentCS', (notification, toUsername) => {
       const user = getUser(toUsername);
       if (user) {

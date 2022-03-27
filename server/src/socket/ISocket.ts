@@ -1,3 +1,5 @@
+import { IConversation } from '../models/conversation/IConversation';
+import { IMessage } from '../models/message/IMessage';
 import { INotificationModel } from '../models/notification/INotificationModel';
 
 export interface ServerToClientEvents {
@@ -7,9 +9,15 @@ export interface ServerToClientEvents {
   likeReplySC: (notification: INotificationModel) => void;
   createCommentSC: (notification: INotificationModel) => void;
   createReplySC: (notification: INotificationModel) => void;
+  sendMessageSC: (conversation: IConversation, message: IMessage) => void;
 }
 
 export interface ClientToServerEvents {
+  sendMessageCS: (
+    conversation: IConversation,
+    message: IMessage,
+    toUsername: string
+  ) => void;
   addUserCS: (username: string) => void;
   likePostCS: (data: INotificationModel, toUsername: string) => void;
   likeCommentCS: (notification: INotificationModel, toUsername: string) => void;

@@ -22,8 +22,11 @@ export default async (req: Request, res: Response) => {
     if (!c) {
       conversation = await createConversation({
         users: [chatSender, receiverId],
+        lastMessage: message,
       });
     } else {
+      c.lastMessage = message;
+      await c.save();
       conversation = c;
     }
 

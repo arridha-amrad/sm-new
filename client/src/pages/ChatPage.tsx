@@ -1,16 +1,34 @@
 import { Container } from "react-bootstrap";
-import { useAppSelector } from "../app/hooks";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
 import ChatHeader from "../components/Chats/ConversationHeader";
 import Conversations from "../components/Chats/Conversations";
 import Messages from "../components/Chats/Messages";
-import { selectChatState } from "../features/chats/chatSlice";
+import { addMessage, selectChatState } from "../features/chats/chatSlice";
 import CreateChat from "../features/chats/SendMessageFeature";
 import CreateGroupChat from "../features/chats/CreateGroupChat";
 import SearchUser from "../features/chats/SearchUserFeature";
+import { useEffect } from "react";
+import { getSocket } from "../mySocket";
+
 import "./style.css";
 
 const ChatPage = () => {
   const { selectedConversation } = useAppSelector(selectChatState);
+  const dispatch = useAppDispatch();
+  const socket = getSocket();
+
+  useEffect(() => {
+    socket?.on("sendMessageSC", (conversation, message) => {
+      dispatch(
+        addMessage({
+          conversation,
+          message,
+        })
+      );
+    });
+    // eslint-disable-next-line
+  }, [socket]);
+
   return (
     <div style={{ overflowY: "hidden", marginTop: "4rem" }}>
       <Container>

@@ -5,6 +5,7 @@ export interface SendChatDTO {
   receiverId: string;
   conversationId?: string;
   isGroup: boolean;
+  toUsername: string;
 }
 
 export interface Conversation {
@@ -28,5 +29,6 @@ export interface Message {
 
 export type SelectedConversation = Conversation & {
   receiverId: string;
+  receiverUsername: string;
   conversationIndex: number;
 };

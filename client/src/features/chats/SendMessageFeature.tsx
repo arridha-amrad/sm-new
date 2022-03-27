@@ -9,7 +9,7 @@ import {
 import "./style.css";
 
 const CreateChat = () => {
-  const { selectedConversation, selectedReceiverId, conversations } =
+  const { selectedConversation, selectedReceiverId, selectedReceiverUsername } =
     useAppSelector(selectChatState);
   const dispatch = useAppDispatch();
 
@@ -30,9 +30,9 @@ const CreateChat = () => {
         isGroup: selectedConversation?.isGroup ?? false,
         message: state.message,
         receiverId: selectedReceiverId!,
+        toUsername: selectedReceiverUsername!,
       })
     );
-    console.log("res payload : ", res.payload);
 
     if (res.meta.requestStatus === "fulfilled") {
       if (!selectedConversation?._id) {
