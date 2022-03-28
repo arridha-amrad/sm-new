@@ -10,9 +10,14 @@ export interface ServerToClientEvents {
   createCommentSC: (notification: INotificationModel) => void;
   createReplySC: (notification: INotificationModel) => void;
   sendMessageSC: (conversation: IConversation, message: IMessage) => void;
+  setTypingSC: ({ isTyping }: { isTyping: boolean }) => void;
 }
 
 export interface ClientToServerEvents {
+  setTypingCS: (
+    { isTyping }: { isTyping: boolean },
+    toUsername: string
+  ) => void;
   sendMessageCS: (
     conversation: IConversation,
     message: IMessage,

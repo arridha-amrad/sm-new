@@ -17,6 +17,7 @@ import {
   setNotifications,
 } from "./features/notification/notificationSlice";
 import ChatPage from "./pages/ChatPage";
+import ProfilePage from "./pages/ProfilePage";
 
 const App = () => {
   const dispatch = useAppDispatch();
@@ -85,6 +86,7 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/chats" element={<ChatPage />} />
       </Route>
+      <Route path="/profile" element={<ProfilePage />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
     </Routes>

@@ -5,6 +5,8 @@ import { selectChatState, setMessages } from "../../features/chats/chatSlice";
 import { Message } from "../../features/chats/IChat";
 import axiosInstance from "../../utils/axiosInterceptor";
 import timeSetter from "../../utils/timeSetter";
+import ScrollableFeed from "react-scrollable-feed";
+
 import "./style.css";
 
 const Messages = () => {
@@ -35,27 +37,42 @@ const Messages = () => {
 
   return (
     <div
-      className="d-flex flex-column w-100 flex-grow-1"
-      style={{ overflow: "auto", maxHeight: "" }}
+      className="d-flex flex-column h-100 w-100"
+      style={{ overflow: "auto" }}
     >
-      <div className="flex-grow-1 d-flex flex-column p-3">
+      <ScrollableFeed
+        forceScroll
+        className="flex-grow-1 d-flex flex-column p-3"
+      >
         {messages.map((message) => (
           <div
             key={message._id}
-            style={{ maxWidth: "400px" }}
+            style={{
+              maxWidth: "400px",
+              height: "100%",
+            }}
             className={` ${
               isSentByMe(message)
                 ? "bg-pink align-self-end"
                 : "border align-self-start"
             } p-3 gap-4 rounded my-2`}
           >
-            <div>{message.text}</div>
+            <div
+              style={{
+                whiteSpace: "pre-line",
+                wordBreak: "break-all",
+                overflowWrap: "break-word",
+                width: "100%",
+              }}
+            >
+              {message.text}
+            </div>
             <small className="d-block text-secondary text-nowrap text-end">
               {timeSetter(new Date(message.createdAt))}
             </small>
           </div>
         ))}
-      </div>
+      </ScrollableFeed>
     </div>
   );
 };

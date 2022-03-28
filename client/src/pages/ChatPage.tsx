@@ -30,7 +30,7 @@ const ChatPage = () => {
   }, [socket]);
 
   return (
-    <div style={{ overflowY: "hidden", marginTop: "4rem" }}>
+    <section className="chat-page">
       <Container>
         <div className="chat-page__container">
           <div className="sidebar border-end">
@@ -58,7 +58,7 @@ const ChatPage = () => {
           )}
         </div>
       </Container>
-    </div>
+    </section>
   );
 };
 

@@ -7,34 +7,36 @@ import "./style.css";
 
 const Home = () => {
   return (
-    <Container>
-      <div className="grid-container">
-        <div className="grid-item-1">
-          <PostMaker />
-          <HomePosts />
-        </div>
-        <div className="grid-item-2">
-          <div className="home-profile">
-            <HomeProfile />
+    <section className="home-page">
+      <Container>
+        <div className="grid-container">
+          <div className="grid-item-1">
+            <PostMaker />
+            <HomePosts />
+          </div>
+          <div className="grid-item-2">
+            <div className="home-profile">
+              <HomeProfile />
+            </div>
           </div>
         </div>
-      </div>
-      <div className="mt-5"></div>
-      <ToastContainer
-        position="bottom-center"
-        autoClose={5000}
-        hideProgressBar
-        newestOnTop={false}
-        closeOnClick={false}
-        rtl={false}
-        pauseOnFocusLoss={false}
-        draggable={false}
-        pauseOnHover={false}
-        closeButton={false}
-        icon={false}
-        theme="colored"
-      />
-    </Container>
+        <div className="mt-5"></div>
+        <ToastContainer
+          position="bottom-center"
+          autoClose={5000}
+          hideProgressBar
+          newestOnTop={false}
+          closeOnClick={false}
+          rtl={false}
+          pauseOnFocusLoss={false}
+          draggable={false}
+          pauseOnHover={false}
+          closeButton={false}
+          icon={false}
+          theme="colored"
+        />
+      </Container>
+    </section>
   );
 };
 

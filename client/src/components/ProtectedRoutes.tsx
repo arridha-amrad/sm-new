@@ -9,7 +9,6 @@ const ProtectedRoute = () => {
   return !isLoadingAuth && loginUser ? (
     <>
       <AppBar />
-      <div className="mt-5" />
       <Outlet />
     </>
   ) : (

@@ -11,7 +11,7 @@
 }
 
 .conversation:hover {
-  background-color: rgb(230, 230, 230);
+  background-color: rgba(230, 230, 230, 0.651);
 }
 
 .chat-input:focus {
@@ -25,4 +25,16 @@
   white-space: nowrap;
   overflow: hidden;
   max-width: 200px;
+}
+
+.btn-toggle-conversation {
+  display: block;
+  border: none;
+  background-color: transparent;
+}
+
+@media screen and (min-width: 768px) {
+  .btn-toggle-conversation {
+    display: none;
+  }
 }

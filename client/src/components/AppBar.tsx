@@ -8,6 +8,7 @@ import NotificationButton from "./Notification/NotificationButton";
 
 const AppBar = () => {
   const [scrollPosition, setScrollPosition] = useState(0);
+
   const handleScroll = () => {
     const position = window.pageYOffset;
     setScrollPosition(position);

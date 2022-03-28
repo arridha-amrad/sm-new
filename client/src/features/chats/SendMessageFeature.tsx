@@ -1,5 +1,6 @@
 import { Spinner } from "react-bootstrap";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { getSocket } from "../../mySocket";
 import useFormHooks from "../../utils/useFormHooks";
 import {
   sendMessageAction,
@@ -9,6 +10,7 @@ import {
 import "./style.css";
 
 const CreateChat = () => {
+  const socket = getSocket();
   const { selectedConversation, selectedReceiverId, selectedReceiverUsername } =
     useAppSelector(selectChatState);
   const dispatch = useAppDispatch();
@@ -57,12 +59,22 @@ const CreateChat = () => {
     checkField
   );
 
+  const setTyping = () => {
+    socket?.emit("setTypingCS", { isTyping: true }, selectedReceiverUsername);
+  };
+
+  const unsetTyping = () => {
+    socket?.emit("setTypingCS", { isTyping: false }, selectedReceiverUsername);
+  };
+
   return (
     <form
       onSubmit={onSubmit}
       className="d-flex align-items-center border-top h-100 gap-3 p-3"
     >
       <textarea
+        onKeyUp={setTyping}
+        onBlur={unsetTyping}
         className="text-input"
         onChange={onChange}
         value={state.message}

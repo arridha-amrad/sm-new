@@ -1,3 +1,7 @@
+.home-page {
+  padding-top: 4.5rem;
+}
+
 .grid-container {
   display: grid;
   grid-template-columns: 1fr;
@@ -27,36 +31,69 @@
 
 @media screen and (min-width: 1000px) {
   .grid-container {
-    margin-top: 5rem;
     display: grid;
     grid-template-columns: 3fr 1fr;
   }
 }
 
 /* CHATPAGE */
+.chat-page {
+  padding-top: 4.5rem;
+}
+
 .chat-page__container {
   margin: 0 1rem 0 1rem;
   overflow-y: hidden;
-  height: calc(100vh - 6rem);
+  min-height: calc(100vh - 6rem);
   display: grid;
-  grid-template-columns: 1fr 3fr;
-  grid-template-rows: 60px calc(100vh - 60px - 120px - 6rem) 120px;
+  grid-template-columns: 1fr;
+  grid-template-rows: 60px calc(100vh - 60px - 100px - 6rem) 100px;
   border-radius: 0.7rem;
   border: 1px solid #ddd;
 }
 
+@media screen and (min-width: 768px) {
+  .chat-page__container {
+    grid-template-columns: 2fr 3fr;
+  }
+}
+@media screen and (min-width: 1000px) {
+  .chat-page__container {
+    grid-template-columns: 1fr 3fr;
+  }
+}
+
 .sidebar {
-  grid-column: 1 / 2;
-  grid-row: 1 / 4;
-  overflow-x: hidden;
+  display: none;
+}
+
+@media screen and (min-width: 768px) {
+  .sidebar {
+    display: block;
+    grid-column: 1 / 2;
+    grid-row: 1 / 4;
+    overflow-x: hidden;
+  }
+  .partner-info {
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+  }
+  .chats {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+    overflow: auto;
+  }
+  .chat-input {
+    grid-column: 2 / 3;
+    grid-row: 3 / 4;
+  }
 }
 
 .partner-info {
-  grid-column: 2 / 3;
-  grid-row: 1 / 2;
+  border-bottom: 1px solid #ddd;
 }
 
-.partners {
+/* .partners {
   border: 1px;
 }
 
@@ -69,8 +106,35 @@
 .chat-input {
   grid-column: 2 / 3;
   grid-row: 3 / 4;
-}
+} */
 
 .spacer {
   height: 1rem;
+}
+
+/* PROFILE PAGE */
+.profile-page__container {
+  min-height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.content {
+  border: 1px solid #fff;
+}
+.middle {
+  height: 200px;
+  background-color: #fff;
+}
+.main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+  background-color: blue;
+}
+
+.footer-p {
+  height: 100px;
+  background-color: red;
 }

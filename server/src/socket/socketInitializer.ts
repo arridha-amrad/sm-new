@@ -48,6 +48,13 @@ export const initIo = (httpServer: HTTPServer) => {
       addUser(username, socket.id);
     });
 
+    socket.on('setTypingCS', ({ isTyping }, username) => {
+      const user = getUser(username);
+      if (user) {
+        io.to(user.socketId).emit('setTypingSC', { isTyping });
+      }
+    });
+
     socket.on('sendMessageCS', (conversation, message, toUsername) => {
       const user = getUser(toUsername);
       if (user) {
