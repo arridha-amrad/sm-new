@@ -11,6 +11,7 @@ import { useEffect } from "react";
 import { getSocket } from "../mySocket";
 
 import "./style.css";
+import { ToastContainer } from "react-toastify";
 
 const ChatPage = () => {
   const { selectedConversation } = useAppSelector(selectChatState);
@@ -57,6 +58,20 @@ const ChatPage = () => {
             </>
           )}
         </div>
+        <ToastContainer
+          position="bottom-center"
+          autoClose={5000}
+          hideProgressBar
+          newestOnTop={false}
+          closeOnClick={false}
+          rtl={false}
+          pauseOnFocusLoss={false}
+          draggable={false}
+          pauseOnHover={false}
+          closeButton={false}
+          icon={false}
+          theme="colored"
+        />
       </Container>
     </section>
   );

@@ -15,6 +15,14 @@ const MessageSchema = new Schema<IMessage, Model<IMessage>>(
       type: Schema.Types.ObjectId,
       ref: 'User',
     },
+    receiver: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+    },
+    isRead: {
+      type: Boolean,
+      default: true,
+    },
   },
   { timestamps: true }
 );

@@ -64,6 +64,7 @@ const chatSlice = createSlice({
       state.selectedReceiverId = receiverId;
       state.selectedConversationIndex = conversationIndex;
       state.selectedReceiverUsername = receiverUsername;
+      state.conversations[conversationIndex].totalUnreadMessage = 0;
     },
     updateConversations: (
       state,
@@ -72,6 +73,11 @@ const chatSlice = createSlice({
       const { conversationIndex, ...conv } = action.payload;
       state.conversations[state.selectedConversationIndex!] = conv;
       state.selectedConversation = conv;
+
+      // override
+      state.conversations[
+        state.selectedConversationIndex!
+      ].totalUnreadMessage = 0;
     },
     setConversations: (state, action: PayloadAction<Conversation[]>) => {
       state.conversations = action.payload;
@@ -94,7 +100,8 @@ const chatSlice = createSlice({
       if (conIndex < 0) {
         state.conversations.unshift(action.payload.conversation);
       } else {
-        state.conversations[conIndex].lastMessage = message.text;
+        state.conversations[conIndex].lastMessage = message;
+        state.conversations[conIndex].totalUnreadMessage += 1;
       }
       if (state.selectedConversation?._id === _id) {
         state.messages.push(message);
@@ -108,7 +115,7 @@ const chatSlice = createSlice({
         (c) => c._id === conversation._id
       );
       if (conIndex >= 0) {
-        state.conversations[conIndex].lastMessage = message.text;
+        state.conversations[conIndex].lastMessage = message;
       }
       state.messages.push(message);
     });

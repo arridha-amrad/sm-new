@@ -49,7 +49,6 @@ const Messages = () => {
             key={message._id}
             style={{
               maxWidth: "400px",
-              height: "100%",
             }}
             className={` ${
               isSentByMe(message)

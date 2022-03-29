@@ -15,3 +15,10 @@ export const findMessage = async (messageId: string) => {
 export const findMessages = async (filter: FilterQuery<IMessage>) => {
   return Message.find(filter).populate('sender', 'username avatarURL');
 };
+
+export const findUnreadMessages = async (
+  conversationId: string,
+  receiverId: string
+) => {
+  return Message.find({ conversationId, isRead: false, receiver: receiverId });
+};

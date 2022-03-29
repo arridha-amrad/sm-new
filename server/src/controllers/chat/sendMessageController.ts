@@ -1,8 +1,12 @@
 import { Request, Response } from 'express';
-import { createMessage } from '../../services/MessageService';
+import {
+  createMessage,
+  findUnreadMessages,
+} from '../../services/MessageService';
 import {
   createConversation,
   findConversation,
+  findConversationById,
 } from '../../services/ConversationService';
 
 export default async (req: Request, res: Response) => {
@@ -14,29 +18,37 @@ export default async (req: Request, res: Response) => {
   console.log('isGroup : ', isGroup);
 
   try {
-    let conversation;
-    const c = await findConversation({
+    let conversation = await findConversation({
       $and: [{ users: chatSender }, { users: receiverId }],
     });
 
-    if (!c) {
+    if (!conversation) {
       conversation = await createConversation({
         users: [chatSender, receiverId],
-        lastMessage: message,
       });
-    } else {
-      c.lastMessage = message;
-      await c.save();
-      conversation = c;
     }
 
     const newMessage = await createMessage({
       conversationId: conversation?.id,
       sender: chatSender,
+      receiver: receiverId,
+      isRead: false,
       text: message,
     });
 
-    return res.status(200).json({ conversation, message: newMessage });
+    conversation!.lastMessage = newMessage?.id!;
+    const upcon = await conversation?.save();
+
+    const populatedConversation = await findConversationById(upcon?.id);
+
+    const unreadMessages = await findUnreadMessages(upcon?.id, receiverId);
+
+    const data = {
+      ...populatedConversation?.toObject(),
+      totalUnreadMessage: unreadMessages.length,
+    };
+
+    return res.status(200).json({ conversation: data, message: newMessage });
   } catch (err: any) {
     console.log(err);
     return res.sendStatus(500);

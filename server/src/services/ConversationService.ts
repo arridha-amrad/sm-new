@@ -13,11 +13,22 @@ export const findConversation = async (filter: FilterQuery<IConversation>) => {
 };
 
 export const findConversationById = async (id: string) => {
-  return ChatModel.findById(id).populate('users', 'username avatarURL');
+  return ChatModel.findById(id)
+    .populate('users', 'username avatarURL')
+    .populate({
+      path: 'lastMessage',
+      populate: { path: 'sender', select: 'username' },
+    });
 };
 
 export const findAllConversations = async (
   filter: FilterQuery<IConversation>
 ) => {
-  return ChatModel.find(filter).populate('users', 'username avatarURL');
+  return ChatModel.find(filter)
+    .sort({ createdAt: 'desc' })
+    .populate('users', 'username avatarURL')
+    .populate({
+      path: 'lastMessage',
+      populate: { path: 'sender', select: 'username' },
+    });
 };

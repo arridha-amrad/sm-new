@@ -9,6 +9,7 @@ import { selectAuthState } from "../authentication/authSlice";
 import { User } from "../authentication/IAuthentication";
 import { searchUserAction, user } from "../user/userSlice";
 import { addConversation } from "./chatSlice";
+import { toast } from "react-toastify";
 import "./style.css";
 
 const SearchUser = () => {
@@ -33,12 +34,26 @@ const SearchUser = () => {
   const handleShow = () => setShow(true);
 
   const pickUser = (user: User) => {
-    dispatch(
-      addConversation({
-        users: [user, loginUser!],
-        isGroup: false,
-      })
-    );
+    if (loginUser!._id !== user._id) {
+      dispatch(
+        addConversation({
+          users: [user, loginUser!],
+          isGroup: false,
+          totalUnreadMessage: 0,
+        })
+      );
+    } else {
+      toast.error("You cannot chat with your account", {
+        position: "bottom-center",
+        autoClose: 5000,
+        hideProgressBar: true,
+        closeOnClick: false,
+        pauseOnHover: false,
+        draggable: false,
+        progress: undefined,
+      });
+    }
+
     handleClose();
   };
 

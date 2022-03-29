@@ -3,7 +3,7 @@ import { IUserModel } from '../user/IUserModel';
 
 export interface IConversation {
   users: Types.DocumentArray<IUserModel>;
-  lastMessage: string;
+  lastMessage: Types.ObjectId;
   groupName: string;
   isGroup: boolean;
   createdAt: Date;

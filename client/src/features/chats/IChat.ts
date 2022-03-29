@@ -11,8 +11,9 @@ export interface SendChatDTO {
 export interface Conversation {
   _id?: string;
   users: User[];
-  lastMessage?: string;
+  lastMessage?: Message;
   groupName?: string;
+  totalUnreadMessage: number;
   isGroup: boolean;
   createdAt?: Date;
   updatedAt?: Date;
@@ -23,6 +24,7 @@ export interface Message {
   text: string;
   conversationId: string;
   sender: User;
+  isRead: boolean;
   createdAt: Date;
   updatedAt: Date;
 }

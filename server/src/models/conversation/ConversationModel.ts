@@ -14,7 +14,10 @@ const ConversationSchema = new Schema<IConversation, Model<IConversation>>(
       type: Boolean,
       default: false,
     },
-    lastMessage: String,
+    lastMessage: {
+      type: Schema.Types.ObjectId,
+      ref: 'Message',
+    },
   },
 
   { timestamps: true }
