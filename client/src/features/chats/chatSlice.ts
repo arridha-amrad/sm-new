@@ -20,8 +20,8 @@ interface ChatState {
 
 const initialState: ChatState = {
   conversations: [],
-  selectedConversation: null,
   messages: [],
+  selectedConversation: null,
   selectedConversationIndex: null,
   selectedReceiverId: null,
   selectedReceiverUsername: null,
@@ -107,6 +107,12 @@ const chatSlice = createSlice({
         state.messages.push(message);
       }
     },
+    resetSelectedConversation: (state) => {
+      state.selectedConversation = null;
+      state.selectedConversationIndex = null;
+      state.selectedReceiverId = null;
+      state.selectedReceiverUsername = null;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(sendMessageAction.fulfilled, (state, action) => {
@@ -118,6 +124,7 @@ const chatSlice = createSlice({
         state.conversations[conIndex].lastMessage = message;
       }
       state.messages.push(message);
+      state.conversations[conIndex].totalUnreadMessage = 0;
     });
   },
 });
@@ -128,6 +135,7 @@ export const {
   setConversations,
   selectConversation,
   setMessages,
+  resetSelectedConversation,
   updateConversations,
 } = chatSlice.actions;
 

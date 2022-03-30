@@ -3,7 +3,11 @@ import { useAppDispatch, useAppSelector } from "../app/hooks";
 import ChatHeader from "../components/Chats/ConversationHeader";
 import Conversations from "../components/Chats/Conversations";
 import Messages from "../components/Chats/Messages";
-import { addMessage, selectChatState } from "../features/chats/chatSlice";
+import {
+  addMessage,
+  resetSelectedConversation,
+  selectChatState,
+} from "../features/chats/chatSlice";
 import CreateChat from "../features/chats/SendMessageFeature";
 import CreateGroupChat from "../features/chats/CreateGroupChat";
 import SearchUser from "../features/chats/SearchUserFeature";
@@ -17,6 +21,10 @@ const ChatPage = () => {
   const { selectedConversation } = useAppSelector(selectChatState);
   const dispatch = useAppDispatch();
   const socket = getSocket();
+
+  useEffect(() => {
+    dispatch(resetSelectedConversation());
+  }, []);
 
   useEffect(() => {
     socket?.on("sendMessageSC", (conversation, message) => {

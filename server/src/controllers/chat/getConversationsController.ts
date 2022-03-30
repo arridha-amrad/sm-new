@@ -21,7 +21,6 @@ export default async (req: Request, res: Response) => {
       }
       return result;
     };
-    console.log('result : ', await getData());
 
     return res.status(200).json({ conversations: await getData() });
   } catch (err: any) {

@@ -4,13 +4,16 @@ import { findMessages } from '../../services/MessageService';
 
 export default async (req: Request, res: Response) => {
   const { conversationId } = req.query;
+  const loginUserId = req.userId;
   try {
     let messages: IMessage[] = [];
     if (conversationId !== 'undefined') {
       const data = await findMessages({ conversationId });
       data.forEach(async (d) => {
-        d.isRead = true;
-        await d.save();
+        if (d.receiver.toString() === loginUserId) {
+          d.isRead = true;
+          await d.save();
+        }
       });
       messages = data;
     }

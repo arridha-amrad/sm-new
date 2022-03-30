@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import {
   createMessage,
+  findMessages,
   findUnreadMessages,
 } from '../../services/MessageService';
 import {
@@ -32,7 +33,6 @@ export default async (req: Request, res: Response) => {
       conversationId: conversation?.id,
       sender: chatSender,
       receiver: receiverId,
-      isRead: false,
       text: message,
     });
 
@@ -47,6 +47,16 @@ export default async (req: Request, res: Response) => {
       ...populatedConversation?.toObject(),
       totalUnreadMessage: unreadMessages.length,
     };
+
+    if (conversationId !== 'undefined') {
+      const data = await findMessages({ conversationId });
+      data.forEach(async (d) => {
+        if (d.receiver.toString() === chatSender) {
+          d.isRead = true;
+          await d.save();
+        }
+      });
+    }
 
     return res.status(200).json({ conversation: data, message: newMessage });
   } catch (err: any) {

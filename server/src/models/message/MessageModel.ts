@@ -21,7 +21,7 @@ const MessageSchema = new Schema<IMessage, Model<IMessage>>(
     },
     isRead: {
       type: Boolean,
-      default: true,
+      default: false,
     },
   },
   { timestamps: true }
