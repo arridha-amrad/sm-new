@@ -122,9 +122,9 @@ const chatSlice = createSlice({
       );
       if (conIndex >= 0) {
         state.conversations[conIndex].lastMessage = message;
+        state.conversations[conIndex].totalUnreadMessage = 0;
       }
       state.messages.push(message);
-      state.conversations[conIndex].totalUnreadMessage = 0;
     });
   },
 });

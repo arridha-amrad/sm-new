@@ -9,8 +9,7 @@ import {
   selectChatState,
 } from "../features/chats/chatSlice";
 import CreateChat from "../features/chats/SendMessageFeature";
-import CreateGroupChat from "../features/chats/CreateGroupChat";
-import SearchUser from "../features/chats/SearchUserFeature";
+import SearchUserFeature from "../features/chats/SearchUserFeature";
 import { useEffect } from "react";
 import { getSocket } from "../mySocket";
 
@@ -44,11 +43,10 @@ const ChatPage = () => {
         <div className="chat-page__container">
           <div className="sidebar border-end">
             <div
-              className="d-flex align-items-center p-3 gap-2 border-bottom justify-content-center"
+              className="d-flex justify-content-center align-items-center bg-primary"
               style={{ height: "60px" }}
             >
-              <SearchUser />
-              <CreateGroupChat />
+              <SearchUserFeature />
             </div>
             <Conversations />
           </div>

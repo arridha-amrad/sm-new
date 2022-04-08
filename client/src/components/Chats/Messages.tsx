@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { selectAuthState } from "../../features/authentication/authSlice";
 import { selectChatState, setMessages } from "../../features/chats/chatSlice";
@@ -8,15 +8,19 @@ import timeSetter from "../../utils/timeSetter";
 import ScrollableFeed from "react-scrollable-feed";
 
 import "./style.css";
+import { Spinner } from "react-bootstrap";
 
 const Messages = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const { selectedConversation, messages } = useAppSelector(selectChatState);
   const { loginUser } = useAppSelector(selectAuthState);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     const controller = new AbortController();
+    let isMounted = true;
     const fetchMessages = async () => {
+      setIsLoading(true);
       const { data } = await axiosInstance.get(
         `/api/chat/messages?conversationId=${selectedConversation?._id}`,
         {
@@ -24,16 +28,26 @@ const Messages = () => {
         }
       );
       dispatch(setMessages(data.messages));
+      isMounted && setIsLoading(false);
     };
     fetchMessages();
     return () => {
       controller.abort();
+      isMounted = false;
     };
     // eslint-disable-next-line
   }, [selectedConversation?._id]);
 
   const isSentByMe = (message: Message) =>
     message.sender._id === loginUser?._id;
+
+  if (isLoading) {
+    return (
+      <div className="d-flex h-100 w-100 align-items-center justify-content-center">
+        <Spinner animation="border" />
+      </div>
+    );
+  }
 
   return (
     <div

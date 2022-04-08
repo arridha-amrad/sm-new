@@ -46,6 +46,7 @@ export const initIo = (httpServer: HTTPServer) => {
   io.on('connection', (socket) => {
     socket.on('addUserCS', (username) => {
       addUser(username, socket.id);
+      console.log('online-users : ', onlineUsers);
     });
 
     socket.on('setTypingCS', ({ isTyping }, username) => {

@@ -24,6 +24,9 @@ console.clear();
 export const runServer = () => {
   const app: Express = express();
 
+  // required by heroku
+  const PORT = process.env.PORT || 5000;
+
   const httpServer = createServer(app);
 
   app.use(cors({ origin: process.env.CLIENT_ORIGIN, credentials: true }));
@@ -45,7 +48,9 @@ export const runServer = () => {
   app.use('/api/notification', NotificationRoutes);
   app.use('/api/chat', ChatRoutes);
 
-  const PORT = process.env.PORT;
+  app.get('/', (req, res) =>
+    res.json({ message: 'Test OK', name: process.env.APP_NAME })
+  );
 
   // init socket io
   initIo(httpServer);

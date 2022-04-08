@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Spinner } from "react-bootstrap";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { getSocket } from "../../mySocket";
@@ -9,7 +10,8 @@ import {
 } from "./chatSlice";
 import "./style.css";
 
-const CreateChat = () => {
+const SendMessageFeature = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const socket = getSocket();
   const { selectedConversation, selectedReceiverId, selectedReceiverUsername } =
     useAppSelector(selectChatState);
@@ -26,6 +28,7 @@ const CreateChat = () => {
     };
   };
   const sendChat = async () => {
+    setIsLoading(true);
     const res = await dispatch(
       sendMessageAction({
         conversationId: selectedConversation?._id,
@@ -50,8 +53,9 @@ const CreateChat = () => {
         message: "",
       });
     }
+    setIsLoading(false);
   };
-  const { onChange, onSubmit, state, isLoading, setState } = useFormHooks(
+  const { onChange, onSubmit, state, setState } = useFormHooks(
     {
       message: "",
     },
@@ -87,10 +91,10 @@ const CreateChat = () => {
         type="submit"
         className="btn btn-primary"
       >
-        {isLoading ? <Spinner animation="border" /> : "Send"}
+        {isLoading ? <Spinner size="sm" animation="border" /> : "Send"}
       </button>
     </form>
   );
 };
 
-export default CreateChat;
+export default SendMessageFeature;
