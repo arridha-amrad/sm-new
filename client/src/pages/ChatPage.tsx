@@ -4,7 +4,6 @@ import ChatHeader from "../components/Chats/ConversationHeader";
 import Conversations from "../components/Chats/Conversations";
 import Messages from "../components/Chats/Messages";
 import {
-  addMessage,
   resetSelectedConversation,
   selectChatState,
 } from "../features/chats/chatSlice";
@@ -24,18 +23,6 @@ const ChatPage = () => {
   useEffect(() => {
     dispatch(resetSelectedConversation());
   }, []);
-
-  useEffect(() => {
-    socket?.on("sendMessageSC", (conversation, message) => {
-      dispatch(
-        addMessage({
-          conversation,
-          message,
-        })
-      );
-    });
-    // eslint-disable-next-line
-  }, [socket]);
 
   return (
     <section className="chat-page">

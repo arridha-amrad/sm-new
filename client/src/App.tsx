@@ -18,11 +18,13 @@ import {
 } from "./features/notification/notificationSlice";
 import ChatPage from "./pages/ChatPage";
 import ProfilePage from "./pages/ProfilePage";
+import { receiveMessage } from "./features/chats/chatSlice";
 
 const App = () => {
   const dispatch = useAppDispatch();
   const [isLoading, setIsLoading] = useState(true);
   const { loginUser } = useAppSelector(selectAuthState);
+
   const socket = getSocket();
 
   useEffect(() => {
@@ -62,12 +64,19 @@ const App = () => {
       dispatch(addNotification(notification));
     });
     socket?.on("likeCommentSC", (notification) => {
-      console.log("like comm noti : ", notification);
-
       dispatch(addNotification(notification));
     });
     socket?.on("likeReplySC", (notification) => {
       dispatch(addNotification(notification));
+    });
+
+    socket?.on("sendMessageSC", (conversation, message) => {
+      dispatch(
+        receiveMessage({
+          conversation,
+          message,
+        })
+      );
     });
     // eslint-disable-next-line
   }, [socket]);

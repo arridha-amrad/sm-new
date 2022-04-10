@@ -88,7 +88,7 @@ const chatSlice = createSlice({
     addConversation: (state, action: PayloadAction<Conversation>) => {
       state.conversations.unshift(action.payload);
     },
-    addMessage: (
+    receiveMessage: (
       state,
       action: PayloadAction<{ conversation: Conversation; message: Message }>
     ) => {
@@ -103,9 +103,7 @@ const chatSlice = createSlice({
         state.conversations[conIndex].lastMessage = message;
         state.conversations[conIndex].totalUnreadMessage += 1;
       }
-      if (state.selectedConversation?._id === _id) {
-        state.messages.push(message);
-      }
+      state.messages.push(message);
     },
     resetSelectedConversation: (state) => {
       state.selectedConversation = null;
@@ -130,7 +128,7 @@ const chatSlice = createSlice({
 });
 
 export const {
-  addMessage,
+  receiveMessage,
   addConversation,
   setConversations,
   selectConversation,
