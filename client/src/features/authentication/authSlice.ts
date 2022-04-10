@@ -3,6 +3,7 @@ import { RootState } from "../../app/store";
 import { setToken } from "../../utils/axiosInterceptor";
 import { AuthState, LoginDTO, RegisterDTO, User } from "./IAuthentication";
 import { loginAPI, logoutAPI, registerAPI } from "./authApi";
+import { setConversations } from "../chats/chatSlice";
 
 const initialState: AuthState = {
   isLoadingAuth: true,
@@ -27,6 +28,7 @@ export const loginAction = createAsyncThunk(
     try {
       const { data } = await loginAPI(body);
       setToken(data.token);
+      thunkAPI.dispatch(setConversations(data.conversations));
       return data;
     } catch (err: any) {
       return thunkAPI.rejectWithValue(err.response.data);

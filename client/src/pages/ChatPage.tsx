@@ -10,7 +10,6 @@ import {
 import CreateChat from "../features/chats/SendMessageFeature";
 import SearchUserFeature from "../features/chats/SearchUserFeature";
 import { useEffect } from "react";
-import { getSocket } from "../mySocket";
 
 import "./style.css";
 import { ToastContainer } from "react-toastify";
@@ -18,10 +17,10 @@ import { ToastContainer } from "react-toastify";
 const ChatPage = () => {
   const { selectedConversation } = useAppSelector(selectChatState);
   const dispatch = useAppDispatch();
-  const socket = getSocket();
 
   useEffect(() => {
     dispatch(resetSelectedConversation());
+    // eslint-disable-next-line
   }, []);
 
   return (

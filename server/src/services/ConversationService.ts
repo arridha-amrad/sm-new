@@ -1,6 +1,7 @@
 import ChatModel from '../models/conversation/ConversationModel';
 import { IConversation } from '../models/conversation/IConversation';
 import { AnyKeys, FilterQuery } from 'mongoose';
+import { findUnreadMessages } from './MessageService';
 
 export const createConversation = async (data: AnyKeys<IConversation>) => {
   const newConversation = new ChatModel(data);
@@ -21,14 +22,24 @@ export const findConversationById = async (id: string) => {
     });
 };
 
-export const findAllConversations = async (
-  filter: FilterQuery<IConversation>
-) => {
-  return ChatModel.find(filter)
+export const findConversations = async (userId: string) => {
+  const conversations = await ChatModel.find({ users: userId })
     .sort({ createdAt: 'desc' })
     .populate('users', 'username avatarURL')
     .populate({
       path: 'lastMessage',
       populate: { path: 'sender', select: 'username' },
     });
+  let myConversations = [];
+  for (let i = 0; i < conversations.length; i++) {
+    const unreadMessages = await findUnreadMessages(
+      conversations[i].id,
+      userId
+    );
+    myConversations.push({
+      ...conversations[i].toObject(),
+      totalUnreadMessage: unreadMessages.length,
+    });
+  }
+  return myConversations;
 };

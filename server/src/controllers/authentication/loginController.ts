@@ -6,6 +6,7 @@ import { signAccessToken, signRefreshToken } from '../../services/JwtServices';
 import { setCookieOptions } from '../../utils/CookieHelpers';
 import { loginValidator } from './authFieldValidator';
 import { findNotificationsOfOneUser } from '../../services/NotificationService';
+import { findConversations } from '../../services/ConversationService';
 
 export default async (req: Request, res: Response) => {
   const { identity, password } = req.body;
@@ -46,10 +47,17 @@ export default async (req: Request, res: Response) => {
 
     const notifications = await findNotificationsOfOneUser(user.id);
 
+    const conversations = await findConversations(user.id);
+
     return res
       .status(200)
       .cookie(process.env.COOKIE_REFRESH_TOKEN, refreshToken, setCookieOptions)
-      .json({ user: loginUser, token: accessToken, notifications });
+      .json({
+        user: loginUser,
+        token: accessToken,
+        notifications,
+        conversations,
+      });
   } catch (err) {
     console.log(err);
     return res.status(500).send('Server Error');

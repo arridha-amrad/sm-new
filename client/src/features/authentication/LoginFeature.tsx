@@ -32,7 +32,7 @@ const Login = () => {
     try {
       const result = await dispatch(loginAction(state));
       if (result.meta.requestStatus === "fulfilled") {
-        window.location.pathname = "/";
+        navigate("/");
       }
       if (result.meta.requestStatus === "rejected") {
         setAlert({

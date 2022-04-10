@@ -15,20 +15,20 @@ const Conversations = () => {
   const { loginUser } = useAppSelector(selectAuthState);
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    const controller = new AbortController();
-    const fetchConversations = async () => {
-      const { data } = await axiosInstance.get("/api/chat/conversations", {
-        signal: controller.signal,
-      });
-      dispatch(setConversations(data.conversations));
-    };
-    fetchConversations();
-    return () => {
-      controller.abort();
-    };
-    // eslint-disable-next-line
-  }, []);
+  // useEffect(() => {
+  //   const controller = new AbortController();
+  //   const fetchConversations = async () => {
+  //     const { data } = await axiosInstance.get("/api/chat/conversations", {
+  //       signal: controller.signal,
+  //     });
+  //     dispatch(setConversations(data.conversations));
+  //   };
+  //   fetchConversations();
+  //   return () => {
+  //     controller.abort();
+  //   };
+  //   // eslint-disable-next-line
+  // }, []);
 
   return (
     <div className="w-100">

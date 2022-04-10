@@ -1,5 +1,4 @@
 import { FC, useEffect, useState } from "react";
-import Button from "react-bootstrap/esm/Button";
 import Modal from "react-bootstrap/esm/Modal";
 import { useAppSelector } from "../../app/hooks";
 import { selectAuthState } from "../../features/authentication/authSlice";
