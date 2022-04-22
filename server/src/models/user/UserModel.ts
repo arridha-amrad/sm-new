@@ -21,35 +21,21 @@ const UserSchema = new Schema<IUserModel, Model<IUserModel>>(
       default:
         'https://iupac.org/wp-content/uploads/2018/05/default-avatar.png',
     },
-    role: {
-      type: String,
-      enum: ['user', 'admin', 'moderator'],
-      required: true,
-      default: 'user',
-    },
-    password: {
-      type: String,
-    },
+    password: String,
     strategy: {
       type: String,
       required: true,
-      enum: ['default', 'google', 'facebook'],
+      enum: ['default', 'google'],
     },
     requiredAuthAction: {
       type: String,
       enum: ['none', 'emailVerification', 'resetPassword'],
     },
-    jwtVersion: {
-      type: String,
-    },
-    isActive: {
-      type: Boolean,
-      default: false,
-    },
     isVerified: {
       type: Boolean,
       default: false,
     },
+    refreshTokens: [String],
   },
   { timestamps: true }
 );

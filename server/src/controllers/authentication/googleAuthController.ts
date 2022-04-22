@@ -2,10 +2,9 @@
 import { Request, Response } from 'express';
 import axios from 'axios';
 import qs from 'qs';
-import { signRefreshToken } from '../../services/JwtServices';
-import codeGenerator from '../../utils/CodeGenerator';
 import { setCookieOptions } from '../../utils/CookieHelpers';
 import { createUser, findUser } from '../../services/UserServices';
+import { createToken } from '../../services/JwtServices';
 
 interface GoogleTokensResult {
   access_token: string;
@@ -107,23 +106,28 @@ export default async (req: Request, res: Response) => {
         email,
         fullName: `${given_name} ${family_name}`,
         username: name.split(' ').join(''),
-        isActive: true,
         isVerified: true,
-        jwtVersion: await codeGenerator(),
         strategy: 'google',
+        refreshTokens: [],
       });
       myUser = newUser;
     } else {
       myUser = user;
     }
-    // create accessToken and refreshToken
-    const refresh_token = await signRefreshToken(myUser);
-    res.cookie(
-      process.env.COOKIE_REFRESH_TOKEN,
-      refresh_token,
-      setCookieOptions
-    );
-    res.redirect(process.env.CLIENT_ORIGIN);
+    const refreshToken = await createToken(myUser.id, 'refresh');
+    if (refreshToken) {
+      // refToken without bearer keyword
+      const refToken = refreshToken.split(' ')[1];
+      myUser.refreshTokens.push(refToken);
+      await myUser.save();
+
+      res.cookie(
+        process.env.COOKIE_REFRESH_TOKEN,
+        refreshToken,
+        setCookieOptions
+      );
+      res.redirect(process.env.CLIENT_ORIGIN);
+    }
   } catch (err) {
     console.log(err);
     res.redirect(`${process.env.CLIENT_ORIGIN}/login`);

@@ -5,18 +5,18 @@ import getPostController from '../controllers/post/getPostController';
 import getPostsController from '../controllers/post/getPostsController';
 import likePostController from '../controllers/post/likePostController';
 import updatePostController from '../controllers/post/updatePostController';
-import { verifyAccessToken } from '../services/JwtServices';
+import { verifyAuthToken } from '../services/JwtServices';
 
 const router = express.Router();
 
 router.get('/', getPostsController);
 router.get('/:postId', getPostController);
 
-router.post('/create', verifyAccessToken, createPostController);
-router.post('/like/:postId', verifyAccessToken, likePostController);
+router.post('/create', verifyAuthToken, createPostController);
+router.post('/like/:postId', verifyAuthToken, likePostController);
 
-router.put('/:postId', verifyAccessToken, updatePostController);
+router.put('/:postId', verifyAuthToken, updatePostController);
 
-router.delete('/:postId', verifyAccessToken, deletePostController);
+router.delete('/:postId', verifyAuthToken, deletePostController);
 
 export default router;

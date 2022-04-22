@@ -8,7 +8,7 @@ import register from '../controllers/authentication/registerController';
 import resetPassword from '../controllers/authentication/resetPasswordController';
 
 import googleOauth from '../controllers/authentication/googleAuthController';
-import { verifyAccessToken } from '../services/JwtServices';
+import { verifyAuthToken } from '../services/JwtServices';
 
 // eslint-disable-next-line new-cap
 const router = Express.Router();
@@ -19,7 +19,7 @@ router.post('/forgot-password', forgotPassword);
 router.post('/reset-password/:token', resetPassword);
 router.get('/email-verification/:token', emailVerification);
 router.get('/refresh-token', refreshToken);
-router.post('/logout', verifyAccessToken, logout);
+router.post('/logout', verifyAuthToken, logout);
 router.get('/google', googleOauth);
 
 export default router;

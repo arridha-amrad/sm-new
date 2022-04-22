@@ -8,9 +8,8 @@ export const setCookieOptions: CookieOptions = {
 };
 
 export const getRefreshTokenFromCookie = (req: Request) => {
-  return req.cookies.refreshToken as string | undefined;
-};
-
-export const getAuthTokenFromCookie = (req: Request) => {
-  return req.cookies.authToken as string | undefined;
+  const bearerToken = req.cookies.refreshToken as string | undefined;
+  if (bearerToken) {
+    return bearerToken.split(' ')[1];
+  }
 };

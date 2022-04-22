@@ -1,165 +1,80 @@
-import { Request, NextFunction, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import {
-  AccessTokenPayloadType,
-  LinkPayloadType,
-  RefreshTokenPayloadType,
-} from '../interfacesAndTypes/JwtTypes';
 import * as fs from 'fs';
-import { IUserModel } from '../models/user/IUserModel';
+import { NextFunction, Request, Response } from 'express';
 
 const publicKey = fs.readFileSync('keys/public.pem', 'utf-8');
 const privateKey = fs.readFileSync('keys/private.pem', 'utf-8');
 
-const emailLinkSignOptions: jwt.SignOptions = {
-  expiresIn: '7d',
-  algorithm: 'RS256',
-};
+type TokenTypes = 'link' | 'auth' | 'refresh';
 
-const emailLinkVerifyOptions: jwt.VerifyOptions = {
-  algorithms: ['RS256'],
-  maxAge: '7d',
-};
-
-export const createEmailLinkToken = (
-  email: string
+export const createToken = (
+  userId: string,
+  type: TokenTypes
 ): Promise<string | undefined> => {
   return new Promise((resolve, reject) => {
-    if (!email) {
-      reject(new Error('createEmailLinkToken error : email not provided'));
-    }
-    jwt.sign({ email }, privateKey, emailLinkSignOptions, (err, token) => {
-      if (err) {
-        reject(new Error(`createEmailLinkToken error : ${err.message}`));
-      }
-      resolve(token);
-    });
-  });
-};
-
-export const verifyTokenLink = (token: string): Promise<LinkPayloadType> => {
-  return new Promise((resolve, reject) => {
-    if (!token) {
-      reject(new Error('verifyEmailTokenLink error : token not provided'));
-    }
-    jwt.verify(token, publicKey, emailLinkVerifyOptions, (err, payload) => {
-      if (err) {
-        reject(new Error(`verifyEmailTokenLink error : ${err.message}`));
-      }
-      resolve(payload as LinkPayloadType);
-    });
-  });
-};
-
-//* ACCESS TOKEN
-const accessTokenSignOptions: jwt.SignOptions = {
-  expiresIn: '7d',
-  algorithm: 'RS256',
-};
-
-const accessTokenVerifyOptions: jwt.VerifyOptions = {
-  algorithms: ['RS256'],
-  maxAge: '7d',
-};
-
-export const signAccessToken = (
-  userId: string
-): Promise<string | undefined> => {
-  return new Promise((resolve, reject) => {
-    if (!userId) {
-      reject(new Error('signAccessToken error : userId not provided'));
-    }
-
-    jwt.sign({ userId }, privateKey, accessTokenSignOptions, (err, token) => {
-      if (err) {
-        reject(err);
-      }
-      resolve(`Bearer ${token}`);
-    });
-  });
-};
-
-// eslint-disable-next-line
-export function verifyAccessToken(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  const bearerToken = req.headers['authorization'] as string;
-  const token = bearerToken.split('Bearer ')[1];
-
-  if (!token) {
-    return res.status(401).send('no token');
-  }
-
-  return jwt.verify(
-    token,
-    publicKey,
-    accessTokenVerifyOptions,
-    (err, payload) => {
-      if (err && err.message === 'jwt expired') {
-        return res.status(403).send('token expired');
-      }
-      const verifyTokenPayload = payload as AccessTokenPayloadType | undefined;
-
-      if (verifyTokenPayload) {
-        req.userId = verifyTokenPayload.userId;
-        return next();
-      }
-    }
-  );
-}
-
-//* REFRESH TOKEN
-const refreshTokenSignOptions: jwt.SignOptions = {
-  expiresIn: '1y',
-  algorithm: 'RS256',
-};
-
-const refreshTokenVerifyOptions: jwt.VerifyOptions = {
-  algorithms: ['RS256'],
-  maxAge: '1y',
-};
-export const signRefreshToken = (
-  user: IUserModel
-): Promise<string | undefined> => {
-  return new Promise((resolve, reject) => {
-    if (!user) {
-      reject(new Error('signRefreshToken error : userId not provided'));
-    }
-    if (!user.jwtVersion) {
-      reject(new Error('signRefreshToken error : jwtVersion not provided'));
-    }
     jwt.sign(
-      { userId: user.id!, jwtVersion: user.jwtVersion },
+      { userId },
       privateKey,
-      refreshTokenSignOptions,
+      {
+        algorithm: 'RS256',
+        expiresIn: type === 'link' ? '1d' : type === 'auth' ? '2h' : '1d',
+      },
       (err, token) => {
         if (err) {
-          reject(new Error(`signRefreshToken error : ${err.message}`));
-        } else {
-          resolve(`Bearer ${token}`);
+          reject(new Error(`Failure on creating token : ${err.message}`));
         }
+        resolve(token);
       }
     );
   });
 };
 
-export const verifyRefreshToken = (
-  oldRefreshToken: string
-): Promise<RefreshTokenPayloadType | undefined> => {
+export const verifyToken = (
+  token: string,
+  type: TokenTypes
+): Promise<string | undefined> => {
   return new Promise((resolve, reject) => {
-    if (!oldRefreshToken) {
-      reject(
-        new Error('verifyRefreshToken error : old refresh token not provided')
-      );
-    }
-    const token = oldRefreshToken.split(' ')[1];
-    jwt.verify(token, publicKey, refreshTokenVerifyOptions, (err, payload) => {
-      if (err) {
-        reject(new Error(`verifyRefreshToken error : ${err.message}`));
+    jwt.verify(
+      token,
+      publicKey,
+      {
+        algorithms: ['RS256'],
+        maxAge: type === 'link' ? '1d' : type === 'auth' ? '2h' : '1d',
+      },
+      (err, payload) => {
+        if (err) {
+          reject(new Error(`token verification error : ${err.message}`));
+        }
+        const { userId } = payload as { userId: string };
+        resolve(userId);
       }
-      resolve(payload as RefreshTokenPayloadType);
-    });
+    );
   });
+};
+
+export const verifyAuthToken = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const bearerToken = req.headers['authorization'];
+  if (bearerToken) {
+    const token = bearerToken.split(' ')[1];
+    jwt.verify(
+      token,
+      publicKey,
+      {
+        algorithms: ['RS256'],
+        maxAge: '2h',
+      },
+      (err, payload) => {
+        if (err && err.message === 'jwt expired') {
+          return res.status(403).send('token expired');
+        }
+        const { userId } = payload as { userId: string };
+        req.userId = userId;
+        next();
+      }
+    );
+  }
 };

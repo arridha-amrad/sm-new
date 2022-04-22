@@ -1,10 +1,6 @@
 import { Request, Response } from 'express';
-import {
-  signAccessToken,
-  signRefreshToken,
-  verifyRefreshToken,
-} from '../../services/JwtServices';
-import { findUserById } from '../../services/UserServices';
+import { createToken, verifyToken } from '../../services/JwtServices';
+import { findUser, findUserById } from '../../services/UserServices';
 import {
   getRefreshTokenFromCookie,
   setCookieOptions,
@@ -12,23 +8,41 @@ import {
 
 export default async (req: Request, res: Response) => {
   const refreshToken = getRefreshTokenFromCookie(req);
+
   try {
     if (refreshToken) {
-      const refreshTokenPayload = await verifyRefreshToken(refreshToken);
-      if (refreshTokenPayload) {
-        const { jwtVersion, userId } = refreshTokenPayload;
-        const user = await findUserById(userId, 'jwtVersion');
-        if (jwtVersion === user?.jwtVersion) {
-          const newAccessToken = await signAccessToken(userId);
-          const newRefreshToken = await signRefreshToken(user);
-          return res
-            .cookie(
-              process.env.COOKIE_REFRESH_TOKEN,
-              newRefreshToken,
-              setCookieOptions
-            )
-            .json({ token: newAccessToken });
+      const userId = await verifyToken(refreshToken, 'refresh');
+      const user = await findUser({ refreshTokens: refreshToken });
+      // Refresh Token reuse detected
+      if (!user) {
+        const hackedUser = await findUserById(userId!);
+        if (hackedUser) {
+          hackedUser.refreshTokens = [];
+          await hackedUser.save();
         }
+        return res.sendStatus(403);
+      }
+      const newRefreshTokens = user.refreshTokens.filter(
+        (rt) => rt !== refreshToken
+      );
+      const newRefreshToken = await createToken(user.id, 'refresh');
+      const newAuthToken = await createToken(user.id, 'auth');
+
+      if (newRefreshToken && newAuthToken) {
+        user.refreshTokens = [...newRefreshTokens, newRefreshToken];
+        await user.save();
+
+        const bearerRefToken = `Bearer ${newRefreshToken}`;
+        const bearerAuthToken = `Bearer ${newAuthToken}`;
+
+        return res
+          .status(200)
+          .cookie(
+            process.env.COOKIE_REFRESH_TOKEN,
+            bearerRefToken,
+            setCookieOptions
+          )
+          .json({ token: bearerAuthToken });
       }
     }
     return res.sendStatus(401);

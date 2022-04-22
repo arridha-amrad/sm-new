@@ -1,8 +1,9 @@
 import { FilterQuery, QueryOptions, UpdateQuery } from 'mongoose';
 import { IUserModel } from '../models/user/IUserModel';
 import UserModel from '../models/user/UserModel';
+import { AnyKeys } from 'mongoose';
 
-export const createUser = async (user: IUserModel): Promise<IUserModel> => {
+export const createUser = async (user: AnyKeys<IUserModel>) => {
   const newUser = new UserModel(user);
   return newUser.save();
 };
@@ -24,7 +25,9 @@ export const findUserByIdAndUpdate = async (
   update: UpdateQuery<IUserModel>,
   options?: QueryOptions | null
 ) => {
-  return UserModel.findByIdAndUpdate(id, update, options);
+  return UserModel.findByIdAndUpdate(id, update, {
+    new: true,
+  });
 };
 
 export const findUser = async (query: FilterQuery<IUserModel>) => {
@@ -33,4 +36,15 @@ export const findUser = async (query: FilterQuery<IUserModel>) => {
 
 export const findUsers = async (filter: FilterQuery<IUserModel>) => {
   return UserModel.find(filter).select('_id username avatarURL fullName');
+};
+
+export const removeRefreshToken = async (refreshToken: string) => {
+  const user = await findUser({ refreshTokens: refreshToken });
+  if (user) {
+    const filteredToken = user.refreshTokens.filter(
+      (rt) => rt !== refreshToken
+    );
+    user.refreshTokens = filteredToken;
+    await user.save();
+  }
 };

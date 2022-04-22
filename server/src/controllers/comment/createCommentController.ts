@@ -1,11 +1,7 @@
 import { Request, Response } from 'express';
-import mongoose from 'mongoose';
 import { NotificationType } from '../../models/notification/INotificationModel';
 import { addComment } from '../../services/CommentService';
-import {
-  createNotification,
-  findOneNotification,
-} from '../../services/NotificationService';
+import { createNotification } from '../../services/NotificationService';
 import { findOnePost } from '../../services/PostService';
 
 export default async (req: Request, res: Response) => {

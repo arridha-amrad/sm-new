@@ -3,15 +3,13 @@ import createCommentController from '../controllers/comment/createCommentControl
 import deleteCommentController from '../controllers/comment/deleteCommentController';
 import likeCommentController from '../controllers/comment/likeCommentController';
 import updateCommentController from '../controllers/comment/updateCommentController';
-import { verifyAccessToken } from '../services/JwtServices';
+import { verifyAuthToken } from '../services/JwtServices';
 
 const router = express.Router();
 
-router.post('/:postId', verifyAccessToken, createCommentController);
-router.post('/like/:commentId', verifyAccessToken, likeCommentController);
-
-router.delete('/:commentId', verifyAccessToken, deleteCommentController);
-
-router.put('/:commentId', verifyAccessToken, updateCommentController);
+router.post('/:postId', verifyAuthToken, createCommentController);
+router.post('/like/:commentId', verifyAuthToken, likeCommentController);
+router.delete('/:commentId', verifyAuthToken, deleteCommentController);
+router.put('/:commentId', verifyAuthToken, updateCommentController);
 
 export default router;
