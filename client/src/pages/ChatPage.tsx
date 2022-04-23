@@ -4,24 +4,16 @@ import ChatHeader from "../components/Chats/ConversationHeader";
 import Conversations from "../components/Chats/Conversations";
 import Messages from "../components/Chats/Messages";
 import {
-  resetSelectedConversation,
   selectChatState,
 } from "../features/chats/chatSlice";
 import CreateChat from "../features/chats/SendMessageFeature";
 import SearchUserFeature from "../features/chats/SearchUserFeature";
-import { useEffect } from "react";
 
 import "./style.css";
 import { ToastContainer } from "react-toastify";
 
 const ChatPage = () => {
   const { selectedConversation } = useAppSelector(selectChatState);
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    dispatch(resetSelectedConversation());
-    // eslint-disable-next-line
-  }, []);
 
   return (
     <section className="chat-page">

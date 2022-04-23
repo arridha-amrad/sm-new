@@ -25,9 +25,15 @@ const ConversationHeader: FC<Props> = ({ selectedConversation }) => {
   const handleShow = () => setShow(true);
 
   useEffect(() => {
+    let isMounted = true
     socket?.on("setTypingSC", ({ isTyping }) => {
-      setIsTyping(isTyping);
+      if(isMounted){
+        setIsTyping(isTyping);
+      }
     });
+    return () => {
+      isMounted = false
+    }
     // eslint-disable-next-line
   }, [socket]);
 

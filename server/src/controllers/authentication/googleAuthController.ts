@@ -116,14 +116,14 @@ export default async (req: Request, res: Response) => {
     }
     const refreshToken = await createToken(myUser.id, 'refresh');
     if (refreshToken) {
-      // refToken without bearer keyword
-      const refToken = refreshToken.split(' ')[1];
-      myUser.refreshTokens.push(refToken);
+      myUser.refreshTokens.push(refreshToken);
       await myUser.save();
+
+      const beareRefToken = `Bearer ${refreshToken}`
 
       res.cookie(
         process.env.COOKIE_REFRESH_TOKEN,
-        refreshToken,
+        beareRefToken,
         setCookieOptions
       );
       res.redirect(process.env.CLIENT_ORIGIN);

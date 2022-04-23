@@ -18,7 +18,7 @@ import {
 } from "./features/notification/notificationSlice";
 import ChatPage from "./pages/ChatPage";
 import ProfilePage from "./pages/ProfilePage";
-import { receiveMessage } from "./features/chats/chatSlice";
+import { receiveMessage, setConversations } from "./features/chats/chatSlice";
 
 const App = () => {
   const dispatch = useAppDispatch();
@@ -30,6 +30,8 @@ const App = () => {
   useEffect(() => {
     let isMounted = true;
     const socketIo = io("http://localhost:5000");
+    console.log("socketIo : ", socketIo);
+    
     setSocket(socketIo);
     const fetchUser = async () => {
       try {
@@ -38,6 +40,7 @@ const App = () => {
         const { data } = await axiosInstance.get("/api/user/me");
         dispatch(setLoginUser(data.user));
         dispatch(setNotifications(data.notifications));
+        dispatch(setConversations(data.conversations))
       } finally {
         isMounted && setIsLoading(false);
       }

@@ -1,11 +1,12 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import InputPassword from "../../components/InputPassword";
 import MyAlert from "../../components/MyAlert";
 import useFormHooks from "../../utils/useFormHooks";
 import { LoginDTO } from "./IAuthentication";
 import { loginAction, selectAuthState } from "./authSlice";
+import { getSocket } from "../../mySocket";
 
 const Login = () => {
   type LoginFieldValidator = Partial<LoginDTO>;
@@ -27,6 +28,8 @@ const Login = () => {
       isValid: Object.keys(errors).length <= 0,
     };
   };
+
+  const [params] = useSearchParams("")
 
   const login = async () => {
     try {
@@ -57,6 +60,12 @@ const Login = () => {
 
   useEffect(() => {
     let isMounted = true;
+    if(params.get("e")) {
+      setAlert({
+        text: params.get("e")!,
+        type: "error"
+      })
+    }
     if (loginUser && isMounted) {
       navigate("/");
     }

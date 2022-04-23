@@ -12,7 +12,7 @@ interface OnlineUser {
   socketId: string;
 }
 
-const onlineUsers: OnlineUser[] = [];
+let onlineUsers: OnlineUser[] = [];
 
 const addUser = (username: string, socketId: string) => {
   const index = onlineUsers.findIndex((user) => user.username === username);
@@ -24,7 +24,8 @@ const addUser = (username: string, socketId: string) => {
 };
 
 const removeUser = (socketId: string) => {
-  return onlineUsers.filter((user) => user.socketId !== socketId);
+  const remainingUsers =  onlineUsers.filter((user) => user.socketId !== socketId);
+  onlineUsers = remainingUsers
 };
 
 const getUser = (username: string) => {
@@ -99,8 +100,8 @@ export const initIo = (httpServer: HTTPServer) => {
     });
 
     socket.on('disconnect', () => {
-      const users = removeUser(socket.id);
-      console.log('an user left. -- remaining users : ', users);
+      removeUser(socket.id);
+      console.log('an user left. -- remaining users : ', onlineUsers);
     });
   });
 };

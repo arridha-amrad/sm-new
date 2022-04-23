@@ -15,7 +15,6 @@ const Messages = () => {
   const { selectedConversation, messages } = useAppSelector(selectChatState);
   const { loginUser } = useAppSelector(selectAuthState);
   const dispatch = useAppDispatch();
-
   useEffect(() => {
     const controller = new AbortController();
     let isMounted = true;
@@ -27,6 +26,8 @@ const Messages = () => {
           signal: controller.signal,
         }
       );
+      console.log("messages data : ", data);
+      
       dispatch(setMessages(data.messages));
       isMounted && setIsLoading(false);
     };

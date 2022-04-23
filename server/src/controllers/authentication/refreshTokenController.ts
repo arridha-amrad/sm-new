@@ -32,17 +32,14 @@ export default async (req: Request, res: Response) => {
         user.refreshTokens = [...newRefreshTokens, newRefreshToken];
         await user.save();
 
-        const bearerRefToken = `Bearer ${newRefreshToken}`;
-        const bearerAuthToken = `Bearer ${newAuthToken}`;
-
         return res
           .status(200)
           .cookie(
             process.env.COOKIE_REFRESH_TOKEN,
-            bearerRefToken,
+            `Bearer ${newRefreshToken}`,
             setCookieOptions
           )
-          .json({ token: bearerAuthToken });
+          .json({ token: `Bearer ${newAuthToken}` });
       }
     }
     return res.sendStatus(401);

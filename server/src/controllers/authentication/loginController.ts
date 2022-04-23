@@ -35,13 +35,15 @@ export default async (req: Request, res: Response) => {
     if (!user.isVerified) {
       return res.status(400).send(emailNotVerified);
     }
+    if(user && user.strategy !== "default") {
+      return res.status(400).send("This account is registered with different strategy")
+    }
     const isMatch = await argon2.verify(user.password!, password!);
     if (!isMatch) {
       return res.status(400).send('Password not match');
     }
     const authToken = await createToken(user.id, 'auth');
     const refreshToken = await createToken(user.id, 'refresh');
-
     if (authToken && refreshToken) {
       // ref token without bearer keyword
       user.refreshTokens.push(refreshToken);

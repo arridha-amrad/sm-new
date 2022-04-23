@@ -105,12 +105,6 @@ const chatSlice = createSlice({
       }
       state.messages.push(message);
     },
-    resetSelectedConversation: (state) => {
-      state.selectedConversation = null;
-      state.selectedConversationIndex = null;
-      state.selectedReceiverId = null;
-      state.selectedReceiverUsername = null;
-    },
   },
   extraReducers: (builder) => {
     builder.addCase(sendMessageAction.fulfilled, (state, action) => {
@@ -133,7 +127,6 @@ export const {
   setConversations,
   selectConversation,
   setMessages,
-  resetSelectedConversation,
   updateConversations,
 } = chatSlice.actions;
 

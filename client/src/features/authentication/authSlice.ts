@@ -4,6 +4,8 @@ import { setToken } from "../../utils/axiosInterceptor";
 import { AuthState, LoginDTO, RegisterDTO, User } from "./IAuthentication";
 import { loginAPI, logoutAPI, registerAPI } from "./authApi";
 import { setConversations } from "../chats/chatSlice";
+import { getSocket, setSocket } from "../../mySocket";
+import { io } from "socket.io-client";
 
 const initialState: AuthState = {
   isLoadingAuth: true,
@@ -25,10 +27,19 @@ export const registerAction = createAsyncThunk(
 export const loginAction = createAsyncThunk(
   "user/login",
   async (body: LoginDTO, thunkAPI) => {
+    let currSocket = getSocket()
+    console.log("curr socket : ", currSocket);
+    
+    if(!currSocket?.id) {
+      const socket = io("http://localhost:5000")
+      setSocket(socket)
+      currSocket = socket
+    }
     try {
       const { data } = await loginAPI(body);
       setToken(data.token);
       thunkAPI.dispatch(setConversations(data.conversations));
+      currSocket?.emit("addUserCS", data.user.username)
       return data;
     } catch (err: any) {
       return thunkAPI.rejectWithValue(err.response.data);
