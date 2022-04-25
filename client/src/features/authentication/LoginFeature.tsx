@@ -6,7 +6,6 @@ import MyAlert from "../../components/MyAlert";
 import useFormHooks from "../../utils/useFormHooks";
 import { LoginDTO } from "./IAuthentication";
 import { loginAction, selectAuthState } from "./authSlice";
-import { getSocket } from "../../mySocket";
 
 const Login = () => {
   type LoginFieldValidator = Partial<LoginDTO>;
@@ -29,7 +28,7 @@ const Login = () => {
     };
   };
 
-  const [params] = useSearchParams("")
+  const [params] = useSearchParams("");
 
   const login = async () => {
     try {
@@ -60,11 +59,11 @@ const Login = () => {
 
   useEffect(() => {
     let isMounted = true;
-    if(params.get("e")) {
+    if (params.get("e")) {
       setAlert({
         text: params.get("e")!,
-        type: "error"
-      })
+        type: "error",
+      });
     }
     if (loginUser && isMounted) {
       navigate("/");

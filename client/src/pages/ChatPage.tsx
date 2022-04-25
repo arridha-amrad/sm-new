@@ -1,11 +1,9 @@
 import { Container } from "react-bootstrap";
-import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { useAppSelector } from "../app/hooks";
 import ChatHeader from "../components/Chats/ConversationHeader";
 import Conversations from "../components/Chats/Conversations";
 import Messages from "../components/Chats/Messages";
-import {
-  selectChatState,
-} from "../features/chats/chatSlice";
+import { selectChatState } from "../features/chats/chatSlice";
 import CreateChat from "../features/chats/SendMessageFeature";
 import SearchUserFeature from "../features/chats/SearchUserFeature";
 
@@ -28,7 +26,7 @@ const ChatPage = () => {
             </div>
             <Conversations />
           </div>
-          {selectedConversation && (
+          {selectedConversation ? (
             <>
               <div className="partner-info">
                 <ChatHeader selectedConversation={selectedConversation} />
@@ -40,6 +38,11 @@ const ChatPage = () => {
                 <CreateChat />
               </div>
             </>
+          ) : (
+            <div className=" d-md-none d-block">
+              <h2 className="p-3">Your Chats</h2>
+              <Conversations />
+            </div>
           )}
         </div>
         <ToastContainer

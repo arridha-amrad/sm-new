@@ -1,8 +1,7 @@
 import { Link } from "react-router-dom";
-import GoogleLogin from "../components/GoogleLogin";
-import LoginForm from "../features/authentication/LoginFeature";
+import ForgotPasswordForm from "../features/authentication/ForgotPasswordFeature";
 
-const Login = () => {
+const ForgotPasswordPage = () => {
   return (
     <section className="d-flex flex-column min-vh-100 overflow-hidden">
       <div className="flex-grow-1 d-flex align-items-center  justify-content-center">
@@ -10,23 +9,15 @@ const Login = () => {
           style={{ width: "400px" }}
           className="d-flex flex-column gap-3 p-4 border rounded shadow-sm"
         >
-          <h1 className="fw-bold">Login</h1>
+          <h1 className="fw-bold">Forgot Password</h1>
 
-          <LoginForm />
+          <ForgotPasswordForm />
 
-          <small>
-            Forgot password?
-            <Link className=" ms-1 text-decoration-none" to="/register">
-              click here
-            </Link>
-          </small>
           <small className=" text-center">
-            Don't have an account?
-            <Link className=" ms-1 text-decoration-none" to="/register">
-              register
+            <Link className=" ms-1 text-decoration-none" to="/login">
+              back to login
             </Link>
           </small>
-          <GoogleLogin />
         </div>
       </div>
       <div className="flex-grow-0 d-flex align-items-center justify-content-center flex-column my-3">
@@ -38,4 +29,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default ForgotPasswordPage;

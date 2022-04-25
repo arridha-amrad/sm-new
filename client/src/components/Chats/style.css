@@ -30,7 +30,8 @@
 .btn-toggle-conversation {
   display: block;
   border: none;
-  background-color: transparent;
+  height: 50px;
+  width: 50px;
 }
 
 @media screen and (min-width: 768px) {

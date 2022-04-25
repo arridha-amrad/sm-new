@@ -54,6 +54,12 @@ const chatSlice = createSlice({
   name: "chat",
   initialState,
   reducers: {
+    resetSelectedConversation: (state) => {
+      state.selectedConversation = null;
+      state.selectedConversationIndex = null;
+      state.selectedReceiverId = null;
+      state.selectedReceiverUsername = null;
+    },
     selectConversation: (
       state,
       action: PayloadAction<SelectedConversation>
@@ -123,6 +129,7 @@ const chatSlice = createSlice({
 
 export const {
   receiveMessage,
+  resetSelectedConversation,
   addConversation,
   setConversations,
   selectConversation,

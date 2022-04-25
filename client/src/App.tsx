@@ -6,9 +6,9 @@ import {
   selectAuthState,
   setLoginUser,
 } from "./features/authentication/authSlice";
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
+import Home from "./pages/HomePage";
+import Login from "./pages/LoginPage";
+import Register from "./pages/RegisterPage";
 import axiosInstance, { setToken } from "./utils/axiosInterceptor";
 import { io } from "socket.io-client";
 import { getSocket, setSocket } from "./mySocket";
@@ -19,6 +19,8 @@ import {
 import ChatPage from "./pages/ChatPage";
 import ProfilePage from "./pages/ProfilePage";
 import { receiveMessage, setConversations } from "./features/chats/chatSlice";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
 
 const App = () => {
   const dispatch = useAppDispatch();
@@ -30,8 +32,6 @@ const App = () => {
   useEffect(() => {
     let isMounted = true;
     const socketIo = io("http://localhost:5000");
-    console.log("socketIo : ", socketIo);
-    
     setSocket(socketIo);
     const fetchUser = async () => {
       try {
@@ -40,7 +40,7 @@ const App = () => {
         const { data } = await axiosInstance.get("/api/user/me");
         dispatch(setLoginUser(data.user));
         dispatch(setNotifications(data.notifications));
-        dispatch(setConversations(data.conversations))
+        dispatch(setConversations(data.conversations));
       } finally {
         isMounted && setIsLoading(false);
       }
@@ -101,6 +101,8 @@ const App = () => {
       <Route path="/profile" element={<ProfilePage />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+      <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
     </Routes>
   );
 };

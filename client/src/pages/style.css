@@ -93,21 +93,6 @@
   border-bottom: 1px solid #ddd;
 }
 
-/* .partners {
-  border: 1px;
-}
-
-.chats {
-  grid-column: 2 / 3;
-  grid-row: 2 / 3;
-  overflow: auto;
-}
-
-.chat-input {
-  grid-column: 2 / 3;
-  grid-row: 3 / 4;
-} */
-
 .spacer {
   height: 1rem;
 }

@@ -1,10 +1,9 @@
 import { FC, useEffect, useState } from "react";
-import Modal from "react-bootstrap/esm/Modal";
-import { useAppSelector } from "../../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { selectAuthState } from "../../features/authentication/authSlice";
+import { resetSelectedConversation } from "../../features/chats/chatSlice";
 import { Conversation } from "../../features/chats/IChat";
 import { getSocket } from "../../mySocket";
-import Conversations from "./Conversations";
 
 import "./style.css";
 
@@ -15,42 +14,42 @@ interface Props {
 const ConversationHeader: FC<Props> = ({ selectedConversation }) => {
   const socket = getSocket();
   const { loginUser } = useAppSelector(selectAuthState);
+  const dispatch = useAppDispatch();
   const user = selectedConversation.users.find(
     (user) => user._id !== loginUser?._id
   );
-  const [show, setShow] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-
   useEffect(() => {
-    let isMounted = true
+    let isMounted = true;
     socket?.on("setTypingSC", ({ isTyping }) => {
-      if(isMounted){
+      if (isMounted) {
         setIsTyping(isTyping);
       }
     });
     return () => {
-      isMounted = false
-    }
+      isMounted = false;
+    };
     // eslint-disable-next-line
   }, [socket]);
 
   return (
     <div className="d-flex h-100 p-1">
-      <button onClick={handleShow} className="btn-toggle-conversation">
+      <button
+        onClick={() => dispatch(resetSelectedConversation())}
+        className="btn-toggle-conversation rounded-circle h-auto"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          width="30"
-          height="30"
+          width="16"
+          height="16"
           fill="currentColor"
-          className="bi bi-list"
+          className="bi bi-chevron-left"
           viewBox="0 0 16 16"
         >
           <path
             fillRule="evenodd"
-            d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"
+            d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"
           />
         </svg>
       </button>
@@ -70,15 +69,6 @@ const ConversationHeader: FC<Props> = ({ selectedConversation }) => {
           </div>
         </div>
       </div>
-
-      <Modal fullscreen show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Your Chats</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Conversations />
-        </Modal.Body>
-      </Modal>
     </div>
   );
 };

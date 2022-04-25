@@ -1,8 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
-import { setToken } from "../../utils/axiosInterceptor";
+import axiosInstance, { setToken } from "../../utils/axiosInterceptor";
 import { AuthState, LoginDTO, RegisterDTO, User } from "./IAuthentication";
-import { loginAPI, logoutAPI, registerAPI } from "./authApi";
 import { setConversations } from "../chats/chatSlice";
 import { getSocket, setSocket } from "../../mySocket";
 import { io } from "socket.io-client";
@@ -12,11 +11,27 @@ const initialState: AuthState = {
   loginUser: null,
 };
 
+const URL = "/api/auth";
+
+export const forgotPasswordAction = createAsyncThunk(
+  "user/forgotPassword",
+  async (email: string, thunkAPI) => {
+    try {
+      const { data } = await axiosInstance.post(`${URL}/forgot-password`, {
+        email,
+      });
+      return data.message;
+    } catch (err: any) {
+      return thunkAPI.rejectWithValue(err.response.data);
+    }
+  }
+);
+
 export const registerAction = createAsyncThunk(
   "user/registration",
   async (body: RegisterDTO, thunkAPI) => {
     try {
-      const { data } = await registerAPI(body);
+      const { data } = await axiosInstance.post(`${URL}/register`, body);
       return data.message;
     } catch (err: any) {
       return thunkAPI.rejectWithValue(err.response.data);
@@ -27,19 +42,17 @@ export const registerAction = createAsyncThunk(
 export const loginAction = createAsyncThunk(
   "user/login",
   async (body: LoginDTO, thunkAPI) => {
-    let currSocket = getSocket()
-    console.log("curr socket : ", currSocket);
-    
-    if(!currSocket?.id) {
-      const socket = io("http://localhost:5000")
-      setSocket(socket)
-      currSocket = socket
+    let currSocket = getSocket();
+    if (!currSocket?.id) {
+      const socket = io("http://localhost:5000");
+      setSocket(socket);
+      currSocket = socket;
     }
     try {
-      const { data } = await loginAPI(body);
+      const { data } = await axiosInstance.post(`${URL}/login`, body);
       setToken(data.token);
       thunkAPI.dispatch(setConversations(data.conversations));
-      currSocket?.emit("addUserCS", data.user.username)
+      currSocket?.emit("addUserCS", data.user.username);
       return data;
     } catch (err: any) {
       return thunkAPI.rejectWithValue(err.response.data);
@@ -48,7 +61,7 @@ export const loginAction = createAsyncThunk(
 );
 
 export const logoutAction = createAsyncThunk("user/logout", async () => {
-  await logoutAPI();
+  await axiosInstance.post(`${URL}/logout`);
 });
 
 export const userSlice = createSlice({
