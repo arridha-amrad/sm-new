@@ -28,7 +28,9 @@ axiosInstance.interceptors.response.use(
   (response: AxiosResponse) => {
     return response;
   },
-  async (error: any) => {    
+  async (error: any) => {
+    console.log("err : ", error);
+
     if (error && error.response.data === "token expired") {
       const prevRequest = error.config;
       return axiosInstance

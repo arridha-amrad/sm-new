@@ -1,14 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { selectAuthState } from "../../features/authentication/authSlice";
 import { selectChatState, setMessages } from "../../features/chats/chatSlice";
 import { Message } from "../../features/chats/IChat";
 import axiosInstance from "../../utils/axiosInterceptor";
 import timeSetter from "../../utils/timeSetter";
-import ScrollableFeed from "react-scrollable-feed";
+import { Spinner } from "react-bootstrap";
 
 import "./style.css";
-import { Spinner } from "react-bootstrap";
 
 const Messages = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -26,8 +25,6 @@ const Messages = () => {
           signal: controller.signal,
         }
       );
-      console.log("messages data : ", data);
-      
       dispatch(setMessages(data.messages));
       isMounted && setIsLoading(false);
     };
@@ -42,6 +39,12 @@ const Messages = () => {
   const isSentByMe = (message: Message) =>
     message.sender._id === loginUser?._id;
 
+  const lastMessage = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    lastMessage.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
   if (isLoading) {
     return (
       <div className="d-flex h-100 w-100 align-items-center justify-content-center">
@@ -55,10 +58,7 @@ const Messages = () => {
       className="d-flex flex-column h-100 w-100"
       style={{ overflow: "auto" }}
     >
-      <ScrollableFeed
-        forceScroll
-        className="flex-grow-1 d-flex flex-column p-3"
-      >
+      <div className="flex-grow-1 d-flex flex-column p-3">
         {messages.map((message) => (
           <div
             key={message._id}
@@ -86,7 +86,8 @@ const Messages = () => {
             </small>
           </div>
         ))}
-      </ScrollableFeed>
+        <div ref={lastMessage} />
+      </div>
     </div>
   );
 };

@@ -33,11 +33,16 @@ const App = () => {
     let isMounted = true;
     const socketIo = io("http://localhost:5000");
     setSocket(socketIo);
+    const controller = new AbortController();
     const fetchUser = async () => {
       try {
-        const res = await axiosInstance.get("/api/auth/refresh-token");
+        const res = await axiosInstance.get("/api/auth/refresh-token", {
+          signal: controller.signal,
+        });
         setToken(res.data.token);
-        const { data } = await axiosInstance.get("/api/user/me");
+        const { data } = await axiosInstance.get("/api/user/me", {
+          signal: controller.signal,
+        });
         dispatch(setLoginUser(data.user));
         dispatch(setNotifications(data.notifications));
         dispatch(setConversations(data.conversations));
@@ -47,6 +52,7 @@ const App = () => {
     };
     fetchUser();
     return () => {
+      controller.abort();
       isMounted = false;
       socket?.disconnect();
     };

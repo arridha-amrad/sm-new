@@ -1,18 +1,33 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../app/hooks";
 import PostCard from "../features/post/PostCard";
-import { getPostsAction, selectPostState } from "../features/post/postSlice";
+import { selectPostState, setPosts } from "../features/post/postSlice";
+import axiosInstance from "../utils/axiosInterceptor";
 
 const HomePosts = () => {
-  const { posts, isFetchingPosts } = useAppSelector(selectPostState);
+  const [loading, setLoading] = useState(true);
+  const { posts } = useAppSelector(selectPostState);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(getPostsAction());
+    const controller = new AbortController();
+    let isMounted = true;
+    const fetchPosts = async () => {
+      const { data } = await axiosInstance.get("/api/post", {
+        signal: controller.signal,
+      });
+      dispatch(setPosts(data.posts));
+    };
+    fetchPosts();
+    isMounted && setLoading(false);
+    return () => {
+      controller.abort();
+      isMounted = false;
+    };
     // eslint-disable-next-line
   }, []);
 
-  if (isFetchingPosts) {
+  if (loading) {
     return <p>loading...</p>;
   }
 

@@ -8,10 +8,6 @@ export const createPostAPI = async (data: FormData) => {
   return axiosInstance.post<{ post: Post }>(`${url}/create`, data);
 };
 
-export const getPostsAPI = async () => {
-  return axiosInstance.get<{ posts: Post[] }>(`${url}`);
-};
-
 export const getPostByIdAPI = async (postId: string) => {
   return axiosInstance.get<{ post: Post }>(`${url}/${postId}`);
 };

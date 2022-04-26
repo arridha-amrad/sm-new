@@ -5,7 +5,6 @@ import { Post, PostState, UpdatePostDTO } from "./IPost";
 import {
   createPostAPI,
   deletePostAPI,
-  getPostsAPI,
   likePostAPI,
   updatePostAPI,
 } from "./postApi";
@@ -64,18 +63,6 @@ export const createPostAction = createAsyncThunk(
     try {
       const { data } = await createPostAPI(formData);
       return data.post;
-    } catch (err: any) {
-      return thunkAPI.rejectWithValue(err.response.data);
-    }
-  }
-);
-
-export const getPostsAction = createAsyncThunk(
-  "post/getPosts",
-  async (_, thunkAPI) => {
-    try {
-      const { data } = await getPostsAPI();
-      return data.posts;
     } catch (err: any) {
       return thunkAPI.rejectWithValue(err.response.data);
     }
@@ -252,14 +239,6 @@ export const postSlice = createSlice({
         }
         continue;
       }
-    });
-    builder.addCase(getPostsAction.fulfilled, (state, action) => {
-      const posts = action.payload as WritableDraft<Post[]>;
-      state.isFetchingPosts = false;
-      state.posts = posts;
-    });
-    builder.addCase(getPostsAction.rejected, (state) => {
-      state.isFetchingPosts = false;
     });
     builder.addCase(createPostAction.fulfilled, (state, action) => {
       const newPost = action.payload as WritableDraft<Post>;
