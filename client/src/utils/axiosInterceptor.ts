@@ -29,9 +29,7 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   async (error: any) => {
-    console.log("err : ", error);
-
-    if (error && error.response.data === "token expired") {
+    if (error.response.data === "token expired") {
       const prevRequest = error.config;
       return axiosInstance
         .get<{ token: string }>("/api/auth/refresh-token")
