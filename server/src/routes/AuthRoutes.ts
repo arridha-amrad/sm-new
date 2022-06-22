@@ -1,25 +1,21 @@
-import Express from 'express';
-import emailVerification from '../controllers/authentication/emailVerificationController';
-import forgotPassword from '../controllers/authentication/forgotPasswordController';
-import login from '../controllers/authentication/loginController';
-import logout from '../controllers/authentication/logoutController';
-import refreshToken from '../controllers/authentication/refreshTokenController';
-import register from '../controllers/authentication/registerController';
-import resetPassword from '../controllers/authentication/resetPasswordController';
+import { Router } from 'express';
+import AuthController from '../controllers/AuthController';
+import { IRoutes } from './IRoutes';
 
-import googleOauth from '../controllers/authentication/googleAuthController';
-import { verifyAuthToken } from '../services/JwtServices';
+class NewAuthRoutes implements IRoutes {
+  router: Router;
+  constructor() {
+    this.router = Router();
+    this.routes();
+  }
+  routes() {
+    // login
+    this.router.post('/login', AuthController.login);
+    // google oauth
+    this.router.post('/google-oauth', AuthController.googleOAuth);
+    // logout
+    this.router.post('/logout', AuthController.logout);
+  }
+}
 
-// eslint-disable-next-line new-cap
-const router = Express.Router();
-
-router.post('/login', login);
-router.post('/register', register);
-router.post('/forgot-password', forgotPassword);
-router.post('/reset-password/:token', resetPassword);
-router.get('/email-verification/:token', emailVerification);
-router.get('/refresh-token', refreshToken);
-router.post('/logout', verifyAuthToken, logout);
-router.get('/google', googleOauth);
-
-export default router;
+export default new NewAuthRoutes().router;

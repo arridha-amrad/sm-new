@@ -8,7 +8,7 @@ import {
   createConversation,
   findConversation,
   findConversationById,
-} from '../../services/ConversationService';
+} from '../../services/ConversationServices';
 
 export default async (req: Request, res: Response) => {
   const { conversationId, isGroup } = req.query;

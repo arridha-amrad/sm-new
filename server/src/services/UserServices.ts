@@ -3,48 +3,68 @@ import { IUserModel } from '../models/user/IUserModel';
 import UserModel from '../models/user/UserModel';
 import { AnyKeys } from 'mongoose';
 
-export const createUser = async (user: AnyKeys<IUserModel>) => {
-  const newUser = new UserModel(user);
-  return newUser.save();
-};
-
-export const findUserByUsernameOrEmail = async (usernameOrEmail: string) => {
-  return UserModel.findOne(
-    usernameOrEmail.includes('@')
-      ? { email: usernameOrEmail }
-      : { username: usernameOrEmail }
-  );
-};
-
-export const findUserById = async (userId: string, selects?: string) => {
-  return UserModel.findById(userId).select(selects);
-};
-
-export const findUserByIdAndUpdate = async (
-  id: string,
-  update: UpdateQuery<IUserModel>,
-  options?: QueryOptions | null
-) => {
-  return UserModel.findByIdAndUpdate(id, update, {
-    new: true,
-  });
-};
-
-export const findUser = async (query: FilterQuery<IUserModel>) => {
-  return UserModel.findOne(query);
-};
-
-export const findUsers = async (filter: FilterQuery<IUserModel>) => {
-  return UserModel.find(filter).select('_id username avatarURL fullName');
-};
-
-export const removeRefreshToken = async (refreshToken: string) => {
-  const user = await findUser({ refreshTokens: refreshToken });
-  if (user) {
-    const filteredToken = user.refreshTokens.filter(
-      (rt) => rt !== refreshToken
-    );
-    user.refreshTokens = filteredToken;
-    await user.save();
+class UserServices {
+  async findUser(query: FilterQuery<IUserModel>) {
+    try {
+      return UserModel.findOne(query);
+    } catch (err) {
+      throw new Error(err);
+    }
   }
-};
+
+  async createUser(user: AnyKeys<IUserModel>) {
+    try {
+      const newUser = new UserModel(user);
+      return newUser.save();
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
+
+  async removeRefreshToken(refreshToken: string) {
+    try {
+      const user = await this.findUser({ refreshTokens: refreshToken });
+      if (user) {
+        const filteredToken = user.refreshTokens.filter(
+          (rt) => rt !== refreshToken
+        );
+        user.refreshTokens = filteredToken;
+        await user.save();
+      }
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
+
+  async findUserById(userId: string, selects?: string) {
+    try {
+      return UserModel.findById(userId).select(selects);
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
+
+  async findUserByIdAndUpdate(
+    id: string,
+    update: UpdateQuery<IUserModel>,
+    options?: QueryOptions | null
+  ) {
+    try {
+      return UserModel.findByIdAndUpdate(id, update, {
+        new: true,
+        ...options,
+      });
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
+
+  async findUsers(filter: FilterQuery<IUserModel>) {
+    try {
+      return UserModel.find(filter).select('_id username avatarURL fullName');
+    } catch (err) {
+      throw new Error(err);
+    }
+  }
+}
+export default new UserServices();

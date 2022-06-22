@@ -6,7 +6,7 @@ import {
   deleteNotification,
   findOneNotification,
   findOneNotificationAndDelete,
-} from '../../services/NotificationService';
+} from '../../services/NotificationServices';
 import { findOneReply, updateReply } from '../../services/ReplyService';
 
 export default async (req: Request, res: Response) => {

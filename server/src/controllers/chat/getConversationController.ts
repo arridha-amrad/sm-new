@@ -1,14 +1,25 @@
 import { Request, Response } from 'express';
 import { IMessage } from '../../models/message/IMessage';
-import { findConversation } from '../../services/ConversationService';
+import { findConversation } from '../../services/ConversationServices';
 import { findMessages } from '../../services/MessageService';
 
 export default async (req: Request, res: Response) => {
   const { receiverId } = req.query;
-  const loginUserId = req.userId;
+  const loginUserId = req.app.locals.userId;
   try {
     const conversation = await findConversation({
-      $and: [{ users: loginUserId }, { users: receiverId }],
+      $and: [
+        {
+          users: {
+            $elemMatch: { $eq: loginUserId },
+          },
+        },
+        {
+          users: {
+            $elemMatch: { $eq: receiverId },
+          },
+        },
+      ],
     });
     let messages: IMessage[] = [];
     if (conversation) {

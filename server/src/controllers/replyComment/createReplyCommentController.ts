@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { NotificationType } from '../../models/notification/INotificationModel';
 import { findOneComment } from '../../services/CommentService';
-import { createNotification } from '../../services/NotificationService';
+import { createNotification } from '../../services/NotificationServices';
 import { findOneReply, makeReply } from '../../services/ReplyService';
 
 export default async (req: Request, res: Response) => {

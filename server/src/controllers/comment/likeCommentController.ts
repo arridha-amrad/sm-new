@@ -4,7 +4,7 @@ import { editComment, findOneComment } from '../../services/CommentService';
 import {
   createNotification,
   findOneNotificationAndDelete,
-} from '../../services/NotificationService';
+} from '../../services/NotificationServices';
 
 export default async (req: Request, res: Response) => {
   const likeSender = req.userId;

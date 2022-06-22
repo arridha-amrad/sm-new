@@ -1,22 +1,28 @@
-import express from 'express';
-import createPostController from '../controllers/post/createPostController';
-import deletePostController from '../controllers/post/deletePostController';
-import getPostController from '../controllers/post/getPostController';
-import getPostsController from '../controllers/post/getPostsController';
-import likePostController from '../controllers/post/likePostController';
-import updatePostController from '../controllers/post/updatePostController';
-import { verifyAuthToken } from '../services/JwtServices';
+import { Router } from 'express';
+import PostController from '../controllers/PostController';
 
-const router = express.Router();
+class PostRoutes {
+  router: Router;
 
-router.get('/', getPostsController);
-router.get('/:postId', getPostController);
+  constructor() {
+    this.router = Router();
+    this.routes();
+  }
 
-router.post('/create', verifyAuthToken, createPostController);
-router.post('/like/:postId', verifyAuthToken, likePostController);
+  routes() {
+    // get many posts
+    this.router.get('/', PostController.getMany);
+    // get single post
+    this.router.get('/:id', PostController.getOne);
+    // create post
+    this.router.post('/', PostController.create);
+    // like post
+    this.router.post('/like/:id', PostController.like);
+    // update post
+    this.router.put('/:id', PostController.update);
+    // delete post
+    this.router.delete('/:id', PostController.delete);
+  }
+}
 
-router.put('/:postId', verifyAuthToken, updatePostController);
-
-router.delete('/:postId', verifyAuthToken, deletePostController);
-
-export default router;
+export default new PostRoutes().router;

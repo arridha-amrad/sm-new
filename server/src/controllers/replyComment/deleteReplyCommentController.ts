@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { findOneComment } from '../../services/CommentService';
-import { deleteNotifications } from '../../services/NotificationService';
+import { deleteNotifications } from '../../services/NotificationServices';
 import { deleteReply, findOneReply } from '../../services/ReplyService';
 
 export default async (req: Request, res: Response) => {

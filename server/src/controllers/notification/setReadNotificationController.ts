@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { findByIdAndUpdate } from '../../services/NotificationService';
+import { findByIdAndUpdate } from '../../services/NotificationServices';
 
 export default async (req: Request, res: Response) => {
   const { notificationIds }: { notificationIds: string[] } = req.body;

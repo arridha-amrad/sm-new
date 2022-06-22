@@ -1,4 +1,4 @@
-import { IMailContent } from '../interfacesAndTypes/MailInterfaces';
+import { IMailContent } from '../types/MailInterfaces';
 
 export const createConfirmationEmail = (
   username: string,

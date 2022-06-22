@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import { NotificationType } from '../../models/notification/INotificationModel';
 import { addComment } from '../../services/CommentService';
-import { createNotification } from '../../services/NotificationService';
-import { findOnePost } from '../../services/PostService';
+import { createNotification } from '../../services/NotificationServices';
+import { findOnePost } from '../../services/PostServices';
 
 export default async (req: Request, res: Response) => {
   const { postId } = req.params;
