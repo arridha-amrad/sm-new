@@ -6,6 +6,7 @@ import {
   ServerToClientEvents,
   SocketData,
 } from './ISocket';
+import config from '../config';
 
 interface OnlineUser {
   username: string;
@@ -24,8 +25,10 @@ const addUser = (username: string, socketId: string) => {
 };
 
 const removeUser = (socketId: string) => {
-  const remainingUsers =  onlineUsers.filter((user) => user.socketId !== socketId);
-  onlineUsers = remainingUsers
+  const remainingUsers = onlineUsers.filter(
+    (user) => user.socketId !== socketId
+  );
+  onlineUsers = remainingUsers;
 };
 
 const getUser = (username: string) => {
@@ -40,7 +43,7 @@ export const initIo = (httpServer: HTTPServer) => {
     SocketData
   >(httpServer, {
     cors: {
-      origin: process.env.CLIENT_ORIGIN,
+      origin: config.clientOrigin,
     },
   });
 

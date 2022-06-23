@@ -171,6 +171,8 @@ class UserController {
 
   async me(req: Request, res: Response) {
     const userId = Helpers.getUserIdFromAccToken(req);
+    console.log('req executed');
+
     try {
       const user = await UserServices.findUserById(
         userId,

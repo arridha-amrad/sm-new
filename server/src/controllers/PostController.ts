@@ -5,7 +5,7 @@ import fs from 'fs';
 import Cloudinary from '../utils/Cloudinary';
 import Helpers from '../utils/Helpers';
 import NotificationServices from '../services/NotificationServices';
-import { NotificationType } from '../models/notification/INotificationModel';
+import { NotificationType } from '../types/ModelTypes';
 
 class PostController {
   async getMany(req: Request, res: Response) {

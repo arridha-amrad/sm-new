@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import UserController from '../controllers/UserController';
+import JwtServices from '../services/JwtServices';
 import Routes from './Routes';
 
 class NewUserRoutes extends Routes {
@@ -13,7 +14,7 @@ class NewUserRoutes extends Routes {
 
   routes() {
     // me
-    this.router.get('/me', UserController.me);
+    this.router.get('/me', JwtServices.verifyAuthToken, UserController.me);
     // searchUser
     this.router.get('/searchUser', UserController.searchUser);
     // register

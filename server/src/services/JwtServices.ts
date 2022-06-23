@@ -49,25 +49,26 @@ class JwtServices {
 
   async verifyAuthToken(req: Request, res: Response, next: NextFunction) {
     const bearerToken = req.headers['authorization'];
-    if (bearerToken) {
-      const token = bearerToken.split(' ')[1];
-      jwt.verify(
-        token,
-        publicKey,
-        {
-          algorithms: ['RS256'],
-          maxAge: '2h',
-        },
-        (err, payload) => {
-          if (err && err.message === 'jwt expired') {
-            return res.status(401).send('token expired');
-          }
-          const { userId } = payload as { userId: string };
-          req.app.locals.userId = userId;
-          next();
-        }
-      );
+    if (!bearerToken) {
+      return res.sendStatus(401);
     }
+    const token = bearerToken.split(' ')[1];
+    jwt.verify(
+      token,
+      publicKey,
+      {
+        algorithms: ['RS256'],
+        maxAge: '2h',
+      },
+      (err, payload) => {
+        if (err && err.message === 'jwt expired') {
+          return res.status(401).send('token expired');
+        }
+        const { userId } = payload as { userId: string };
+        req.app.locals.userId = userId;
+        next();
+      }
+    );
   }
 }
 

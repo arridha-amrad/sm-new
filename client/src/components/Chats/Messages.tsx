@@ -1,14 +1,13 @@
-import { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { selectAuthState } from "../../features/authentication/authSlice";
-import { selectChatState, setMessages } from "../../features/chats/chatSlice";
-import { Message } from "../../features/chats/IChat";
-import axiosInstance from "../../utils/axiosInterceptor";
-import timeSetter from "../../utils/timeSetter";
-import { Spinner } from "react-bootstrap";
-import ScrollableFeed from "react-scrollable-feed";
+import { useEffect, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { selectAuthState } from '../../features/authentication/authSlice';
+import { selectChatState, setMessages } from '../../features/chats/chatSlice';
+import { Message } from '../../features/chats/IChat';
+import axiosInstance from '../../utils/axiosInterceptor';
+import timeSetter from '../../utils/timeSetter';
+import { Spinner } from 'react-bootstrap';
 
-import "./style.css";
+import './style.css';
 
 const Messages = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -51,30 +50,27 @@ const Messages = () => {
   return (
     <div
       className="d-flex flex-column h-100 w-100"
-      style={{ overflow: "auto" }}
+      style={{ overflow: 'auto' }}
     >
-      <ScrollableFeed
-        forceScroll
-        className="flex-grow-1 d-flex flex-column p-3"
-      >
+      <div className="flex-grow-1 d-flex flex-column p-3">
         {messages.map((message) => (
           <div
             key={message._id}
             style={{
-              maxWidth: "400px",
+              maxWidth: '400px',
             }}
             className={` ${
               isSentByMe(message)
-                ? "bg-pink align-self-end"
-                : "border align-self-start"
+                ? 'bg-pink align-self-end'
+                : 'border align-self-start'
             } p-3 gap-4 rounded my-2`}
           >
             <div
               style={{
-                whiteSpace: "pre-line",
-                wordBreak: "break-all",
-                overflowWrap: "break-word",
-                width: "100%",
+                whiteSpace: 'pre-line',
+                wordBreak: 'break-all',
+                overflowWrap: 'break-word',
+                width: '100%',
               }}
             >
               {message.text}
@@ -84,7 +80,7 @@ const Messages = () => {
             </small>
           </div>
         ))}
-      </ScrollableFeed>
+      </div>
     </div>
   );
 };

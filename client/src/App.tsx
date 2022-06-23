@@ -1,26 +1,27 @@
-import { useEffect, useState } from "react";
-import { Route, Routes } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "./app/hooks";
-import ProtectedRoute from "./components/ProtectedRoutes";
+import { useEffect, useState } from 'react';
+import { Route, Routes } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from './app/hooks';
+import ProtectedRoute from './components/ProtectedRoutes';
 import {
   selectAuthState,
   setLoginUser,
-} from "./features/authentication/authSlice";
-import Home from "./pages/HomePage";
-import Login from "./pages/LoginPage";
-import Register from "./pages/RegisterPage";
-import axiosInstance, { setToken } from "./utils/axiosInterceptor";
-import { io } from "socket.io-client";
-import { getSocket, setSocket } from "./mySocket";
+} from './features/authentication/authSlice';
+import Home from './pages/HomePage';
+import Login from './pages/LoginPage';
+import Register from './pages/RegisterPage';
+import axiosInstance from './utils/axiosInterceptor';
+import { io } from 'socket.io-client';
+import { getSocket, setSocket } from './mySocket';
 import {
   addNotification,
   setNotifications,
-} from "./features/notification/notificationSlice";
-import ChatPage from "./pages/ChatPage";
-import ProfilePage from "./pages/ProfilePage";
-import { receiveMessage, setConversations } from "./features/chats/chatSlice";
-import ForgotPasswordPage from "./pages/ForgotPasswordPage";
-import ResetPasswordPage from "./pages/ResetPasswordPage";
+} from './features/notification/notificationSlice';
+import ChatPage from './pages/ChatPage';
+import ProfilePage from './pages/ProfilePage';
+import { receiveMessage, setConversations } from './features/chats/chatSlice';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
+import configVariables from './config';
 
 const App = () => {
   const dispatch = useAppDispatch();
@@ -29,31 +30,24 @@ const App = () => {
 
   const socket = getSocket();
 
+  const fetchUser = async (signal: AbortSignal) => {
+    try {
+      const { data } = await axiosInstance.get('/api/user/me', {
+        signal,
+      });
+      dispatch(setLoginUser(data.user));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
-    let isMounted = true;
-    const socketIo = io("http://localhost:5000");
+    const socketIo = io(configVariables.serverOrigin);
     setSocket(socketIo);
     const controller = new AbortController();
-    const fetchUser = async () => {
-      try {
-        const res = await axiosInstance.get("/api/auth/refresh-token", {
-          signal: controller.signal,
-        });
-        setToken(res.data.token);
-        const { data } = await axiosInstance.get("/api/user/me", {
-          signal: controller.signal,
-        });
-        dispatch(setLoginUser(data.user));
-        dispatch(setNotifications(data.notifications));
-        dispatch(setConversations(data.conversations));
-      } finally {
-        isMounted && setIsLoading(false);
-      }
-    };
-    fetchUser();
+    fetchUser(controller.signal);
     return () => {
       controller.abort();
-      isMounted = false;
       socket?.disconnect();
     };
     // eslint-disable-next-line
@@ -61,25 +55,25 @@ const App = () => {
 
   useEffect(() => {
     if (loginUser) {
-      socket?.emit("addUserCS", loginUser.username);
+      socket?.emit('addUserCS', loginUser.username);
     }
-    socket?.on("createReplySC", (notification) => {
+    socket?.on('createReplySC', (notification) => {
       dispatch(addNotification(notification));
     });
-    socket?.on("createCommentSC", (notification) => {
+    socket?.on('createCommentSC', (notification) => {
       dispatch(addNotification(notification));
     });
-    socket?.on("likePostSC", (notification) => {
+    socket?.on('likePostSC', (notification) => {
       dispatch(addNotification(notification));
     });
-    socket?.on("likeCommentSC", (notification) => {
+    socket?.on('likeCommentSC', (notification) => {
       dispatch(addNotification(notification));
     });
-    socket?.on("likeReplySC", (notification) => {
+    socket?.on('likeReplySC', (notification) => {
       dispatch(addNotification(notification));
     });
 
-    socket?.on("sendMessageSC", (conversation, message) => {
+    socket?.on('sendMessageSC', (conversation, message) => {
       dispatch(
         receiveMessage({
           conversation,

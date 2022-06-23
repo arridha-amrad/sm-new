@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { NotificationType } from '../models/notification/INotificationModel';
+import { NotificationType } from '../types/ModelTypes';
 import CommentServices from '../services/CommentServices';
 import NotificationServices from '../services/NotificationServices';
 import ReplyServices from '../services/ReplyServices';

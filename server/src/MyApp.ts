@@ -9,11 +9,13 @@ import { initIo } from './socket/socketInitializer';
 
 // Routes
 import AuthRoutes from './routes/AuthRoutes';
-import UserRoutes from './routes/UserRoutes';
-import PostRoutes from './routes/PostRoutes';
-import NotifRoutes from './routes/NotificationRoutes';
+import ChatRoutes from './routes/ChatRoutes';
 import CommentRoutes from './routes/CommentRoutes';
+import NotifRoutes from './routes/NotificationRoutes';
+import PostRoutes from './routes/PostRoutes';
 import ReplyRoutes from './routes/ReplyRoutes';
+import UserRoutes from './routes/UserRoutes';
+import config from './config';
 
 class MyApp {
   // required by heroku
@@ -30,9 +32,7 @@ class MyApp {
   }
 
   plugins() {
-    this.app.use(
-      cors({ origin: process.env.CLIENT_ORIGIN, credentials: true })
-    );
+    this.app.use(cors({ origin: config.clientOrigin, credentials: true }));
     this.app.use(
       fileUpload({
         useTempFiles: true,
@@ -55,6 +55,7 @@ class MyApp {
     this.app.use('/api/user', UserRoutes);
     this.app.use('/api/post', PostRoutes);
     this.app.use('/api/comment', CommentRoutes);
+    this.app.use('/api/chat', ChatRoutes);
     this.app.use('/api/notif', NotifRoutes);
     this.app.use('/api/reply', ReplyRoutes);
   }
