@@ -1,6 +1,6 @@
-import ReplyModel from '../models/reply/ReplyModel';
+import ReplyModel from '../models/ReplyModel';
 import { AnyKeys } from 'mongoose';
-import { IReplyModel } from '../models/reply/IReplyModel';
+import { IReplyModel } from '../types/ModelTypes';
 import { UpdateQuery } from 'mongoose';
 
 class ReplyServices {

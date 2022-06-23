@@ -1,5 +1,5 @@
 import { Schema, Model, model } from 'mongoose';
-import { IPostModel } from './IPostModel';
+import { IPostModel } from '../types/ModelTypes';
 
 const PostSchema = new Schema<IPostModel, Model<IPostModel>>(
   {

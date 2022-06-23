@@ -1,5 +1,5 @@
 import { Schema, model, Model } from 'mongoose';
-import { IReplyModel } from './IReplyModel';
+import { IReplyModel } from '../types/ModelTypes';
 
 const ReplySchema = new Schema<IReplyModel, Model<IReplyModel>>(
   {

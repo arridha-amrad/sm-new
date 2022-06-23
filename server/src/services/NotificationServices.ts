@@ -1,6 +1,6 @@
-import NotificationModel from '../models/notification/NotificationModel';
+import NotificationModel from '../models/NotificationModel';
 import { AnyKeys, FilterQuery, UpdateQuery } from 'mongoose';
-import { INotificationModel } from '../models/notification/INotificationModel';
+import { INotificationModel } from '../types/ModelTypes';
 
 class NotificationServices {
   async findMany(userId: string) {

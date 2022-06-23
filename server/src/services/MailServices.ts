@@ -1,6 +1,7 @@
 import nodemailer, { SendMailOptions } from 'nodemailer';
 import SMTPTransport from 'nodemailer/lib/smtp-transport';
-import { IMailContent } from '../types/MailInterfaces';
+import config from '../config';
+import { IMailContent } from '../types/MailTypes';
 
 class MailService {
   async sendEmail(
@@ -23,6 +24,33 @@ class MailService {
     };
     const email = Object.assign({}, content, contacts);
     return transporter.sendMail(email);
+  }
+
+  composeEmail(
+    username: string,
+    token: string,
+    type: 'email confirmation' | 'reset password'
+  ): IMailContent {
+    const setTitle = () => {
+      switch (type) {
+        case 'email confirmation':
+          return 'Email Confirmation';
+        case 'reset password':
+          return 'Reset Password';
+        default:
+          return '';
+      }
+    };
+    return {
+      subject: `${config.appName} - ${setTitle()}`,
+      html: `<p>Hello ${username}</p><p>Please use the following link to ${
+        type === 'email confirmation'
+          ? 'verify your email'
+          : 'reset your password'
+      }:</p> <p>${
+        config.serverOrigin
+      }/api/user/email-verification/${token}</p> <p>Thanks</p>`,
+    };
   }
 }
 export default new MailService();

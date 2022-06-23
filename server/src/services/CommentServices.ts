@@ -1,6 +1,6 @@
-import CommentModel from '../models/comment/CommentModel';
-import { ICommentModel } from '../models/comment/ICommentModel';
+import CommentModel from '../models/CommentModel';
 import { AnyKeys, UpdateQuery } from 'mongoose';
+import { ICommentModel } from '../types/ModelTypes';
 
 class CommentServices {
   async save(comment: AnyKeys<ICommentModel>) {

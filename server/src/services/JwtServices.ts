@@ -60,7 +60,7 @@ class JwtServices {
         },
         (err, payload) => {
           if (err && err.message === 'jwt expired') {
-            return res.status(403).send('token expired');
+            return res.status(401).send('token expired');
           }
           const { userId } = payload as { userId: string };
           req.app.locals.userId = userId;

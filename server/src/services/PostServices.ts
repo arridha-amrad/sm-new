@@ -1,5 +1,5 @@
-import { IPostModel } from '../models/post/IPostModel';
-import PostModel from '../models/post/PostModel';
+import { IPostModel } from '../types/ModelTypes';
+import PostModel from '../models/PostModel';
 import { AnyKeys, UpdateQuery } from 'mongoose';
 
 class PostServices {

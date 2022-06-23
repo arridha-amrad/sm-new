@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import RefTokenServices from '../services/RefTokenServices';
 import UserServices from '../services/UserServices';
-import { ILoginDTO, ILoginResponse } from '../types/AuthControllerTypes';
+import { ILoginDTO } from '../types/AuthControllerTypes';
 import Helpers from '../utils/Helpers';
 import AuthControllerValidator from '../validator/AuthControllerValidator';
 import argon from 'argon2';

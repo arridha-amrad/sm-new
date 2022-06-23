@@ -2,10 +2,6 @@ import { Request, Response } from 'express';
 import argon2 from 'argon2';
 
 import UserServices from '../services/UserServices';
-import {
-  createConfirmationEmail,
-  createResetPasswordEmail,
-} from '../templates/MailTemplates';
 import MailServices from '../services/MailServices';
 import { IRegisterDTO } from '../types/UserControllerTypes';
 import UserControllerValidator from '../validator/UserControllerValidator';
@@ -47,9 +43,10 @@ class UserController {
         requiredAuthAction: 'emailVerification',
       });
       const emailToken = await JwtServices.createToken(newUser.id, 'link');
-      const emailContent = createConfirmationEmail(
+      const emailContent = MailServices.composeEmail(
         newUser.username,
-        emailToken
+        emailToken,
+        'email confirmation'
       );
       await MailServices.sendEmail(email, emailContent);
       return res.status(201).json({
@@ -82,13 +79,15 @@ class UserController {
       user.requiredAuthAction = 'resetPassword';
       await user.save();
       const token = await JwtServices.createToken(user.id, 'link');
-      if (token) {
-        const emailContent = createResetPasswordEmail(user.username, token);
-        await MailServices.sendEmail(email, emailContent);
-        return res.status(200).json({
-          message: `An email has been sent to ${email}. Please follow the instructions to reset your password.`,
-        });
-      }
+      const emailContent = MailServices.composeEmail(
+        user.username,
+        token,
+        'reset password'
+      );
+      await MailServices.sendEmail(email, emailContent);
+      return res.status(200).json({
+        message: `An email has been sent to ${email}. Please follow the instructions to reset your password.`,
+      });
     } catch (err) {
       console.log('forgotPassword : ', err);
       return res.sendStatus(500);

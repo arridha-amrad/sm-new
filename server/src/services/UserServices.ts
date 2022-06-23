@@ -1,6 +1,6 @@
 import { FilterQuery, QueryOptions, UpdateQuery } from 'mongoose';
-import { IUserModel } from '../models/user/IUserModel';
-import UserModel from '../models/user/UserModel';
+import { IUserModel } from '../types/ModelTypes';
+import UserModel from '../models/UserModel';
 import { AnyKeys } from 'mongoose';
 
 class UserServices {

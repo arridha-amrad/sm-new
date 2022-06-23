@@ -1,10 +1,12 @@
 import { Router } from 'express';
 import PostController from '../controllers/PostController';
+import Routes from './Routes';
 
-class PostRoutes {
+class PostRoutes extends Routes {
   router: Router;
 
   constructor() {
+    super();
     this.router = Router();
     this.routes();
   }

@@ -1,15 +1,23 @@
-import express from 'express';
-import getConversationController from '../controllers/chat/getConversationController';
-import getConversationsController from '../controllers/chat/getConversationsController';
-import getMessagesController from '../controllers/chat/getMessagesController';
-import sendMessageController from '../controllers/chat/sendMessageController';
-import { verifyAuthToken } from '../services/JwtServices';
+import { Router } from 'express';
+import JwtServices from '../services/JwtServices';
+import Routes from './Routes';
 
-const router = express.Router();
-
-router.post('/send', verifyAuthToken, sendMessageController);
-router.get('/conversations', verifyAuthToken, getConversationsController);
-router.get('/', verifyAuthToken, getConversationController);
-router.get('/messages', verifyAuthToken, getMessagesController);
-
-export default router;
+class ChatRoutes extends Routes {
+  router: Router;
+  constructor() {
+    super();
+    this.router = Router();
+    this.routes();
+  }
+  routes(): void {
+    // send message
+    this.router.post('/send', JwtServices.verifyAuthToken);
+    // get many conversations
+    this.router.get('/many', JwtServices.verifyAuthToken);
+    // get one conversation
+    this.router.get('/one', JwtServices.verifyAuthToken);
+    // get messages
+    this.router.get('/messages', JwtServices.verifyAuthToken);
+  }
+}
+export default new ChatRoutes().router;

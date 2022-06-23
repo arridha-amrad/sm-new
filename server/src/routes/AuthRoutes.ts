@@ -1,9 +1,11 @@
 import { Router } from 'express';
 import AuthController from '../controllers/AuthController';
+import Routes from './Routes';
 
-class NewAuthRoutes {
+class NewAuthRoutes extends Routes {
   router: Router;
   constructor() {
+    super();
     this.router = Router();
     this.routes();
   }

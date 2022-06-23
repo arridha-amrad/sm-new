@@ -12,6 +12,8 @@ import AuthRoutes from './routes/AuthRoutes';
 import UserRoutes from './routes/UserRoutes';
 import PostRoutes from './routes/PostRoutes';
 import NotifRoutes from './routes/NotificationRoutes';
+import CommentRoutes from './routes/CommentRoutes';
+import ReplyRoutes from './routes/ReplyRoutes';
 
 class MyApp {
   // required by heroku
@@ -52,7 +54,9 @@ class MyApp {
     this.app.use('/api/auth', AuthRoutes);
     this.app.use('/api/user', UserRoutes);
     this.app.use('/api/post', PostRoutes);
+    this.app.use('/api/comment', CommentRoutes);
     this.app.use('/api/notif', NotifRoutes);
+    this.app.use('/api/reply', ReplyRoutes);
   }
 
   runApp() {
