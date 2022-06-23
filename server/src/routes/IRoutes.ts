@@ -1,6 +1,8 @@
 import { Router } from 'express';
 
-export interface IRoutes {
-  router: Router;
-  routes(): void;
+abstract class IRoutes {
+  abstract router: Router;
+  abstract routes(): void;
 }
+
+export default IRoutes;

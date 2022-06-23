@@ -10,6 +10,7 @@ import { initIo } from './socket/socketInitializer';
 import AuthRoutes from './routes/AuthRoutes';
 import UserRoutes from './routes/UserRoutes';
 import PostRoutes from './routes/PostRoutes';
+import NotifRoutes from './routes/NotificationRoutes';
 
 class MyApp {
   // required by heroku
@@ -49,6 +50,7 @@ class MyApp {
     this.app.use('/api/auth', AuthRoutes);
     this.app.use('/api/user', UserRoutes);
     this.app.use('/api/post', PostRoutes);
+    this.app.use('/api/notif', NotifRoutes);
   }
 
   runApp() {

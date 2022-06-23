@@ -1,8 +1,5 @@
-import {
-  IFieldError,
-  IRegisterDTO,
-  IValidationResult,
-} from '../types/UserControllerTypes';
+import { IFieldError, IValidationResult } from '../types/FieldErrorTypes';
+import { IRegisterDTO } from '../types/UserControllerTypes';
 
 class UserControllerValidator {
   private emailRegEx =

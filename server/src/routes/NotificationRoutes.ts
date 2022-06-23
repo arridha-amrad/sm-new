@@ -1,9 +1,26 @@
-import express from 'express';
-import setReadNotificationController from '../controllers/notification/setReadNotificationController';
-import { verifyAuthToken } from '../services/JwtServices';
+import { Router } from 'express';
+import NotificationController from '../controllers/NotificationController';
+import JwtServices from '../services/JwtServices';
+import IRoutes from './IRoutes';
 
-const router = express.Router();
+class NotificationRoutes extends IRoutes {
+  router: Router;
 
-router.put('/mark-read', verifyAuthToken, setReadNotificationController);
+  constructor() {
+    super();
+    this.router = Router();
+    this.routes();
+  }
 
-export default router;
+  routes() {
+    this.router.put(
+      '/mark-read',
+      JwtServices.verifyAuthToken,
+      NotificationController.read
+    );
+
+    this.router.get('/', (req, res) => res.send('Notif routes'));
+  }
+}
+
+export default new NotificationRoutes().router;

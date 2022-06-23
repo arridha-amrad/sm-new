@@ -1,8 +1,7 @@
 import { Router } from 'express';
 import AuthController from '../controllers/AuthController';
-import { IRoutes } from './IRoutes';
 
-class NewAuthRoutes implements IRoutes {
+class NewAuthRoutes {
   router: Router;
   constructor() {
     this.router = Router();

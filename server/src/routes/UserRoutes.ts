@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { IRoutes } from './IRoutes';
 import UserController from '../controllers/UserController';
+import IRoutes from './IRoutes';
 
-class NewUserRoutes implements IRoutes {
+class NewUserRoutes {
   router: Router;
 
   constructor() {
