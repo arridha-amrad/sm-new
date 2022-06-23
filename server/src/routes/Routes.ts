@@ -1,8 +1,8 @@
 import { Router } from 'express';
 
-abstract class IRoutes {
+abstract class Routes {
   abstract router: Router;
   abstract routes(): void;
 }
 
-export default IRoutes;
+export default Routes;

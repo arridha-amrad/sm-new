@@ -1,9 +1,9 @@
 import { Router } from 'express';
 import NotificationController from '../controllers/NotificationController';
 import JwtServices from '../services/JwtServices';
-import IRoutes from './IRoutes';
+import Routes from './Routes';
 
-class NotificationRoutes extends IRoutes {
+class NotificationRoutes extends Routes {
   router: Router;
 
   constructor() {
@@ -18,8 +18,6 @@ class NotificationRoutes extends IRoutes {
       JwtServices.verifyAuthToken,
       NotificationController.read
     );
-
-    this.router.get('/', (req, res) => res.send('Notif routes'));
   }
 }
 

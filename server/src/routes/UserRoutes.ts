@@ -1,13 +1,13 @@
 import { Router } from 'express';
 import UserController from '../controllers/UserController';
-import IRoutes from './IRoutes';
+import Routes from './Routes';
 
-class NewUserRoutes {
+class NewUserRoutes extends Routes {
   router: Router;
 
   constructor() {
-    const myRouter = Router();
-    this.router = myRouter;
+    super();
+    this.router = Router();
     this.routes();
   }
 

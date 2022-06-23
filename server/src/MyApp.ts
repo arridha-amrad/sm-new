@@ -3,6 +3,7 @@ import cors from 'cors';
 import express, { Express } from 'express';
 import fileUpload from 'express-fileupload';
 import { createServer, Server } from 'http';
+import morgan from 'morgan';
 
 import { initIo } from './socket/socketInitializer';
 
@@ -37,6 +38,7 @@ class MyApp {
     );
     this.app.use(cookieParser());
     this.app.use([express.json(), express.urlencoded({ extended: false })]);
+    this.app.use(morgan('dev'));
   }
 
   initServer() {

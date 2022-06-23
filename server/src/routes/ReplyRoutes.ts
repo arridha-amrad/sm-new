@@ -1,13 +1,32 @@
 import { Router } from 'express';
-import createReplyCommentController from '../controllers/replyComment/createReplyCommentController';
-import deleteReplyCommentController from '../controllers/replyComment/deleteReplyCommentController';
-import likeReplyCommentController from '../controllers/replyComment/likeReplyCommentController';
-import { verifyAuthToken } from '../services/JwtServices';
+import ReplyController from '../controllers/ReplyController';
+import JwtServices from '../services/JwtServices';
+import Routes from './Routes';
 
-const router = Router();
+class ReplyRoutes extends Routes {
+  router: Router;
+  constructor() {
+    super();
+    this.router = Router();
+    this.routes();
+  }
+  routes(): void {
+    this.router.post(
+      '/:commentId',
+      JwtServices.verifyAuthToken,
+      ReplyController.create
+    );
+    this.router.post(
+      '/like/:replyId',
+      JwtServices.verifyAuthToken,
+      ReplyController.like
+    );
+    this.router.delete(
+      '/:replyId',
+      JwtServices.verifyAuthToken,
+      ReplyController.delete
+    );
+  }
+}
 
-router.post('/:commentId', verifyAuthToken, createReplyCommentController);
-router.post('/like/:replyId', verifyAuthToken, likeReplyCommentController);
-router.delete('/:replyId', verifyAuthToken, deleteReplyCommentController);
-
-export default router;
+export default new ReplyRoutes().router;
