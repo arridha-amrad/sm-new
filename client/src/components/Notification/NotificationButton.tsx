@@ -1,11 +1,14 @@
-import { useRef, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { useEffect, useRef, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { selectAuthState } from '../../features/authentication/authSlice';
 import {
   readNotificationAction,
   selectNotification,
-} from "../../features/notification/notificationSlice";
-import NotificationCard from "./NotificationCard";
-import "./style.css";
+  setNotifications,
+} from '../../features/notification/notificationSlice';
+import axiosInstance from '../../utils/axiosInterceptor';
+import NotificationCard from './NotificationCard';
+import './style.css';
 
 const NotificationButton = () => {
   const [isShow, setIsShow] = useState(false);
@@ -13,6 +16,7 @@ const NotificationButton = () => {
   const dispatch = useAppDispatch();
 
   const notifications = useAppSelector(selectNotification);
+  const { loginUser } = useAppSelector(selectAuthState);
 
   const readNotification = async (notificationIds: string[]) => {
     await dispatch(readNotificationAction(notificationIds));
@@ -23,10 +27,31 @@ const NotificationButton = () => {
     return ntfs;
   };
 
+  const fetchNotifications = async (signal: AbortSignal) => {
+    try {
+      const { data } = await axiosInstance.get('/api/notif', { signal });
+      dispatch(setNotifications(data.notifications));
+    } catch (err: any) {
+      throw new Error(err);
+    }
+  };
+
+  useEffect(() => {
+    const ctrl = new AbortController();
+    if (loginUser) {
+      fetchNotifications(ctrl.signal);
+      console.log('trying to fetch notification');
+    }
+    return () => {
+      ctrl.abort();
+    };
+    // eslint-disable-next-line
+  }, [loginUser]);
+
   return (
-    <div style={{ position: "relative", paddingTop: "4px", cursor: "pointer" }}>
+    <div style={{ position: 'relative', paddingTop: '4px', cursor: 'pointer' }}>
       <button
-        onBlur={() => console.log("blur")}
+        onBlur={() => console.log('blur')}
         ref={ref}
         onClick={async () => {
           setIsShow((prev) => !prev);
@@ -37,7 +62,7 @@ const NotificationButton = () => {
             await readNotification(ids);
           }
         }}
-        style={{ position: "relative" }}
+        style={{ position: 'relative' }}
         className="btn p-0"
       >
         <svg
@@ -72,7 +97,7 @@ const NotificationButton = () => {
               <NotificationCard notifIndex={index} notification={notif} />
               {notifications.length > 1 &&
                 index !== notifications.length - 1 && (
-                  <hr style={{ color: "#ccc" }} />
+                  <hr style={{ color: '#ccc' }} />
                 )}
             </div>
           ))}

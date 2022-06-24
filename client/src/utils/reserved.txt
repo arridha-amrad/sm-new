@@ -1,0 +1,58 @@
+const socket = getSocket();
+const dispatch = useAppDispatch();
+const [isLoading, setIsLoading] = useState(true);
+const { loginUser } = useAppSelector(selectAuthState);
+
+const fetchUser = async (signal: AbortSignal) => {
+  try {
+    const { data } = await axiosInstance.get('/api/user/me', {
+      signal,
+    });
+    dispatch(setLoginUser(data.user));
+  } finally {
+    setIsLoading(false);
+  }
+};
+
+useEffect(() => {
+  const socketIo = io(configVariables.serverOrigin);
+  setSocket(socketIo);
+  const controller = new AbortController();
+  fetchUser(controller.signal);
+  return () => {
+    controller.abort();
+    socket?.disconnect();
+  };
+  // eslint-disable-next-line
+}, []);
+
+useEffect(() => {
+  if (loginUser) {
+    socket?.emit('addUserCS', loginUser.username);
+  }
+  socket?.on('createReplySC', (notification) => {
+    dispatch(addNotification(notification));
+  });
+  socket?.on('createCommentSC', (notification) => {
+    dispatch(addNotification(notification));
+  });
+  socket?.on('likePostSC', (notification) => {
+    dispatch(addNotification(notification));
+  });
+  socket?.on('likeCommentSC', (notification) => {
+    dispatch(addNotification(notification));
+  });
+  socket?.on('likeReplySC', (notification) => {
+    dispatch(addNotification(notification));
+  });
+
+  socket?.on('sendMessageSC', (conversation, message) => {
+    dispatch(
+      receiveMessage({
+        conversation,
+        message,
+      })
+    );
+  });
+  // eslint-disable-next-line
+}, [socket]);

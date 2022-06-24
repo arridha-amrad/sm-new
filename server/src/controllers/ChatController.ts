@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { IMessage } from '../models/message/IMessage';
+import { IMessage } from '../types/ModelTypes';
 import ChatServices from '../services/ChatServices';
 import Helpers from '../utils/Helpers';
 

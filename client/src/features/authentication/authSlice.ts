@@ -1,20 +1,21 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "../../app/store";
-import axiosInstance, { setToken } from "../../utils/axiosInterceptor";
-import { AuthState, LoginDTO, RegisterDTO, User } from "./IAuthentication";
-import { setConversations } from "../chats/chatSlice";
-import { getSocket, setSocket } from "../../mySocket";
-import { io } from "socket.io-client";
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { RootState } from '../../app/store';
+import axiosInstance, { setToken } from '../../utils/axiosInterceptor';
+import { AuthState, LoginDTO, RegisterDTO, User } from './IAuthentication';
+import { setConversations } from '../chats/chatSlice';
+import { getSocket, setSocket } from '../../mySocket';
+import { io } from 'socket.io-client';
+import configVariables from '../../config';
 
 const initialState: AuthState = {
   isLoadingAuth: true,
   loginUser: null,
 };
 
-const URL = "/api/auth";
+const URL = '/api/auth';
 
 export const forgotPasswordAction = createAsyncThunk(
-  "user/forgotPassword",
+  'user/forgotPassword',
   async (email: string, thunkAPI) => {
     try {
       const { data } = await axiosInstance.post(`${URL}/forgot-password`, {
@@ -28,7 +29,7 @@ export const forgotPasswordAction = createAsyncThunk(
 );
 
 export const registerAction = createAsyncThunk(
-  "user/registration",
+  'user/registration',
   async (body: RegisterDTO, thunkAPI) => {
     try {
       const { data } = await axiosInstance.post(`${URL}/register`, body);
@@ -40,19 +41,19 @@ export const registerAction = createAsyncThunk(
 );
 
 export const loginAction = createAsyncThunk(
-  "user/login",
+  '/login',
   async (body: LoginDTO, thunkAPI) => {
     let currSocket = getSocket();
     if (!currSocket?.id) {
-      const socket = io("http://localhost:5000");
+      const socket = io(configVariables.serverOrigin);
       setSocket(socket);
       currSocket = socket;
     }
     try {
       const { data } = await axiosInstance.post(`${URL}/login`, body);
-      setToken(data.token);
-      thunkAPI.dispatch(setConversations(data.conversations));
-      currSocket?.emit("addUserCS", data.user.username);
+      setToken(data.accessToken);
+      // thunkAPI.dispatch(setConversations(data.conversations));
+      // currSocket?.emit('addUserCS', data.user.username);
       return data;
     } catch (err: any) {
       return thunkAPI.rejectWithValue(err.response.data);
@@ -60,12 +61,12 @@ export const loginAction = createAsyncThunk(
   }
 );
 
-export const logoutAction = createAsyncThunk("user/logout", async () => {
+export const logoutAction = createAsyncThunk('/logout', async () => {
   await axiosInstance.post(`${URL}/logout`);
 });
 
 export const userSlice = createSlice({
-  name: "user",
+  name: 'user',
   initialState,
   reducers: {
     setLoginUser: (state, action: PayloadAction<User>) => {

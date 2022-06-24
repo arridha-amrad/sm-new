@@ -13,6 +13,11 @@ class NotificationRoutes extends Routes {
   }
 
   routes() {
+    this.router.get(
+      '/',
+      JwtServices.verifyAuthToken,
+      NotificationController.get
+    );
     this.router.put(
       '/mark-read',
       JwtServices.verifyAuthToken,

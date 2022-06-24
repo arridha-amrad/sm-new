@@ -24,7 +24,7 @@ class NewUserRoutes extends Routes {
     // reset-password
     this.router.post('/reset-password/:token', UserController.resetPassword);
     // refresh-token
-    this.router.post('/refresh-token', UserController.refreshToken);
+    this.router.get('/refresh-token', UserController.refreshToken);
     // email-verification
     this.router.get('/email-verification/:token');
   }

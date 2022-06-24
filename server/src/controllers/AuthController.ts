@@ -103,11 +103,11 @@ class AuthController {
         myUser.refreshTokens.push(refreshToken);
         await myUser.save();
 
-        const beareRefToken = `Bearer ${refreshToken}`;
+        const bearerRefToken = `Bearer ${refreshToken}`;
 
         res.cookie(
           config.refCookieName,
-          beareRefToken,
+          bearerRefToken,
           Helpers.setCookieOptions
         );
         res.redirect(config.clientOrigin);

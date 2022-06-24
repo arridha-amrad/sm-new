@@ -131,8 +131,10 @@ class UserController {
 
   async refreshToken(req: Request, res: Response) {
     const refreshToken = Helpers.getRefreshTokenFromCookie(req);
+    console.log('ref token :', refreshToken);
+
     if (!refreshToken) {
-      return res.status(403);
+      return res.sendStatus(403);
     }
     try {
       const userId = await JwtServices.verifyToken(refreshToken, 'refresh');

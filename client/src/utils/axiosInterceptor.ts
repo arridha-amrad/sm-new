@@ -30,19 +30,16 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   async (error: any) => {
-    console.log('err response from interceptor: ', error.response);
-    if (error.response.status === 401) {
+    if (error?.response?.status === 401) {
       const prevRequest = error.config;
       return axiosInstance
         .get<{ token: string }>('/api/user/refresh-token')
         .then(({ data }) => {
-          console.log('token refresh : ', data.token);
           setToken(data.token);
           prevRequest.headers['Authorization'] = data.token;
-          return axios(prevRequest);
+          return axiosInstance(prevRequest);
         })
         .catch((err) => {
-          console.log('err from interceptor : ', err.response.data);
           if (err.response.status === 500) {
             const pathname = window.location.pathname;
             window.location.href = `/login?e=You need to login to perform this action&next=${pathname}`;
