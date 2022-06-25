@@ -1,26 +1,26 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "../../app/store";
-import { User } from "../authentication/IAuthentication";
-import { Post, PostState, UpdatePostDTO } from "./IPost";
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { RootState } from '../../app/store';
+import { User } from '../authentication/IAuthentication';
+import { Post, PostState, UpdatePostDTO } from './IPost';
 import {
   createPostAPI,
   deletePostAPI,
   likePostAPI,
   updatePostAPI,
-} from "./postApi";
-import { DeleteCommentDTO, LikeCommentDTO } from "../comment/IComment";
-import { WritableDraft } from "immer/dist/internal";
+} from './postApi';
+import { DeleteCommentDTO, LikeCommentDTO } from '../comment/IComment';
+import { WritableDraft } from 'immer/dist/internal';
 import {
   createReplyAPI,
   deleteReplyAPI,
-} from "../replyComment/replyCommentApi";
+} from '../replyComment/replyCommentApi';
 import {
   DeleteReplyDTO,
   LikeReplyDTO,
   ReplyCommentDTO,
-} from "../replyComment/IReply";
-import { likeReplyAPI } from "../replyComment/replyApi";
-import { getSocket } from "../../mySocket";
+} from '../replyComment/IReply';
+import { likeReplyAPI } from '../replyComment/replyApi';
+import { getSocket } from '../../mySocket';
 
 const initialState: PostState = {
   isLoading: false,
@@ -30,14 +30,14 @@ const initialState: PostState = {
 };
 
 export const likeReplyAction = createAsyncThunk(
-  "reply/likeReply",
+  'reply/likeReply',
   async (dto: LikeReplyDTO, thunkAPI) => {
     const socket = getSocket();
     try {
       const { data } = await likeReplyAPI(dto.replyId);
       thunkAPI.dispatch(setLikeReply(dto));
       if (data.notification) {
-        socket?.emit("likeReplyCS", data.notification, dto.toUsername);
+        socket?.emit('likeReplyCS', data.notification, dto.toUsername);
       }
     } catch (err: any) {
       return thunkAPI.rejectWithValue(err.response.data);
@@ -46,7 +46,7 @@ export const likeReplyAction = createAsyncThunk(
 );
 
 export const updatePostAction = createAsyncThunk(
-  "post/update",
+  'post/update',
   async (dto: UpdatePostDTO, thunkAPI) => {
     try {
       const { data } = await updatePostAPI(dto);
@@ -58,7 +58,7 @@ export const updatePostAction = createAsyncThunk(
 );
 
 export const createPostAction = createAsyncThunk(
-  "post/createPost",
+  'post/createPost',
   async (formData: FormData, thunkAPI) => {
     try {
       const { data } = await createPostAPI(formData);
@@ -70,13 +70,13 @@ export const createPostAction = createAsyncThunk(
 );
 
 export const likePostAction = createAsyncThunk(
-  "post/likePost",
+  'post/likePost',
   async (postId: string, thunkAPI) => {
     const socket = getSocket();
     try {
       const { data } = await likePostAPI(postId);
       if (data.notification) {
-        socket?.emit("likePostCS", data.notification, data.post.owner.username);
+        socket?.emit('likePostCS', data.notification, data.post.owner.username);
       }
       return data.post;
     } catch (err: any) {
@@ -86,7 +86,7 @@ export const likePostAction = createAsyncThunk(
 );
 
 export const replyCommentAction = createAsyncThunk(
-  "post/replyComment",
+  'post/replyComment',
   async (dto: ReplyCommentDTO, thunkAPI) => {
     const socket = getSocket();
     try {
@@ -98,7 +98,7 @@ export const replyCommentAction = createAsyncThunk(
         dto.answeredReplyId!
       );
       if (data.notification) {
-        socket?.emit("createReplyCS", data.notification, dto.toUsername);
+        socket?.emit('createReplyCS', data.notification, dto.toUsername);
       }
       return {
         reply: data.reply,
@@ -112,7 +112,7 @@ export const replyCommentAction = createAsyncThunk(
 );
 
 export const deleteReplyAction = createAsyncThunk(
-  "post/deleteReply",
+  'post/deleteReply',
   async (dto: DeleteReplyDTO, thunkAPI) => {
     try {
       await deleteReplyAPI(dto.replyId);
@@ -124,7 +124,7 @@ export const deleteReplyAction = createAsyncThunk(
 );
 
 export const deletePostAction = createAsyncThunk(
-  "post/deletePost",
+  'post/deletePost',
   async (post: Post, thunkAPI) => {
     try {
       await deletePostAPI(post._id);
@@ -141,7 +141,7 @@ interface LikePost {
   isLiked: boolean;
 }
 export const postSlice = createSlice({
-  name: "post",
+  name: 'post',
   initialState,
   reducers: {
     setLikeReply: (state, action: PayloadAction<LikeReplyDTO>) => {
@@ -163,6 +163,7 @@ export const postSlice = createSlice({
     setPosts: (state, action: PayloadAction<Post[]>) => {
       const posts = action.payload as WritableDraft<Post[]>;
       state.posts = posts;
+      state.isFetchingPosts = false;
     },
     toggleIsEdit: (state, action: PayloadAction<number>) => {
       state.posts[action.payload].isEdit = !state.posts[action.payload].isEdit;

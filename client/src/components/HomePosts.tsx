@@ -1,34 +1,29 @@
-import { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../app/hooks";
-import PostCard from "../features/post/PostCard";
-import { selectPostState, setPosts } from "../features/post/postSlice";
-import axiosInstance from "../utils/axiosInterceptor";
+import { useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from '../app/hooks';
+import PostCard from '../features/post/PostCard';
+import { selectPostState, setPosts } from '../features/post/postSlice';
+import useSWR from 'swr';
+import queryKey from '../utils/queryKey';
+import fetcher from '../utils/swrFetcher';
+import MySpinner from './MySpinner';
 
 const HomePosts = () => {
-  const [loading, setLoading] = useState(true);
-  const { posts } = useAppSelector(selectPostState);
+  const { posts, isFetchingPosts } = useAppSelector(selectPostState);
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    const controller = new AbortController();
-    let isMounted = true;
-    const fetchPosts = async () => {
-      const { data } = await axiosInstance.get("/api/post", {
-        signal: controller.signal,
-      });
-      dispatch(setPosts(data.posts));
-    };
-    fetchPosts();
-    isMounted && setLoading(false);
-    return () => {
-      controller.abort();
-      isMounted = false;
-    };
-    // eslint-disable-next-line
-  }, []);
+  const { data } = useSWR(posts.length === 0 ? queryKey.posts : null, fetcher, {
+    revalidateOnFocus: false,
+  });
 
-  if (loading) {
-    return <p>loading...</p>;
+  useEffect(() => {
+    if (data) {
+      dispatch(setPosts(data.posts));
+    }
+    // eslint-disable-next-line
+  }, [data]);
+
+  if (isFetchingPosts) {
+    return <MySpinner />;
   }
 
   return (

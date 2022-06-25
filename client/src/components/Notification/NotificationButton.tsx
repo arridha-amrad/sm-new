@@ -1,14 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { selectAuthState } from '../../features/authentication/authSlice';
 import {
   readNotificationAction,
   selectNotification,
   setNotifications,
 } from '../../features/notification/notificationSlice';
-import axiosInstance from '../../utils/axiosInterceptor';
 import NotificationCard from './NotificationCard';
+import useSWR from 'swr';
 import './style.css';
+import queryKey from '../../utils/queryKey';
+import fetcher from '../../utils/swrFetcher';
 
 const NotificationButton = () => {
   const [isShow, setIsShow] = useState(false);
@@ -16,7 +17,6 @@ const NotificationButton = () => {
   const dispatch = useAppDispatch();
 
   const notifications = useAppSelector(selectNotification);
-  const { loginUser } = useAppSelector(selectAuthState);
 
   const readNotification = async (notificationIds: string[]) => {
     await dispatch(readNotificationAction(notificationIds));
@@ -27,26 +27,16 @@ const NotificationButton = () => {
     return ntfs;
   };
 
-  const fetchNotifications = async (signal: AbortSignal) => {
-    try {
-      const { data } = await axiosInstance.get('/api/notif', { signal });
-      dispatch(setNotifications(data.notifications));
-    } catch (err: any) {
-      throw new Error(err);
-    }
-  };
+  const { data } = useSWR(queryKey.notifs, fetcher, {
+    revalidateOnFocus: false,
+  });
 
   useEffect(() => {
-    const ctrl = new AbortController();
-    if (loginUser) {
-      fetchNotifications(ctrl.signal);
-      console.log('trying to fetch notification');
+    if (data) {
+      dispatch(setNotifications(data.notifications));
     }
-    return () => {
-      ctrl.abort();
-    };
     // eslint-disable-next-line
-  }, [loginUser]);
+  }, [data]);
 
   return (
     <div style={{ position: 'relative', paddingTop: '4px', cursor: 'pointer' }}>

@@ -1,5 +1,5 @@
-import { useAppSelector } from "../app/hooks";
-import { selectAuthState } from "../features/authentication/authSlice";
+import { useAppSelector } from '../app/hooks';
+import { selectAuthState } from '../features/authentication/authSlice';
 
 const HomeProfile = () => {
   const { loginUser } = useAppSelector(selectAuthState);
@@ -8,9 +8,9 @@ const HomeProfile = () => {
       <div>
         <img
           style={{
-            height: "100px",
-            width: "100px",
-            borderRadius: "50%",
+            height: '100px',
+            width: '100px',
+            borderRadius: '50%',
           }}
           className="img-thumbnail"
           src={loginUser?.avatarURL}

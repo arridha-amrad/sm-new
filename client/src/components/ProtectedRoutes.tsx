@@ -1,24 +1,39 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
-import { useAppSelector } from '../app/hooks';
-import { selectAuthState } from '../features/authentication/authSlice';
+import { useAppDispatch, useAppSelector } from '../app/hooks';
+import {
+  selectAuthState,
+  setLoginUser,
+} from '../features/authentication/authSlice';
 
 import AppBar from './AppBar';
+import useSWR from 'swr';
+import MySpinner from './MySpinner';
+import fetcher from '../utils/swrFetcher';
+import queryKey from '../utils/queryKey';
 
 const ProtectedRoute = () => {
-  // const { loginUser } = useAppSelector(selectAuthState);
   const location = useLocation();
-  // const [isAuth, setIsAuth] = useState(false);
+  const dispatch = useAppDispatch();
 
-  // useEffect(() => {
-  //   if (loginUser) {
-  //     console.log('login user : ', loginUser);
+  const { loginUser, isLoadingAuth } = useAppSelector(selectAuthState);
 
-  //     setIsAuth(true);
-  //   }
-  // }, [loginUser]);
+  const { data } = useSWR(loginUser ? null : queryKey.me, fetcher, {
+    revalidateOnFocus: false,
+  });
 
-  return true ? (
+  useEffect(() => {
+    if (data) {
+      dispatch(setLoginUser(data.user));
+    }
+    // eslint-disable-next-line
+  }, [data]);
+
+  if (isLoadingAuth) {
+    return <MySpinner />;
+  }
+
+  return loginUser ? (
     <>
       <AppBar />
       <Outlet />
