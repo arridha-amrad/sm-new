@@ -1,19 +1,17 @@
-import { useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '../app/hooks';
-import PostCard from '../features/post/PostCard';
-import { selectPostState, setPosts } from '../features/post/postSlice';
-import useSWR from 'swr';
-import queryKey from '../utils/queryKey';
-import fetcher from '../utils/swrFetcher';
-import MySpinner from './MySpinner';
+import { useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import PostCard from "../features/post/PostCard";
+import { selectPostState, setPosts } from "../features/post/postSlice";
+import useSWR from "swr";
+import queryKey from "../utils/queryKey";
+import fetcher from "../utils/swrFetcher";
+import MySpinner from "./MySpinner";
 
 const HomePosts = () => {
-  const { posts, isFetchingPosts } = useAppSelector(selectPostState);
+  const { posts } = useAppSelector(selectPostState);
   const dispatch = useAppDispatch();
 
-  const { data } = useSWR(posts.length === 0 ? queryKey.posts : null, fetcher, {
-    revalidateOnFocus: false,
-  });
+  const { data, error } = useSWR(queryKey.posts, fetcher);
 
   useEffect(() => {
     if (data) {
@@ -22,7 +20,7 @@ const HomePosts = () => {
     // eslint-disable-next-line
   }, [data]);
 
-  if (isFetchingPosts) {
+  if (!data && !error) {
     return <MySpinner />;
   }
 

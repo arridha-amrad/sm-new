@@ -1,10 +1,12 @@
-const queryKey = {
+const queryKeys = {
   // user
-  me: '/api/user/me',
+  me: "/api/user/me",
   // post
-  posts: '/api/post',
+  posts: "/api/post",
   // notifications
-  notifs: '/api/notif',
+  notifs: "/api/notif",
+  // conversations
+  conversations: "/api/chat/many",
 };
 
-export default queryKey;
+export default queryKeys;

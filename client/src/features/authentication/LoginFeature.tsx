@@ -1,11 +1,12 @@
-import { useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import InputPassword from '../../components/InputPassword';
-import MyAlert from '../../components/MyAlert';
-import useFormHooks from '../../utils/useFormHooks';
-import { LoginDTO } from './IAuthentication';
-import { loginAction, selectAuthState } from './authSlice';
+import { useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import InputPassword from "../../components/InputPassword";
+import MyAlert from "../../components/MyAlert";
+import useFormHooks from "../../utils/useFormHooks";
+import { LoginDTO } from "./IAuthentication";
+import { loginAction, selectAuthState, setLoginUser } from "./authSlice";
+import axiosInstance, { setToken } from "../../utils/axiosInterceptor";
 
 const Login = () => {
   type LoginFieldValidator = Partial<LoginDTO>;
@@ -16,11 +17,11 @@ const Login = () => {
 
   const checkField = () => {
     let errors: LoginFieldValidator = {};
-    if (state.identity.trim() === '') {
-      errors.identity = 'Identity field is required';
+    if (state.identity.trim() === "") {
+      errors.identity = "Identity field is required";
     }
-    if (state.password.trim() === '') {
-      errors.password = 'Password field is required';
+    if (state.password.trim() === "") {
+      errors.password = "Password field is required";
     }
     return {
       errors,
@@ -28,40 +29,41 @@ const Login = () => {
     };
   };
 
-  const [params] = useSearchParams('');
+  const [params] = useSearchParams("");
 
   const login = async () => {
     try {
-      const result = await dispatch(loginAction(state));
-      if (result.meta.requestStatus === 'fulfilled') {
-        navigate('/');
-      }
-      if (result.meta.requestStatus === 'rejected') {
-        setAlert({
-          type: 'error',
-          text: result.payload as string,
-        });
-      }
+      const { data } = await axiosInstance.post("/api/auth/login", state);
+      console.log("data : ", data);
+      setToken(data.token);
+      dispatch(setLoginUser(data.user));
+      navigate("/", { replace: true });
     } catch (err) {
-      console.log('err login : ', err);
+      console.log("err login : ", err);
     }
   };
 
   const { onChange, state, alert, isLoading, setAlert, onSubmit, fieldErrors } =
     useFormHooks<LoginDTO>(
       {
-        identity: '',
-        password: '',
+        identity: "",
+        password: "",
       },
       login,
       checkField
     );
 
   useEffect(() => {
-    if (params.get('e')) {
+    if (loginUser) {
+      navigate("/");
+    }
+  }, [loginUser]);
+
+  useEffect(() => {
+    if (params.get("e")) {
       setAlert({
-        text: params.get('e')!,
-        type: 'error',
+        text: params.get("e")!,
+        type: "error",
       });
     }
     // eslint-disable-next-line
@@ -94,7 +96,7 @@ const Login = () => {
           type="submit"
           className="btn btn-primary"
         >
-          {isLoading ? 'loading...' : 'Login'}
+          {isLoading ? "loading..." : "Login"}
         </button>
       </form>
     </div>

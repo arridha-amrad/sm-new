@@ -1,15 +1,15 @@
-import { useEffect, useRef, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
   readNotificationAction,
   selectNotification,
   setNotifications,
-} from '../../features/notification/notificationSlice';
-import NotificationCard from './NotificationCard';
-import useSWR from 'swr';
-import './style.css';
-import queryKey from '../../utils/queryKey';
-import fetcher from '../../utils/swrFetcher';
+} from "../../features/notification/notificationSlice";
+import NotificationCard from "./NotificationCard";
+import useSWR from "swr";
+import "./style.css";
+import queryKey from "../../utils/queryKey";
+import fetcher from "../../utils/swrFetcher";
 
 const NotificationButton = () => {
   const [isShow, setIsShow] = useState(false);
@@ -18,14 +18,17 @@ const NotificationButton = () => {
 
   const notifications = useAppSelector(selectNotification);
 
-  const readNotification = async (notificationIds: string[]) => {
-    await dispatch(readNotificationAction(notificationIds));
-  };
+  const readNotification = useCallback(
+    async (ids: string[]) => {
+      await dispatch(readNotificationAction(ids));
+    },
+    [notifications]
+  );
 
-  const getUnreadNotifications = () => {
+  const getUnreadNotifications = useCallback(() => {
     const ntfs = notifications.filter((ntf) => ntf.isRead === false);
     return ntfs;
-  };
+  }, [notifications]);
 
   const { data } = useSWR(queryKey.notifs, fetcher, {
     revalidateOnFocus: false,
@@ -39,9 +42,9 @@ const NotificationButton = () => {
   }, [data]);
 
   return (
-    <div style={{ position: 'relative', paddingTop: '4px', cursor: 'pointer' }}>
+    <div style={{ position: "relative", paddingTop: "4px", cursor: "pointer" }}>
       <button
-        onBlur={() => console.log('blur')}
+        onBlur={() => console.log("blur")}
         ref={ref}
         onClick={async () => {
           setIsShow((prev) => !prev);
@@ -52,7 +55,7 @@ const NotificationButton = () => {
             await readNotification(ids);
           }
         }}
-        style={{ position: 'relative' }}
+        style={{ position: "relative" }}
         className="btn p-0"
       >
         <svg
@@ -87,7 +90,7 @@ const NotificationButton = () => {
               <NotificationCard notifIndex={index} notification={notif} />
               {notifications.length > 1 &&
                 index !== notifications.length - 1 && (
-                  <hr style={{ color: '#ccc' }} />
+                  <hr style={{ color: "#ccc" }} />
                 )}
             </div>
           ))}

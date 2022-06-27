@@ -1,14 +1,22 @@
-import { Route, Routes } from 'react-router-dom';
-import ProtectedRoute from './components/ProtectedRoutes';
-import Home from './pages/HomePage';
-import Login from './pages/LoginPage';
-import Register from './pages/RegisterPage';
-import ChatPage from './pages/ChatPage';
-import ProfilePage from './pages/ProfilePage';
-import ForgotPasswordPage from './pages/ForgotPasswordPage';
-import ResetPasswordPage from './pages/ResetPasswordPage';
+import { Navigate, Route, Routes } from "react-router-dom";
+import ProtectedRoute from "./components/ProtectedRoutes";
+import Home from "./pages/HomePage";
+import Login from "./pages/LoginPage";
+import Register from "./pages/RegisterPage";
+import ChatPage from "./pages/ChatPage";
+import ProfilePage from "./pages/ProfilePage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
+import useCheckAuth from "./hooks/useCheckAuth";
+import MySpinner from "./components/MySpinner";
 
 const App = () => {
+  const { loading } = useCheckAuth();
+
+  if (loading) {
+    return <MySpinner />;
+  }
+
   return (
     <Routes>
       <Route element={<ProtectedRoute />}>

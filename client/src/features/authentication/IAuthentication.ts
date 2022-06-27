@@ -20,4 +20,5 @@ export interface User {
 export interface AuthState {
   loginUser: User | null;
   isLoadingAuth: boolean;
+  isAuthenticated: boolean;
 }
