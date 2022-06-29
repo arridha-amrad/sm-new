@@ -48,13 +48,13 @@ const ImagePreview: FC<Props> = ({ previewImages }) => {
             if (index === 1) {
               return (
                 <div key={index} className="grid-item-2-imgs3">
-                  <img className="img img_half-height" src={image} alt="post" />
+                  <img className="img" src={image} alt="post" />
                 </div>
               );
             }
             return (
               <div key={index} className="grid-item-3-imgs3">
-                <img className="img img_half-height" src={image} alt="post" />
+                <img className="img" src={image} alt="post" />
               </div>
             );
           })}
@@ -64,12 +64,7 @@ const ImagePreview: FC<Props> = ({ previewImages }) => {
       {previewImages.length === 4 && (
         <div className="grid-container-2-col">
           {previewImages.map((image, index) => (
-            <img
-              key={index}
-              className="img-height-half"
-              src={image}
-              alt="post"
-            />
+            <img key={index} className="img" src={image} alt="post" />
           ))}
         </div>
       )}

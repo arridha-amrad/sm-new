@@ -31,7 +31,12 @@ const PostCard: FC<Props> = ({ post, stateIndex }) => {
   return (
     <div className="row justify-content-start mb-4 px-2">
       <div className="col-12 rounded border p-3">
-        <PostHeader post={post} setEdit={() => setIsEdit(true)} />
+        <PostHeader
+          post={post}
+          setEdit={() => {
+            setIsEdit(true);
+          }}
+        />
         <PostImages post={post} />
         <PostBody
           post={post}

@@ -10,6 +10,7 @@ import Spinner from 'react-bootstrap/esm/Spinner';
 import { toast, ToastOptions } from 'react-toastify';
 import { useAppDispatch } from '../../app/hooks';
 import ImagePreview from '../../components/imagePreviewer/ImagePreview';
+import MySpinner from '../../components/MySpinner';
 import imagePicker from '../../utils/imagePicker';
 import useFormHooks from '../../utils/useFormHooks';
 import { createPostAction } from './postSlice';
@@ -147,17 +148,7 @@ const PostMaker = () => {
               type="submit"
               className="btn btn-primary"
             >
-              {isLoading ? (
-                <Spinner
-                  as="span"
-                  animation="border"
-                  size="sm"
-                  role="status"
-                  aria-hidden="true"
-                />
-              ) : (
-                'Post'
-              )}
+              {isLoading ? <MySpinner isFullHeight={false} /> : 'Post'}
             </button>
             <div>{state.body.length}/200</div>|
             <div className="d-flex align-items-center">

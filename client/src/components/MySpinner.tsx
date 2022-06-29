@@ -1,10 +1,16 @@
-export default function MySpinner() {
+import { FC } from 'react';
+
+interface IProps {
+  isFullHeight?: boolean;
+}
+
+const MySpinner: FC<IProps> = ({ isFullHeight = true }) => {
   return (
     <div
       style={{
         display: 'flex',
         justifyContent: 'center',
-        height: '100vh',
+        height: isFullHeight ? '100vh' : '100%',
         alignItems: 'center',
       }}
     >
@@ -47,4 +53,6 @@ export default function MySpinner() {
       </svg>
     </div>
   );
-}
+};
+
+export default MySpinner;

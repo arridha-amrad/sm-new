@@ -1,9 +1,9 @@
-import { FC, FormEvent } from "react";
-import Spinner from "react-bootstrap/esm/Spinner";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import useForm from "../../utils/useForm";
-import { Post } from "./IPost";
-import { selectPostState, updatePostAction } from "./postSlice";
+import { FC, FormEvent, useEffect, useRef } from 'react';
+import Spinner from 'react-bootstrap/esm/Spinner';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import useForm from '../../utils/useForm';
+import { Post } from './IPost';
+import { selectPostState, updatePostAction } from './postSlice';
 
 interface Props {
   hideFormEditPost: () => void;
@@ -16,7 +16,7 @@ const UpdatePostForm: FC<Props> = ({ hideFormEditPost, post }) => {
   });
 
   const { isLoading } = useAppSelector(selectPostState);
-
+  const ref = useRef<HTMLTextAreaElement>(null);
   const dispatch = useAppDispatch();
 
   const onSubmit = async (e: FormEvent) => {
@@ -27,22 +27,28 @@ const UpdatePostForm: FC<Props> = ({ hideFormEditPost, post }) => {
         postId: post._id,
       })
     );
-    if (res.meta.requestStatus === "fulfilled") {
+    if (res.meta.requestStatus === 'fulfilled') {
       setState({
         ...state,
-        body: "",
+        body: '',
       });
       hideFormEditPost();
     }
   };
+
+  useEffect(() => {
+    ref.current?.focus();
+  }, []);
+
   return (
     <form className="d-flex flex-column" onSubmit={onSubmit}>
       <textarea
+        ref={ref}
         onChange={onChange}
         value={state.body}
         name="body"
         placeholder="post body"
-        style={{ resize: "none" }}
+        style={{ resize: 'none' }}
         className="w-100 form-control"
       />
       <div className="d-flex gap-2 justify-content-end mt-1">
@@ -62,7 +68,7 @@ const UpdatePostForm: FC<Props> = ({ hideFormEditPost, post }) => {
               <span className="visually-hidden">Loading...</span>
             </>
           ) : (
-            "Update"
+            'Update'
           )}
         </button>
       </div>
