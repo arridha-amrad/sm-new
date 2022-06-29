@@ -1,10 +1,12 @@
 import axios from 'axios';
 import { CookieOptions, Request } from 'express';
+import { Document, Types } from 'mongoose';
 import qs from 'qs';
 import {
   GoogleTokensResult,
   GoogleUserResult,
 } from '../types/AuthControllerTypes';
+import { IUserModel } from '../types/ModelTypes';
 
 class Helpers {
   setCookieOptions: CookieOptions = {

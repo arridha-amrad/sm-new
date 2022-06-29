@@ -1,15 +1,16 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import {
   readNotificationAction,
   selectNotification,
   setNotifications,
-} from "../../features/notification/notificationSlice";
-import NotificationCard from "./NotificationCard";
-import useSWR from "swr";
-import "./style.css";
-import queryKey from "../../utils/queryKey";
-import fetcher from "../../utils/swrFetcher";
+} from '../../features/notification/notificationSlice';
+import NotificationCard from './NotificationCard';
+import useSWR from 'swr';
+import './style.css';
+import queryKey from '../../utils/queryKey';
+import fetcher from '../../utils/swrFetcher';
+import { Button } from 'react-bootstrap';
 
 const NotificationButton = () => {
   const [isShow, setIsShow] = useState(false);
@@ -42,9 +43,9 @@ const NotificationButton = () => {
   }, [data]);
 
   return (
-    <div style={{ position: "relative", paddingTop: "4px", cursor: "pointer" }}>
-      <button
-        onBlur={() => console.log("blur")}
+    <div style={{ position: 'relative', paddingTop: '4px', cursor: 'pointer' }}>
+      <Button
+        onBlur={() => console.log('blur')}
         ref={ref}
         onClick={async () => {
           setIsShow((prev) => !prev);
@@ -55,8 +56,8 @@ const NotificationButton = () => {
             await readNotification(ids);
           }
         }}
-        style={{ position: "relative" }}
-        className="btn p-0"
+        variant="outline-primary"
+        style={{ position: 'relative' }}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -68,7 +69,7 @@ const NotificationButton = () => {
         >
           <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z" />
         </svg>
-      </button>
+      </Button>
       {getUnreadNotifications().length > 0 && (
         <button
           onClick={() => {
@@ -90,7 +91,7 @@ const NotificationButton = () => {
               <NotificationCard notifIndex={index} notification={notif} />
               {notifications.length > 1 &&
                 index !== notifications.length - 1 && (
-                  <hr style={{ color: "#ccc" }} />
+                  <hr style={{ color: '#ccc' }} />
                 )}
             </div>
           ))}

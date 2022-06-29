@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
-import useSWR from "swr";
-import { useAppDispatch } from "../app/hooks";
-import { setLoginUser } from "../features/authentication/authSlice";
-import queryKey from "../utils/queryKey";
-import fetcher from "../utils/swrFetcher";
+import { useEffect, useState } from 'react';
+import useSWR from 'swr';
+import { useAppDispatch } from '../app/hooks';
+import { setLoginUser } from '../features/authentication/authSlice';
+import queryKey from '../utils/queryKey';
+import fetcher from '../utils/swrFetcher';
 
 const useCheckAuth = () => {
   const [loading, setIsLoading] = useState(true);

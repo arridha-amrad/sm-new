@@ -1,17 +1,19 @@
-import { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "../app/hooks";
-import PostCard from "../features/post/PostCard";
-import { selectPostState, setPosts } from "../features/post/postSlice";
-import useSWR from "swr";
-import queryKey from "../utils/queryKey";
-import fetcher from "../utils/swrFetcher";
-import MySpinner from "./MySpinner";
+import { useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from '../app/hooks';
+import PostCard from './Post/PostCard';
+import { selectPostState, setPosts } from '../features/post/postSlice';
+import useSWR from 'swr';
+import queryKey from '../utils/queryKey';
+import fetcher from '../utils/swrFetcher';
+import MySpinner from './MySpinner';
+import { selectAuthState } from '../features/authentication/authSlice';
 
 const HomePosts = () => {
   const { posts } = useAppSelector(selectPostState);
+  const { loginUser } = useAppSelector(selectAuthState);
   const dispatch = useAppDispatch();
 
-  const { data, error } = useSWR(queryKey.posts, fetcher);
+  const { data, error } = useSWR(loginUser ? queryKey.posts : null, fetcher);
 
   useEffect(() => {
     if (data) {

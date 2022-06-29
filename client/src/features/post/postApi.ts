@@ -1,11 +1,11 @@
-import axiosInstance from "../../utils/axiosInterceptor";
-import { INotification } from "../notification/INotification";
-import { Post, UpdatePostDTO } from "./IPost";
+import axiosInstance from '../../utils/axiosInterceptor';
+import { INotification } from '../notification/INotification';
+import { Post, UpdatePostDTO } from './IPost';
 
-const url = "/api/post";
+const url = '/api/post';
 
 export const createPostAPI = async (data: FormData) => {
-  return axiosInstance.post<{ post: Post }>(`${url}/create`, data);
+  return axiosInstance.post<{ post: Post }>(`${url}`, data);
 };
 
 export const getPostByIdAPI = async (postId: string) => {

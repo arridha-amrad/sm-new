@@ -14,7 +14,7 @@ class NewAuthRoutes extends Routes {
     // login
     this.router.post('/login', AuthController.login);
     // google oauth
-    this.router.post('/google-oauth', AuthController.googleOAuth);
+    this.router.get('/google', AuthController.googleOAuth);
     // logout
     this.router.post(
       '/logout',

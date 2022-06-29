@@ -131,10 +131,9 @@ class UserController {
 
   async refreshToken(req: Request, res: Response) {
     const refreshToken = Helpers.getRefreshTokenFromCookie(req);
-    console.log('ref token :', refreshToken);
 
     if (!refreshToken) {
-      return res.sendStatus(403);
+      return res.status(403).send('ref token was not included');
     }
     try {
       const userId = await JwtServices.verifyToken(refreshToken, 'refresh');
@@ -148,7 +147,7 @@ class UserController {
           hackedUser.refreshTokens = [];
           await hackedUser.save();
         }
-        return res.sendStatus(403);
+        return res.status(403).send('reuse detected');
       }
       const newRefreshTokens = user.refreshTokens.filter(
         (rt) => rt !== refreshToken
@@ -173,8 +172,6 @@ class UserController {
 
   async me(req: Request, res: Response) {
     const userId = Helpers.getUserIdFromAccToken(req);
-    console.log('req executed');
-
     try {
       const user = await UserServices.findUserById(
         userId,
@@ -185,7 +182,6 @@ class UserController {
       }
       return res.status(200).json({ user });
     } catch (err) {
-      console.log(err);
       return res.sendStatus(500);
     }
   }
@@ -199,7 +195,7 @@ class UserController {
       return res.status(200).json({ users });
     } catch (err) {
       console.log(err);
-      return res.status(500);
+      return res.sendStatus(500);
     }
   }
 

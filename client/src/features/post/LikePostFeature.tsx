@@ -1,8 +1,8 @@
-import { FC } from "react";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { selectAuthState } from "../authentication/authSlice";
-import { Post } from "./IPost";
-import { likePostAction, setLikePost } from "./postSlice";
+import { FC, useEffect, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { selectAuthState } from '../authentication/authSlice';
+import { Post } from './IPost';
+import { likePostAction, setLikePost } from './postSlice';
 
 interface Props {
   post: Post;
@@ -12,7 +12,15 @@ interface Props {
 const LikePostButton: FC<Props> = ({ post, stateIndex }) => {
   const { loginUser } = useAppSelector(selectAuthState);
   const dispatch = useAppDispatch();
-  const isLiked = post.likes.find((user) => user._id === loginUser?._id);
+
+  const [isLiked, setIsLiked] = useState(false);
+
+  useEffect(() => {
+    if (post) {
+      setIsLiked(!!post.likes.find((user) => user._id === loginUser?._id));
+    }
+    // eslint-disable-next-line
+  }, [post]);
 
   const handleLikePost = async () => {
     dispatch(
@@ -29,7 +37,7 @@ const LikePostButton: FC<Props> = ({ post, stateIndex }) => {
     <button
       onClick={handleLikePost}
       className="btn bg-transparent border-0 p-0"
-      style={{ cursor: "pointer" }}
+      style={{ cursor: 'pointer' }}
     >
       {isLiked ? (
         <svg

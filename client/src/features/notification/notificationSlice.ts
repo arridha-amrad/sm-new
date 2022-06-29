@@ -1,22 +1,22 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { WritableDraft } from "immer/dist/internal";
-import { RootState } from "../../app/store";
-import axiosInstance from "../../utils/axiosInterceptor";
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { WritableDraft } from 'immer/dist/internal';
+import { RootState } from '../../app/store';
+import axiosInstance from '../../utils/axiosInterceptor';
 import {
   INotification,
   NotificationState,
   NotificationType,
-} from "./INotification";
+} from './INotification';
 
 const initialState: NotificationState = {
   notifications: [],
 };
 
 export const readNotificationAction = createAsyncThunk(
-  "notification/read",
+  'notification/read',
   async (notificationIds: string[], thunkAPI) => {
     try {
-      await axiosInstance.put("/api/notification/mark-read", {
+      await axiosInstance.put('/api/notif/mark-read', {
         notificationIds,
       });
     } catch (err: any) {
@@ -27,7 +27,7 @@ export const readNotificationAction = createAsyncThunk(
 );
 
 const notificationSlice = createSlice({
-  name: "notification",
+  name: 'notification',
   initialState,
   reducers: {
     setNotifications: (state, action) => {

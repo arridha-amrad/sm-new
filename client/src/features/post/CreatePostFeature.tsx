@@ -1,47 +1,88 @@
-import { ChangeEvent, useEffect, useRef, useState } from "react";
-import Spinner from "react-bootstrap/esm/Spinner";
-import { toast } from "react-toastify";
-import { useAppDispatch } from "../../app/hooks";
-import CreatePageImagePreview from "../../components/CreatePostImagePreview";
-import useFormHooks from "../../utils/useFormHooks";
-import { createPostAction } from "./postSlice";
-import "./style.css";
+import {
+  ChangeEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import Spinner from 'react-bootstrap/esm/Spinner';
+import { toast, ToastOptions } from 'react-toastify';
+import { useAppDispatch } from '../../app/hooks';
+import ImagePreview from '../../components/imagePreviewer/ImagePreview';
+import imagePicker from '../../utils/imagePicker';
+import useFormHooks from '../../utils/useFormHooks';
+import { createPostAction } from './postSlice';
+import './style.css';
 
 interface PostMakerValidator {
   body?: string;
 }
 
+const toastOptions: ToastOptions = {
+  position: 'bottom-center',
+  autoClose: 5000,
+  hideProgressBar: true,
+  closeOnClick: false,
+  pauseOnHover: false,
+  draggable: false,
+  progress: undefined,
+};
+
 const PostMaker = () => {
   const dispatch = useAppDispatch();
-
   const checkField = () => {
     let errors: PostMakerValidator = {};
-    if (state.body.trim() === "") {
-      errors.body = "Body field is required";
+    if (state.body.trim() === '') {
+      errors.body = 'Body field is required';
     }
     return {
       errors,
       isValid: Object.keys(errors).length <= 0,
     };
   };
-
   const createPost = async () => {
     const formData = new FormData();
-    formData.append("body", state.body);
-    if (fileObj2) {
-      for (let i = 0; i < fileObj2!.length; i++) {
-        const file = fileObj2![i];
-        formData.append("images", file);
-      }
+    formData.append('body', state.body);
+    if (!files) {
+      return;
+    }
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      formData.append('images', file);
     }
     const res = await dispatch(createPostAction(formData));
-    if (res.meta.requestStatus === "fulfilled") {
-      notify("New post created successfully", "success");
+    if (res.meta.requestStatus === 'fulfilled') {
+      notify('New post created successfully', 'success');
       setState({
         ...state,
-        body: "",
+        body: '',
       });
       setPreviewImages([]);
+    }
+  };
+
+  const [files, setFiles] = useState<FileList | null>(null);
+  const [previewImages, setPreviewImages] = useState<string[]>([]);
+  const ref = useRef<HTMLInputElement>(null);
+
+  const handleImagePicker = (e: ChangeEvent<HTMLInputElement>) => {
+    const { error, fileToPreview, files } = imagePicker(e);
+    if (error) {
+      notify(error, 'error');
+    }
+    if (!error) {
+      setPreviewImages(fileToPreview);
+      setFiles(files);
+    }
+  };
+
+  const notify = (message: string, type: 'success' | 'error') => {
+    if (type === 'error') {
+      toast.error(message, toastOptions);
+    }
+    if (type === 'success') {
+      toast.success(message, toastOptions);
     }
   };
 
@@ -57,70 +98,11 @@ const PostMaker = () => {
     body: string;
   }>(
     {
-      body: "",
+      body: '',
     },
     createPost,
     checkField
   );
-
-  const [fileObj2, setFileObj2] = useState<FileList | null>(null);
-  const [previewImages, setPreviewImages] = useState<string[]>([]);
-  const ref = useRef<HTMLInputElement>(null);
-
-  const pickImages = (e: ChangeEvent<HTMLInputElement>) => {
-    const fileObj: FileList[] = [];
-    const fileArray: string[] = [];
-    const files = e.target.files;
-
-    if (files) {
-      let isLarge = false;
-      for (let i = 0; i < files.length; i++) {
-        if (files[i].size > 1000000) {
-          notify("Maximum size of a file is 1MB", "error");
-          isLarge = true;
-          break;
-        }
-      }
-      if (!isLarge) {
-        if (files.length > 4) {
-          notify("Maximum file is 4", "error");
-        } else {
-          setFileObj2(files);
-          fileObj.push(files);
-          for (let i = 0; i < fileObj[0].length; i++) {
-            const obj = URL.createObjectURL(fileObj[0][i]);
-            fileArray.push(obj);
-          }
-          setPreviewImages(fileArray);
-        }
-      }
-    }
-  };
-
-  const notify = (message: string, type: "success" | "error") => {
-    if (type === "error") {
-      toast.error(message, {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: true,
-        closeOnClick: false,
-        pauseOnHover: false,
-        draggable: false,
-        progress: undefined,
-      });
-    }
-    if (type === "success") {
-      toast.success(message, {
-        position: "bottom-center",
-        autoClose: 5000,
-        hideProgressBar: true,
-        closeOnClick: false,
-        pauseOnHover: false,
-        draggable: false,
-        progress: undefined,
-      });
-    }
-  };
 
   useEffect(() => {
     setFieldErrors(null);
@@ -137,7 +119,7 @@ const PostMaker = () => {
               onChange={onChange}
               name="body"
               value={state.body}
-              style={{ resize: "none" }}
+              style={{ resize: 'none' }}
               placeholder="write something ..."
             />
 
@@ -146,7 +128,7 @@ const PostMaker = () => {
             )}
           </div>
 
-          <CreatePageImagePreview previewImages={previewImages} />
+          <ImagePreview previewImages={previewImages} />
         </div>
 
         <input
@@ -155,7 +137,7 @@ const PostMaker = () => {
           type="file"
           hidden
           name="images"
-          onChange={pickImages}
+          onChange={handleImagePicker}
         />
 
         <div className="d-flex gap-2 justify-content-between align-items-center ">
@@ -174,7 +156,7 @@ const PostMaker = () => {
                   aria-hidden="true"
                 />
               ) : (
-                "Post"
+                'Post'
               )}
             </button>
             <div>{state.body.length}/200</div>|

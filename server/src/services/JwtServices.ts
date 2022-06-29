@@ -38,7 +38,7 @@ class JwtServices {
         },
         (err, payload) => {
           if (err) {
-            reject(new Error(`token verification error : ${err.message}`));
+            reject(new Error(err.message));
           }
           const { userId } = payload as { userId: string };
           resolve(userId);
