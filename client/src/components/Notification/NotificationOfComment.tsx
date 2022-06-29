@@ -20,7 +20,9 @@ const NotificationOfReply: FC<Props> = ({ notification, type, loginUser }) => {
       content = "commented your post";
       bodyTwo = notification.comment?.body;
       body = notification.post?.body;
-      time = timeSetter(new Date(notification.comment!.createdAt));
+      time = timeSetter(
+        new Date(notification.comment?.createdAt ?? new Date())
+      );
     }
     if (type === "reply") {
       content = "replied your comment";

@@ -1,12 +1,12 @@
-import { useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '../app/hooks';
-import PostCard from './Post/PostCard';
-import { selectPostState, setPosts } from '../features/post/postSlice';
-import useSWR from 'swr';
-import queryKey from '../utils/queryKey';
-import fetcher from '../utils/swrFetcher';
-import MySpinner from './MySpinner';
-import { selectAuthState } from '../features/authentication/authSlice';
+import { useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import PostCard from "./Post/PostCard";
+import { selectPostState, setPosts } from "../features/post/postSlice";
+import useSWR from "swr";
+import queryKey from "../utils/queryKey";
+import fetcher from "../utils/swrFetcher";
+import MySpinner from "./MySpinner";
+import { selectAuthState } from "../features/authentication/authSlice";
 
 const HomePosts = () => {
   const { posts } = useAppSelector(selectPostState);
@@ -23,7 +23,11 @@ const HomePosts = () => {
   }, [data]);
 
   if (!data && !error) {
-    return <MySpinner />;
+    return (
+      <div className="mt-5">
+        <MySpinner isFullHeight={false} />
+      </div>
+    );
   }
 
   return (

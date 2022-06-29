@@ -1,4 +1,4 @@
-import getGoogleOauthURL from "../utils/getGoogleOauthURL";
+import getGoogleOauthURL from "../../utils/getGoogleOauthURL";
 
 const GoogleLogin = () => {
   const onGoogleLogin = () => {

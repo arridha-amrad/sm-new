@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import ResetPasswordForm from "../features/authentication/ResetPasswordFeature";
+import ResetPasswordForm from "../features/user/ResetPasswordFeature";
 
 const ResetPasswordPage = () => {
   return (

@@ -1,16 +1,13 @@
-import { useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAppSelector } from '../app/hooks';
-import GoogleLogin from '../components/GoogleLogin';
-import { selectAuthState } from '../features/authentication/authSlice';
-import LoginForm from '../features/authentication/LoginFeature';
+import { Link } from "react-router-dom";
+import GoogleLogin from "../features/authentication/GoogleLogin";
+import LoginForm from "../features/authentication/LoginFeature";
 
 const Login = () => {
   return (
     <section className="d-flex flex-column min-vh-100 overflow-hidden">
       <div className="flex-grow-1 d-flex align-items-center  justify-content-center">
         <div
-          style={{ width: '400px' }}
+          style={{ width: "400px" }}
           className="d-flex flex-column gap-3 p-4 border rounded shadow-sm"
         >
           <h1 className="fw-bold">Login</h1>

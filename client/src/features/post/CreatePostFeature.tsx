@@ -1,27 +1,19 @@
-import {
-  ChangeEvent,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
-import Spinner from 'react-bootstrap/esm/Spinner';
-import { toast, ToastOptions } from 'react-toastify';
-import { useAppDispatch } from '../../app/hooks';
-import ImagePreview from '../../components/imagePreviewer/ImagePreview';
-import MySpinner from '../../components/MySpinner';
-import imagePicker from '../../utils/imagePicker';
-import useFormHooks from '../../utils/useFormHooks';
-import { createPostAction } from './postSlice';
-import './style.css';
+import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { toast, ToastOptions } from "react-toastify";
+import { useAppDispatch } from "../../app/hooks";
+import ImagePreview from "../../components/imagePreviewer/ImagePreview";
+import MySpinner from "../../components/MySpinner";
+import imagePicker from "../../utils/imagePicker";
+import useFormHooks from "../../utils/useFormHooks";
+import { createPostAction } from "./postSlice";
+import "./style.css";
 
 interface PostMakerValidator {
   body?: string;
 }
 
 const toastOptions: ToastOptions = {
-  position: 'bottom-center',
+  position: "bottom-center",
   autoClose: 5000,
   hideProgressBar: true,
   closeOnClick: false,
@@ -34,8 +26,8 @@ const PostMaker = () => {
   const dispatch = useAppDispatch();
   const checkField = () => {
     let errors: PostMakerValidator = {};
-    if (state.body.trim() === '') {
-      errors.body = 'Body field is required';
+    if (state.body.trim() === "") {
+      errors.body = "Body field is required";
     }
     return {
       errors,
@@ -44,20 +36,20 @@ const PostMaker = () => {
   };
   const createPost = async () => {
     const formData = new FormData();
-    formData.append('body', state.body);
+    formData.append("body", state.body);
     if (!files) {
       return;
     }
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      formData.append('images', file);
+      formData.append("images", file);
     }
     const res = await dispatch(createPostAction(formData));
-    if (res.meta.requestStatus === 'fulfilled') {
-      notify('New post created successfully', 'success');
+    if (res.meta.requestStatus === "fulfilled") {
+      notify("New post created successfully", "success");
       setState({
         ...state,
-        body: '',
+        body: "",
       });
       setPreviewImages([]);
     }
@@ -70,7 +62,7 @@ const PostMaker = () => {
   const handleImagePicker = (e: ChangeEvent<HTMLInputElement>) => {
     const { error, fileToPreview, files } = imagePicker(e);
     if (error) {
-      notify(error, 'error');
+      notify(error, "error");
     }
     if (!error) {
       setPreviewImages(fileToPreview);
@@ -78,11 +70,11 @@ const PostMaker = () => {
     }
   };
 
-  const notify = (message: string, type: 'success' | 'error') => {
-    if (type === 'error') {
+  const notify = (message: string, type: "success" | "error") => {
+    if (type === "error") {
       toast.error(message, toastOptions);
     }
-    if (type === 'success') {
+    if (type === "success") {
       toast.success(message, toastOptions);
     }
   };
@@ -99,7 +91,7 @@ const PostMaker = () => {
     body: string;
   }>(
     {
-      body: '',
+      body: "",
     },
     createPost,
     checkField
@@ -120,18 +112,15 @@ const PostMaker = () => {
               onChange={onChange}
               name="body"
               value={state.body}
-              style={{ resize: 'none' }}
+              style={{ resize: "none" }}
               placeholder="write something ..."
             />
-
             {fieldErrors?.body && (
               <small className="text-danger">{fieldErrors.body}</small>
             )}
           </div>
-
           <ImagePreview previewImages={previewImages} />
         </div>
-
         <input
           ref={ref}
           multiple
@@ -140,7 +129,6 @@ const PostMaker = () => {
           name="images"
           onChange={handleImagePicker}
         />
-
         <div className="d-flex gap-2 justify-content-between align-items-center ">
           <div className="d-flex gap-2 align-items-center">
             <button
@@ -148,7 +136,7 @@ const PostMaker = () => {
               type="submit"
               className="btn btn-primary"
             >
-              {isLoading ? <MySpinner isFullHeight={false} /> : 'Post'}
+              {isLoading ? <MySpinner isFullHeight={false} /> : "Post"}
             </button>
             <div>{state.body.length}/200</div>|
             <div className="d-flex align-items-center">

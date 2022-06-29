@@ -1,16 +1,16 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
   readNotificationAction,
   selectNotification,
   setNotifications,
-} from '../../features/notification/notificationSlice';
-import NotificationCard from './NotificationCard';
-import useSWR from 'swr';
-import './style.css';
-import queryKey from '../../utils/queryKey';
-import fetcher from '../../utils/swrFetcher';
-import { Button } from 'react-bootstrap';
+} from "../../features/notification/notificationSlice";
+import NotificationCard from "./NotificationCard";
+import useSWR from "swr";
+import "./style.css";
+import queryKey from "../../utils/queryKey";
+import fetcher from "../../utils/swrFetcher";
+import { Button } from "react-bootstrap";
 
 const NotificationButton = () => {
   const [isShow, setIsShow] = useState(false);
@@ -19,12 +19,9 @@ const NotificationButton = () => {
 
   const notifications = useAppSelector(selectNotification);
 
-  const readNotification = useCallback(
-    async (ids: string[]) => {
-      await dispatch(readNotificationAction(ids));
-    },
-    [notifications]
-  );
+  const readNotification = async (ids: string[]) => {
+    await dispatch(readNotificationAction(ids));
+  };
 
   const getUnreadNotifications = useCallback(() => {
     const ntfs = notifications.filter((ntf) => ntf.isRead === false);
@@ -43,9 +40,9 @@ const NotificationButton = () => {
   }, [data]);
 
   return (
-    <div style={{ position: 'relative', paddingTop: '4px', cursor: 'pointer' }}>
+    <div style={{ position: "relative", paddingTop: "4px", cursor: "pointer" }}>
       <Button
-        onBlur={() => console.log('blur')}
+        onBlur={() => console.log("blur")}
         ref={ref}
         onClick={async () => {
           setIsShow((prev) => !prev);
@@ -57,7 +54,7 @@ const NotificationButton = () => {
           }
         }}
         variant="outline-primary"
-        style={{ position: 'relative' }}
+        style={{ position: "relative" }}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -91,7 +88,7 @@ const NotificationButton = () => {
               <NotificationCard notifIndex={index} notification={notif} />
               {notifications.length > 1 &&
                 index !== notifications.length - 1 && (
-                  <hr style={{ color: '#ccc' }} />
+                  <hr style={{ color: "#ccc" }} />
                 )}
             </div>
           ))}

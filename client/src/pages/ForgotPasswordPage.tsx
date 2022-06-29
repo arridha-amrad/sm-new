@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import ForgotPasswordForm from "../features/authentication/ForgotPasswordFeature";
+import ForgotPasswordForm from "../features/user/ForgotPasswordFeature";
 
 const ForgotPasswordPage = () => {
   return (

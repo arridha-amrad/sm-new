@@ -1,16 +1,15 @@
 import { useAppDispatch } from "../../app/hooks";
-import InputPassword from "../../components/InputPassword";
 import MyAlert from "../../components/MyAlert";
 import useFormHooks from "../../utils/useFormHooks";
-import { forgotPasswordAction } from "./authSlice";
+import { forgotPasswordAction } from "../authentication/authSlice";
 
-const ResetPasswordFeature = () => {
-  type FieldValidator = Partial<{ password: string }>;
+const ForgotPasswordFeature = () => {
+  type FieldValidator = Partial<{ email: string }>;
   const dispatch = useAppDispatch();
   const checkField = () => {
     let errors: FieldValidator = {};
-    if (state.password.trim() === "") {
-      errors.password = "password field is required";
+    if (state.email.trim() === "") {
+      errors.email = "email field is required";
     }
     return {
       errors,
@@ -18,16 +17,16 @@ const ResetPasswordFeature = () => {
     };
   };
 
-  const resetPassword = async () => {
+  const sendResetPasswordRequest = async () => {
     try {
-      const result = await dispatch(forgotPasswordAction(state.password));
+      const result = await dispatch(forgotPasswordAction(state.email));
       if (result.meta.requestStatus === "fulfilled") {
         setAlert({
           text: result.payload,
           type: "success",
         });
         setState({
-          password: "",
+          email: "",
         });
       }
     } catch (err) {
@@ -44,11 +43,11 @@ const ResetPasswordFeature = () => {
     onSubmit,
     fieldErrors,
     setState,
-  } = useFormHooks<{ password: string }>(
+  } = useFormHooks<{ email: string }>(
     {
-      password: "",
+      email: "",
     },
-    resetPassword,
+    sendResetPasswordRequest,
     checkField
   );
 
@@ -56,21 +55,29 @@ const ResetPasswordFeature = () => {
     <div>
       {!!alert && <MyAlert alert={alert} close={() => setAlert(null)} />}
       <form onSubmit={onSubmit} className="d-flex flex-column gap-3">
-        <InputPassword
-          fieldError={fieldErrors?.password}
-          value={state.password}
-          onChange={onChange}
-        />
+        <div>
+          <input
+            value={state.email}
+            name="email"
+            onChange={onChange}
+            className="form-control"
+            placeholder="email"
+            type="text"
+          />
+          {fieldErrors?.email && (
+            <small className="text-danger">{fieldErrors.email}</small>
+          )}
+        </div>
         <button
-          disabled={isLoading || !state.password}
+          disabled={isLoading || !state.email}
           type="submit"
           className="btn btn-primary"
         >
-          {isLoading ? "loading..." : "Submit"}
+          {isLoading ? "loading..." : "Send"}
         </button>
       </form>
     </div>
   );
 };
 
-export default ResetPasswordFeature;
+export default ForgotPasswordFeature;

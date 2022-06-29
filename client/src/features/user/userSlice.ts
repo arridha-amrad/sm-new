@@ -1,7 +1,7 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { RootState } from '../../app/store';
-import axiosInstance from '../../utils/axiosInterceptor';
-import { User } from '../authentication/IAuthentication';
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { RootState } from "../../app/store";
+import axiosInstance from "../../utils/axiosInterceptor";
+import { User } from "../authentication/IAuthentication";
 
 interface UserState {
   searchUser: User[];
@@ -14,7 +14,7 @@ const initialState: UserState = {
 };
 
 export const searchUserAction = createAsyncThunk(
-  'user/search',
+  "user/search",
   async (username: string, thunkAPI) => {
     try {
       const { data } = await axiosInstance.get(
@@ -28,14 +28,13 @@ export const searchUserAction = createAsyncThunk(
 );
 
 const userSlice = createSlice({
-  name: 'user',
+  name: "user",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(searchUserAction.pending, (state) => {
       state.isLoadingSearchUser = true;
     });
-
     builder.addCase(searchUserAction.fulfilled, (state, action) => {
       state.searchUser = action.payload;
       state.isLoadingSearchUser = false;

@@ -1,7 +1,7 @@
 import { useAppDispatch } from "../../app/hooks";
 import InputPassword from "../../components/InputPassword";
-import { RegisterDTO } from "./IAuthentication";
-import { registerAction } from "./authSlice";
+import { RegisterDTO } from "../authentication/IAuthentication";
+import { registerAction } from "../authentication/authSlice";
 import useFormHooks from "../../utils/useFormHooks";
 import MyAlert from "../../components/MyAlert";
 
