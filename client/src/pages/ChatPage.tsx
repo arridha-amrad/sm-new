@@ -5,7 +5,7 @@ import Conversations from "../components/Chats/Conversations";
 import Messages from "../components/Chats/Messages";
 import { selectChatState } from "../features/chats/chatSlice";
 import CreateChat from "../features/chats/SendMessageFeature";
-import SearchUserFeature from "../features/chats/SearchUserFeature";
+import SearchUserFeature from "../components/Chats/SearchUser";
 
 import "./style.css";
 import { ToastContainer } from "react-toastify";

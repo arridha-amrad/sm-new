@@ -16,7 +16,7 @@ class NewUserRoutes extends Routes {
     // me
     this.router.get('/me', JwtServices.verifyAuthToken, UserController.me);
     // searchUser
-    this.router.get('/searchUser', UserController.searchUser);
+    this.router.get('/search', UserController.searchUser);
     // register
     this.router.post('/register', UserController.register);
     // forgot-password
@@ -26,7 +26,10 @@ class NewUserRoutes extends Routes {
     // refresh-token
     this.router.get('/refresh-token', UserController.refreshToken);
     // email-verification
-    this.router.get('/email-verification/:token');
+    this.router.get(
+      '/email-verification/:token',
+      UserController.emailVerification
+    );
   }
 }
 

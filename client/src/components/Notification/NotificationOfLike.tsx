@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { User } from "../../features/authentication/IAuthentication";
 import { INotification } from "../../features/notification/INotification";
 import timeSetter from "../../utils/timeSetter";
@@ -14,26 +14,43 @@ const NotificationOfLike: FC<Props> = ({
   typeOfLike,
   loginUser,
 }) => {
+  const [notif, setNotif] = useState({
+    time: "",
+    body: "",
+  });
+
   const setContent = () => {
-    let time;
-    let body;
-    if (typeOfLike === "comment") {
-      time = timeSetter(new Date(notification.comment!.createdAt));
-      body = notification.comment?.body;
+    switch (typeOfLike) {
+      case "comment":
+        return {
+          time: timeSetter(new Date(notification.comment!.createdAt)),
+          body: notification.comment?.body,
+        };
+      case "post":
+        return {
+          time: timeSetter(new Date(notification.post!.createdAt)),
+          body: notification.post?.body,
+        };
+      case "reply":
+        return {
+          time: timeSetter(new Date(notification.reply!.createdAt)),
+          body: notification.reply?.body,
+        };
+      default:
+        return {
+          time: "",
+          body: "",
+        };
     }
-    if (typeOfLike === "post") {
-      time = timeSetter(new Date(notification.post!.createdAt));
-      body = notification.post?.body;
-    }
-    if (typeOfLike === "reply") {
-      time = timeSetter(new Date(notification.reply!.createdAt));
-      body = notification.reply?.body;
-    }
-    return {
-      time,
-      body,
-    };
   };
+
+  useEffect(() => {
+    const { time, body } = setContent();
+    setNotif({
+      body: body!,
+      time,
+    });
+  }, [notification]);
 
   return (
     <div className="d-flex gap-3 align-items-start p-3">
@@ -78,10 +95,10 @@ const NotificationOfLike: FC<Props> = ({
             <div>
               you
               <span className="ms-2">
-                <small className="text-secondary">{setContent().time}</small>
+                <small className="text-secondary">{notif.time}</small>
               </span>
             </div>
-            <div>{setContent().body}</div>
+            <div>{notif.body}</div>
           </div>
         </div>
       </div>

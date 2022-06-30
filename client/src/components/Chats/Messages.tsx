@@ -1,48 +1,57 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { selectAuthState } from "../../features/authentication/authSlice";
 import { selectChatState, setMessages } from "../../features/chats/chatSlice";
 import { Message } from "../../features/chats/IChat";
-import axiosInstance from "../../utils/axiosInterceptor";
+
 import timeSetter from "../../utils/timeSetter";
-import { Spinner } from "react-bootstrap";
 
 import "./style.css";
+import useSWR from "swr";
+import queryKeys from "../../utils/queryKey";
+import fetcher from "../../utils/swrFetcher";
+import MySpinner from "../MySpinner";
+import { useSearchParams } from "react-router-dom";
 
 const Messages = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const { selectedConversation, messages } = useAppSelector(selectChatState);
+  const { messages } = useAppSelector(selectChatState);
   const { loginUser } = useAppSelector(selectAuthState);
   const dispatch = useAppDispatch();
+  const lastMessageRef = useRef<HTMLDivElement>(null);
+
+  const [val] = useSearchParams();
+
+  const { data, error, isValidating } = useSWR(
+    val.get("id")
+      ? `${queryKeys.messages}?conversationId=${val.get("id")}`
+      : null,
+    fetcher
+  );
+
   useEffect(() => {
-    const controller = new AbortController();
-    let isMounted = true;
-    const fetchMessages = async () => {
-      setIsLoading(true);
-      const { data } = await axiosInstance.get(
-        `/api/chat/messages?conversationId=${selectedConversation?._id}`,
-        {
-          signal: controller.signal,
-        }
-      );
+    if (data) {
       dispatch(setMessages(data.messages));
-      isMounted && setIsLoading(false);
-    };
-    fetchMessages();
-    return () => {
-      controller.abort();
-      isMounted = false;
-    };
+    }
     // eslint-disable-next-line
-  }, [selectedConversation?._id]);
+  }, [data, error]);
+
+  useEffect(() => {
+    if (lastMessageRef.current) {
+      lastMessageRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "end",
+        inline: "nearest",
+      });
+    }
+  }, [messages]);
 
   const isSentByMe = (message: Message) =>
     message.sender._id === loginUser?._id;
 
-  if (isLoading) {
+  if (isValidating) {
     return (
       <div className="d-flex h-100 w-100 align-items-center justify-content-center">
-        <Spinner animation="border" />
+        <MySpinner isFullHeight={false} />
       </div>
     );
   }
@@ -52,7 +61,7 @@ const Messages = () => {
       className="d-flex flex-column h-100 w-100"
       style={{ overflow: "auto" }}
     >
-      <div className="flex-grow-1 d-flex flex-column p-3">
+      <div className="flex-grow-1 d-flex flex-column p-3 h-100">
         {messages.map((message) => (
           <div
             key={message._id}
@@ -80,6 +89,7 @@ const Messages = () => {
             </small>
           </div>
         ))}
+        <div ref={lastMessageRef} />
       </div>
     </div>
   );

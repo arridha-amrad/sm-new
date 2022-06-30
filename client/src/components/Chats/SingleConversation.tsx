@@ -1,4 +1,5 @@
 import { FC } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { selectAuthState } from "../../features/authentication/authSlice";
 import { User } from "../../features/authentication/IAuthentication";
@@ -15,6 +16,8 @@ const SingleConversation: FC<{
   conversation: Conversation;
   conversationIndex: number;
 }> = ({ user, conversation, conversationIndex }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const { loginUser } = useAppSelector(selectAuthState);
   const { selectedReceiverId } = useAppSelector(selectChatState);
   const isSelected = user._id === selectedReceiverId;
@@ -30,6 +33,7 @@ const SingleConversation: FC<{
             receiverUsername: user.username,
           })
         );
+        navigate(`${location.pathname}?id=${conversation._id}`);
       }}
       className={`${
         isSelected ? "bg-gray" : ""

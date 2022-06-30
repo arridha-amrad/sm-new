@@ -1,6 +1,7 @@
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { User } from "../../features/authentication/IAuthentication";
 import { INotification } from "../../features/notification/INotification";
+import ChatIcon from "../../icons/ChatIcon";
 import timeSetter from "../../utils/timeSetter";
 
 interface Props {
@@ -10,56 +11,63 @@ interface Props {
 }
 
 const NotificationOfReply: FC<Props> = ({ notification, type, loginUser }) => {
-  const setContent = () => {
-    let time;
-    let body;
-    let bodyTwo;
-    let content;
+  const [notif, setNotif] = useState({
+    content: "",
+    time: "",
+    body: "",
+    bodyTwo: "",
+  });
 
-    if (type === "comment") {
-      content = "commented your post";
-      bodyTwo = notification.comment?.body;
-      body = notification.post?.body;
-      time = timeSetter(
-        new Date(notification.comment?.createdAt ?? new Date())
-      );
+  const setContent = () => {
+    switch (type) {
+      case "comment":
+        return {
+          content: "commented your post",
+          bodyTwo: notification.comment?.body ?? "",
+          body: notification.post?.body ?? "",
+          time: timeSetter(
+            new Date(notification.comment?.createdAt ?? new Date())
+          ),
+        };
+      case "reply":
+        return {
+          content: "replied your comment",
+          time: timeSetter(new Date(notification.reply!.createdAt)),
+          body: notification.comment?.body ?? "",
+          bodyTwo: notification.reply?.body ?? "",
+        };
+      case "replyOfReply":
+        return {
+          content: "replied your comment",
+          time: timeSetter(new Date(notification.reply!.createdAt)),
+          body: notification.reply?.body ?? "",
+          bodyTwo: notification.replyTwo?.body ?? "",
+        };
+      default:
+        return {
+          time: "",
+          body: "",
+          bodyTwo: "",
+          content: "",
+        };
     }
-    if (type === "reply") {
-      content = "replied your comment";
-      time = timeSetter(new Date(notification.reply!.createdAt));
-      body = notification.comment?.body;
-      bodyTwo = notification.reply?.body;
-    }
-    if (type === "replyOfReply") {
-      content = "answer your replied comment";
-      time = timeSetter(new Date(notification.reply!.createdAt));
-      body = notification.reply?.body;
-      bodyTwo = notification.replyTwo?.body;
-    }
-    return { time, body, bodyTwo, content };
   };
+
+  useEffect(() => {
+    const res = setContent();
+    setNotif({ ...res });
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <div className="d-flex align-items-start p-3 gap-3">
       <div className="d-flex flex-column gap-2 align-items-center">
-        <div>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="25"
-            height="25"
-            fill="currentColor"
-            className="bi bi-chat-right-quote"
-            viewBox="0 0 16 16"
-          >
-            <path d="M2 1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h9.586a2 2 0 0 1 1.414.586l2 2V2a1 1 0 0 0-1-1H2zm12-1a2 2 0 0 1 2 2v12.793a.5.5 0 0 1-.854.353l-2.853-2.853a1 1 0 0 0-.707-.293H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h12z" />
-            <path d="M7.066 4.76A1.665 1.665 0 0 0 4 5.668a1.667 1.667 0 0 0 2.561 1.406c-.131.389-.375.804-.777 1.22a.417.417 0 1 0 .6.58c1.486-1.54 1.293-3.214.682-4.112zm4 0A1.665 1.665 0 0 0 8 5.668a1.667 1.667 0 0 0 2.561 1.406c-.131.389-.375.804-.777 1.22a.417.417 0 1 0 .6.58c1.486-1.54 1.293-3.214.682-4.112z" />
-          </svg>
-        </div>
-        <div className={notification.isOpen ? "" : "unseen"} />
+        <ChatIcon />
+        <div className={notification.isOpen ? "" : "unseen bg-primary"} />
       </div>
       <div className="d-flex flex-column gap-1">
         <div>
-          {notification.sender.username} {setContent().content}
+          {notification.sender.username} {notif.content}
         </div>
         <small className="text-secondary">
           {timeSetter(new Date(notification.updatedAt))}
@@ -75,10 +83,10 @@ const NotificationOfReply: FC<Props> = ({ notification, type, loginUser }) => {
             <div>
               you
               <span className="ms-2">
-                <small className="text-secondary">{setContent().time}</small>
+                <small className="text-secondary">{notif.time}</small>
               </span>
             </div>
-            <div>{setContent().body}</div>
+            <div>{notif.body}</div>
             <div className="d-flex align-items-start gap-2">
               <div className="mt-2">
                 <svg
@@ -111,7 +119,7 @@ const NotificationOfReply: FC<Props> = ({ notification, type, loginUser }) => {
                       </small>
                     </span>
                   </small>
-                  <small>{setContent().bodyTwo}</small>
+                  <small>{notif.bodyTwo}</small>
                 </div>
               </div>
             </div>

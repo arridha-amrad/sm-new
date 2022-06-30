@@ -7,6 +7,10 @@ const queryKeys = {
   notifs: "/api/notif",
   // conversations
   conversations: "/api/chat/many",
+  // search user
+  searchUser: "/api/user/search",
+  // messages
+  messages: "/api/chat/messages",
 };
 
 export default queryKeys;

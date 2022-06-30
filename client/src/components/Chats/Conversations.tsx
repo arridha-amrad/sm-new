@@ -32,7 +32,11 @@ const Conversations = () => {
 
   return (
     <div className="w-100">
-      {loading && <MySpinner />}
+      {loading && (
+        <div className="mt-4">
+          <MySpinner isFullHeight={false} />
+        </div>
+      )}
       {conversations.map((conversation, index) => (
         <SingleConversation
           key={index}
