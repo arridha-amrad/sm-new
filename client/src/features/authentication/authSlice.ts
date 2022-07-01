@@ -3,7 +3,7 @@ import { RootState } from "../../app/store";
 import axiosInstance, { setToken } from "../../utils/axiosInterceptor";
 import { AuthState, LoginDTO, RegisterDTO, User } from "./IAuthentication";
 import { setConversations } from "../chats/chatSlice";
-import { getSocket, setSocket } from "../../mySocket";
+import { getSocket, setSocket } from "../../socket/mySocket";
 import { io } from "socket.io-client";
 import configVariables from "../../config";
 

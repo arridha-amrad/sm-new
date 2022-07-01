@@ -1,11 +1,11 @@
-import { useEffect } from 'react';
-import { io } from 'socket.io-client';
-import { useAppDispatch, useAppSelector } from '../app/hooks';
-import configVariables from '../config';
-import { selectAuthState } from '../features/authentication/authSlice';
-import { receiveMessage } from '../features/chats/chatSlice';
-import { addNotification } from '../features/notification/notificationSlice';
-import { getSocket, setSocket } from '../mySocket';
+import { useEffect } from "react";
+import { io } from "socket.io-client";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import configVariables from "../config";
+import { selectAuthState } from "../features/authentication/authSlice";
+import { receiveMessage } from "../features/chats/chatSlice";
+import { addNotification } from "../features/notification/notificationSlice";
+import { getSocket, setSocket } from "../socket/mySocket";
 
 const useSocket = () => {
   const socket = getSocket();
@@ -15,7 +15,7 @@ const useSocket = () => {
   useEffect(() => {
     const socketIo = io(configVariables.serverOrigin);
     setSocket(socketIo);
-    console.log('socket io : ', socketIo);
+    console.log("socket io : ", socketIo);
     return () => {
       socket?.disconnect();
     };
@@ -23,23 +23,23 @@ const useSocket = () => {
   }, []);
 
   useEffect(() => {
-    socket?.on('createReplySC', (notification) => {
+    socket?.on("createReplySC", (notification) => {
       dispatch(addNotification(notification));
     });
-    socket?.on('createCommentSC', (notification) => {
+    socket?.on("createCommentSC", (notification) => {
       dispatch(addNotification(notification));
     });
-    socket?.on('likePostSC', (notification) => {
+    socket?.on("likePostSC", (notification) => {
       dispatch(addNotification(notification));
     });
-    socket?.on('likeCommentSC', (notification) => {
+    socket?.on("likeCommentSC", (notification) => {
       dispatch(addNotification(notification));
     });
-    socket?.on('likeReplySC', (notification) => {
+    socket?.on("likeReplySC", (notification) => {
       dispatch(addNotification(notification));
     });
 
-    socket?.on('sendMessageSC', (conversation, message) => {
+    socket?.on("sendMessageSC", (conversation, message) => {
       dispatch(
         receiveMessage({
           conversation,
@@ -52,7 +52,7 @@ const useSocket = () => {
 
   useEffect(() => {
     if (loginUser) {
-      socket?.emit('addUserCS', loginUser.username);
+      socket?.emit("addUserCS", loginUser.username);
     }
   }, [loginUser, socket]);
 };

@@ -53,10 +53,12 @@ export const initIo = (httpServer: HTTPServer) => {
       console.log('online-users : ', onlineUsers);
     });
 
-    socket.on('setTypingCS', ({ isTyping }, username) => {
-      const user = getUser(username);
+    socket.on('setTypingCS', ({ chatId, isTyping, toUsername }) => {
+      console.log('set Typing CS : ', { chatId });
+
+      const user = getUser(toUsername);
       if (user) {
-        io.to(user.socketId).emit('setTypingSC', { isTyping });
+        io.to(user.socketId).emit('setTypingSC', { chatId, isTyping });
       }
     });
 

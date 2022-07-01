@@ -1,9 +1,10 @@
 import { FC, useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { selectAuthState } from "../../features/authentication/authSlice";
 import { resetSelectedConversation } from "../../features/chats/chatSlice";
 import { Conversation } from "../../features/chats/IChat";
-import { getSocket } from "../../mySocket";
+import { getSocket } from "../../socket/mySocket";
 
 import "./style.css";
 
@@ -20,12 +21,23 @@ const ConversationHeader: FC<Props> = ({ selectedConversation }) => {
   );
   const [isTyping, setIsTyping] = useState(false);
 
+  const [val] = useSearchParams();
+  const cId = val.get("id");
+
   useEffect(() => {
-    socket?.on("setTypingSC", ({ isTyping }) => {
-      setIsTyping(isTyping);
+    setIsTyping(false);
+  }, [cId]);
+
+  useEffect(() => {
+    socket?.on("setTypingSC", ({ isTyping, chatId }) => {
+      if (cId === chatId) {
+        setIsTyping(isTyping);
+      } else {
+        setIsTyping(false);
+      }
     });
     // eslint-disable-next-line
-  }, [socket]);
+  }, [socket, cId]);
 
   return (
     <div className="d-flex h-100 p-1">

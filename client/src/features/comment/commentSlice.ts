@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
-import { getSocket } from "../../mySocket";
+import { getSocket } from "../../socket/mySocket";
 import { removeComment, setComment, setLikeComment } from "../post/postSlice";
 import {
   createCommentAPI,

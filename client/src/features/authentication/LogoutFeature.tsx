@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useSWRConfig } from "swr";
 import { useAppDispatch } from "../../app/hooks";
-import { getSocket } from "../../mySocket";
+import { getSocket } from "../../socket/mySocket";
 import queryKeys from "../../utils/queryKey";
 import { logoutAction } from "./authSlice";
 

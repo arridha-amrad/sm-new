@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Spinner } from "react-bootstrap";
+import { useSearchParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { getSocket } from "../../mySocket";
+import { getSocket } from "../../socket/mySocket";
 import useFormHooks from "../../utils/useFormHooks";
 import {
   sendMessageAction,
@@ -55,6 +56,7 @@ const SendMessageFeature = () => {
     }
     setIsLoading(false);
   };
+
   const { onChange, onSubmit, state, setState } = useFormHooks(
     {
       message: "",
@@ -63,12 +65,30 @@ const SendMessageFeature = () => {
     checkField
   );
 
+  const [val] = useSearchParams();
+  const chatId = val.get("id");
+
+  useEffect(() => {
+    setState({
+      ...state,
+      message: "",
+    });
+  }, [chatId]);
+
   const setTyping = () => {
-    socket?.emit("setTypingCS", { isTyping: true }, selectedReceiverUsername);
+    socket?.emit("setTypingCS", {
+      isTyping: true,
+      chatId,
+      toUsername: selectedReceiverUsername,
+    });
   };
 
   const unsetTyping = () => {
-    socket?.emit("setTypingCS", { isTyping: false }, selectedReceiverUsername);
+    socket?.emit("setTypingCS", {
+      isTyping: false,
+      chatId,
+      toUsername: selectedReceiverUsername,
+    });
   };
 
   return (
@@ -77,7 +97,7 @@ const SendMessageFeature = () => {
       className="d-flex align-items-center border-top h-100 gap-3 p-3"
     >
       <textarea
-        onKeyUp={setTyping}
+        onKeyDown={setTyping}
         onBlur={unsetTyping}
         className="text-input"
         onChange={onChange}

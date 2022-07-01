@@ -2,7 +2,7 @@ import {
   IConversation,
   IMessage,
   INotificationModel,
-} from '../types/ModelTypes';
+} from "../types/ModelTypes";
 
 interface ISetTyping {
   isTyping: boolean;
@@ -10,7 +10,7 @@ interface ISetTyping {
   toUsername: string;
 }
 
-type ISetTypingSC = Omit<ISetTyping, 'toUsername'>;
+type ISetTypingSC = Omit<ISetTyping, "toUsername">;
 
 export interface ServerToClientEvents {
   greet: (msg: string) => void;
