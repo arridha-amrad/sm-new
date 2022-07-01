@@ -1,13 +1,13 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "../../app/store";
-import { getSocket } from "../../mySocket";
-import axiosInstance from "../../utils/axiosInterceptor";
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { RootState } from '../../app/store';
+import { getSocket } from '../../mySocket';
+import axiosInstance from '../../utils/axiosInterceptor';
 import {
   Conversation,
   Message,
   SelectedConversation,
   SendChatDTO,
-} from "./IChat";
+} from './IChat';
 
 interface ChatState {
   conversations: Conversation[];
@@ -28,7 +28,7 @@ const initialState: ChatState = {
 };
 
 export const sendMessageAction = createAsyncThunk(
-  "chat/send",
+  'chat/send',
   async (dto: SendChatDTO, thunkAPI) => {
     const socket = getSocket();
     const { isGroup, message, receiverId, conversationId, toUsername } = dto;
@@ -38,7 +38,7 @@ export const sendMessageAction = createAsyncThunk(
         { message, receiverId }
       );
       socket?.emit(
-        "sendMessageCS",
+        'sendMessageCS',
         data.conversation,
         data.message,
         toUsername
@@ -51,7 +51,7 @@ export const sendMessageAction = createAsyncThunk(
 );
 
 const chatSlice = createSlice({
-  name: "chat",
+  name: 'chat',
   initialState,
   reducers: {
     resetSelectedConversation: (state) => {
@@ -109,7 +109,9 @@ const chatSlice = createSlice({
         state.conversations[conIndex].lastMessage = message;
         state.conversations[conIndex].totalUnreadMessage += 1;
       }
-      state.messages.push(message);
+      if (state.selectedConversation?._id === _id) {
+        state.messages.push(message);
+      }
     },
   },
   extraReducers: (builder) => {

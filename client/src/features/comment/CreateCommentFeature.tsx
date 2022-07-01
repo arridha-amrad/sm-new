@@ -1,8 +1,9 @@
-import React, { HTMLProps } from "react";
-import { useAppDispatch } from "../../app/hooks";
-import { createCommentAction } from "./commentSlice";
-import { Post } from "../post/IPost";
-import useFormHooks from "../../utils/useFormHooks";
+import React, { HTMLProps } from 'react';
+import { useAppDispatch } from '../../app/hooks';
+import { createCommentAction } from './commentSlice';
+import { Post } from '../post/IPost';
+import useFormHooks from '../../utils/useFormHooks';
+import MySpinner from '../../components/MySpinner';
 
 type InputProps = HTMLProps<HTMLInputElement>;
 
@@ -16,8 +17,8 @@ const CommentMaker = React.forwardRef<HTMLInputElement, Props>(
 
     const checkField = () => {
       let errors: { body?: string } = {};
-      if (state.body.trim() === "") {
-        errors.body = "Identity field is required";
+      if (state.body.trim() === '') {
+        errors.body = 'Identity field is required';
       }
       return {
         errors,
@@ -33,10 +34,10 @@ const CommentMaker = React.forwardRef<HTMLInputElement, Props>(
           toUsername: post.owner.username,
         })
       );
-      if (res.meta.requestStatus === "fulfilled") {
+      if (res.meta.requestStatus === 'fulfilled') {
         setState({
           ...state,
-          body: "",
+          body: '',
         });
       }
     };
@@ -44,7 +45,7 @@ const CommentMaker = React.forwardRef<HTMLInputElement, Props>(
     const { fieldErrors, isLoading, onChange, onSubmit, setState, state } =
       useFormHooks(
         {
-          body: "",
+          body: '',
         },
         createComment,
         checkField
@@ -68,7 +69,7 @@ const CommentMaker = React.forwardRef<HTMLInputElement, Props>(
           type="submit"
           className="btn btn-primary"
         >
-          Send
+          {isLoading ? <MySpinner isFullHeight={false} /> : 'Send'}
         </button>
       </form>
     );

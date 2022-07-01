@@ -1,30 +1,31 @@
-import { useEffect, useRef } from "react";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { selectAuthState } from "../../features/authentication/authSlice";
-import { selectChatState, setMessages } from "../../features/chats/chatSlice";
-import { Message } from "../../features/chats/IChat";
+import { useEffect, useRef } from 'react';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { selectAuthState } from '../../features/authentication/authSlice';
+import { selectChatState, setMessages } from '../../features/chats/chatSlice';
+import { Message } from '../../features/chats/IChat';
 
-import timeSetter from "../../utils/timeSetter";
+import timeSetter from '../../utils/timeSetter';
 
-import "./style.css";
-import useSWR from "swr";
-import queryKeys from "../../utils/queryKey";
-import fetcher from "../../utils/swrFetcher";
-import MySpinner from "../MySpinner";
-import { useSearchParams } from "react-router-dom";
+import './style.css';
+import useSWR from 'swr';
+import queryKeys from '../../utils/queryKey';
+import fetcher from '../../utils/swrFetcher';
+import MySpinner from '../MySpinner';
+import { useSearchParams } from 'react-router-dom';
 
 const Messages = () => {
   const { messages } = useAppSelector(selectChatState);
   const { loginUser } = useAppSelector(selectAuthState);
   const dispatch = useAppDispatch();
-  const lastMessageRef = useRef<HTMLDivElement>(null);
+
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const outerContainerRef = useRef<HTMLDivElement>(null);
 
   const [val] = useSearchParams();
+  const chatId = val.get('id');
 
   const { data, error, isValidating } = useSWR(
-    val.get("id")
-      ? `${queryKeys.messages}?conversationId=${val.get("id")}`
-      : null,
+    chatId ? `${queryKeys.messages}?conversationId=${chatId}` : null,
     fetcher
   );
 
@@ -36,14 +37,19 @@ const Messages = () => {
   }, [data, error]);
 
   useEffect(() => {
-    if (lastMessageRef.current) {
-      lastMessageRef.current.scrollIntoView({
-        behavior: "smooth",
-        block: "end",
-        inline: "nearest",
+    if (messagesContainerRef.current) {
+      outerContainerRef.current?.scroll({
+        behavior: 'smooth',
+        top: messagesContainerRef.current.scrollHeight,
       });
     }
-  }, [messages]);
+  }, [messagesContainerRef.current?.scrollHeight]);
+
+  useEffect(() => {
+    outerContainerRef.current?.scroll({
+      top: 0,
+    });
+  }, [chatId]);
 
   const isSentByMe = (message: Message) =>
     message.sender._id === loginUser?._id;
@@ -58,38 +64,26 @@ const Messages = () => {
 
   return (
     <div
+      ref={outerContainerRef}
       className="d-flex flex-column h-100 w-100"
-      style={{ overflow: "auto" }}
+      style={{ overflow: 'auto' }}
     >
-      <div className="flex-grow-1 d-flex flex-column p-3 h-100">
+      <div ref={messagesContainerRef} className="d-flex flex-column my-2 mx-3">
         {messages.map((message) => (
           <div
             key={message._id}
-            style={{
-              maxWidth: "400px",
-            }}
-            className={` ${
+            className={`message-container ${
               isSentByMe(message)
-                ? "bg-pink align-self-end"
-                : "border align-self-start"
+                ? 'bg-pink align-self-end'
+                : 'border align-self-start'
             } p-3 gap-4 rounded my-2`}
           >
-            <div
-              style={{
-                whiteSpace: "pre-line",
-                wordBreak: "break-all",
-                overflowWrap: "break-word",
-                width: "100%",
-              }}
-            >
-              {message.text}
-            </div>
+            <div className="message-body">{message.text}</div>
             <small className="d-block text-secondary text-nowrap text-end">
               {timeSetter(new Date(message.createdAt))}
             </small>
           </div>
         ))}
-        <div ref={lastMessageRef} />
       </div>
     </div>
   );

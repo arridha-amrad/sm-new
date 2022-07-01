@@ -1,11 +1,11 @@
-import { FC, useEffect, useState } from "react";
-import { User } from "../../features/authentication/IAuthentication";
-import { INotification } from "../../features/notification/INotification";
-import timeSetter from "../../utils/timeSetter";
+import { FC, useEffect, useState } from 'react';
+import { User } from '../../features/authentication/IAuthentication';
+import { INotification } from '../../features/notification/INotification';
+import timeSetter from '../../utils/timeSetter';
 
 interface Props {
   notification: INotification;
-  typeOfLike: "post" | "comment" | "reply";
+  typeOfLike: 'post' | 'comment' | 'reply';
   loginUser: User;
 }
 
@@ -15,31 +15,31 @@ const NotificationOfLike: FC<Props> = ({
   loginUser,
 }) => {
   const [notif, setNotif] = useState({
-    time: "",
-    body: "",
+    time: '',
+    body: '',
   });
 
   const setContent = () => {
     switch (typeOfLike) {
-      case "comment":
+      case 'comment':
         return {
           time: timeSetter(new Date(notification.comment!.createdAt)),
           body: notification.comment?.body,
         };
-      case "post":
+      case 'post':
         return {
           time: timeSetter(new Date(notification.post!.createdAt)),
           body: notification.post?.body,
         };
-      case "reply":
+      case 'reply':
         return {
           time: timeSetter(new Date(notification.reply!.createdAt)),
           body: notification.reply?.body,
         };
       default:
         return {
-          time: "",
-          body: "",
+          time: '',
+          body: '',
         };
     }
   };
@@ -50,6 +50,7 @@ const NotificationOfLike: FC<Props> = ({
       body: body!,
       time,
     });
+    // eslint-disable-next-line
   }, [notification]);
 
   return (
@@ -70,7 +71,7 @@ const NotificationOfLike: FC<Props> = ({
             />
           </svg>
         </div>
-        <div className={notification.isOpen ? "" : "unseen"} />
+        <div className={notification.isOpen ? '' : 'unseen'} />
       </div>
       <div className="d-flex flex-column gap-1">
         <div className="d-flex flex-column justify-content-start align-items-start">
@@ -88,7 +89,7 @@ const NotificationOfLike: FC<Props> = ({
               src={loginUser.avatarURL}
               alt="avatar"
               className="rounded-circle mt-2"
-              style={{ width: "30px", height: "30px" }}
+              style={{ width: '30px', height: '30px' }}
             />
           </div>
           <div className="d-flex flex-column align-items-start">

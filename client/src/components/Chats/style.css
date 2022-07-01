@@ -39,3 +39,14 @@
     display: none;
   }
 }
+
+.message-container {
+  max-width: 400px;
+}
+
+.message-body {
+  white-space: 'pre-line';
+  word-break: 'break-all';
+  overflow-wrap: 'break-word';
+  width: '100%';
+}
