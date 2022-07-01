@@ -54,50 +54,48 @@ export const initIo = (httpServer: HTTPServer) => {
     });
 
     socket.on('setTypingCS', ({ chatId, isTyping, toUsername }) => {
-      console.log('set Typing CS : ', { chatId });
-
       const user = getUser(toUsername);
       if (user) {
         io.to(user.socketId).emit('setTypingSC', { chatId, isTyping });
       }
     });
 
-    socket.on('sendMessageCS', (conversation, message, toUsername) => {
+    socket.on('sendMessageCS', ({ conversation, message, toUsername }) => {
       const user = getUser(toUsername);
       if (user) {
-        io.to(user.socketId).emit('sendMessageSC', conversation, message);
+        io.to(user.socketId).emit('sendMessageSC', { conversation, message });
       }
     });
 
-    socket.on('createCommentCS', (notification, toUsername) => {
+    socket.on('createCommentCS', ({ notification, toUsername }) => {
       const user = getUser(toUsername);
       if (user) {
         io.to(user.socketId).emit('createCommentSC', notification);
       }
     });
 
-    socket.on('createReplyCS', (notification, toUsername) => {
+    socket.on('createReplyCS', ({ notification, toUsername }) => {
       const user = getUser(toUsername);
       if (user) {
         io.to(user.socketId).emit('createReplySC', notification);
       }
     });
 
-    socket.on('likeCommentCS', (notification, toUsername) => {
+    socket.on('likeCommentCS', ({ notification, toUsername }) => {
       const user = getUser(toUsername);
       if (user) {
         io.to(user.socketId).emit('likeCommentSC', notification);
       }
     });
 
-    socket.on('likePostCS', (notification, toUsername) => {
+    socket.on('likePostCS', ({ notification, toUsername }) => {
       const user = getUser(toUsername);
       if (user) {
         io.to(user.socketId).emit('likePostSC', notification);
       }
     });
 
-    socket.on('likeReplyCS', (notification, toUsername) => {
+    socket.on('likeReplyCS', ({ notification, toUsername }) => {
       const user = getUser(toUsername);
       if (user) {
         io.to(user.socketId).emit('likeReplySC', notification);

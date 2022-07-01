@@ -1,7 +1,7 @@
 import { Schema, model, Model } from 'mongoose';
-import { IReplyModel } from '../types/ModelTypes';
+import { IReply } from '../types/ModelTypes';
 
-const ReplySchema = new Schema<IReplyModel, Model<IReplyModel>>(
+const ReplySchema = new Schema<IReply, Model<IReply>>(
   {
     body: {
       type: String,
@@ -31,6 +31,6 @@ const ReplySchema = new Schema<IReplyModel, Model<IReplyModel>>(
   }
 );
 
-const ReplyModel = model<IReplyModel>('Reply', ReplySchema);
+const ReplyModel = model<IReply>('Reply', ReplySchema);
 
 export default ReplyModel;

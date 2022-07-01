@@ -1,4 +1,4 @@
-import { User } from "../authentication/IAuthentication";
+import { User } from '../authentication/IAuthentication';
 
 export interface SendChatDTO {
   message: string;
@@ -8,10 +8,10 @@ export interface SendChatDTO {
   toUsername: string;
 }
 
-export interface Conversation {
+export interface IConversation {
   _id?: string;
   users: User[];
-  lastMessage?: Message;
+  lastMessage?: IMessage;
   groupName?: string;
   totalUnreadMessage: number;
   isGroup: boolean;
@@ -19,7 +19,7 @@ export interface Conversation {
   updatedAt?: Date;
 }
 
-export interface Message {
+export interface IMessage {
   _id: string;
   text: string;
   conversationId: string;
@@ -29,7 +29,7 @@ export interface Message {
   updatedAt: Date;
 }
 
-export type SelectedConversation = Conversation & {
+export type SelectedConversation = IConversation & {
   receiverId: string;
   receiverUsername: string;
   conversationIndex: number;

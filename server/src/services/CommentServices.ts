@@ -1,9 +1,9 @@
 import CommentModel from '../models/CommentModel';
 import { AnyKeys, UpdateQuery } from 'mongoose';
-import { ICommentModel } from '../types/ModelTypes';
+import { IComment } from '../types/ModelTypes';
 
 class CommentServices {
-  async save(comment: AnyKeys<ICommentModel>) {
+  async save(comment: AnyKeys<IComment>) {
     try {
       const newComment = new CommentModel(comment);
       await newComment.save();
@@ -31,7 +31,7 @@ class CommentServices {
     }
   }
 
-  async update(commentId: string, comment: UpdateQuery<ICommentModel>) {
+  async update(commentId: string, comment: UpdateQuery<IComment>) {
     try {
       return CommentModel.findByIdAndUpdate(commentId, comment, { new: true });
     } catch (err) {

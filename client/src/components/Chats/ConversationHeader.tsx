@@ -1,15 +1,15 @@
-import { FC, useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { selectAuthState } from "../../features/authentication/authSlice";
-import { resetSelectedConversation } from "../../features/chats/chatSlice";
-import { Conversation } from "../../features/chats/IChat";
-import { getSocket } from "../../socket/mySocket";
+import { FC, useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { selectAuthState } from '../../features/authentication/authSlice';
+import { resetSelectedConversation } from '../../features/chats/chatSlice';
+import { IConversation } from '../../features/chats/IChat';
+import { getSocket } from '../../socket/mySocket';
 
-import "./style.css";
+import './style.css';
 
 interface Props {
-  selectedConversation: Conversation;
+  selectedConversation: IConversation;
 }
 
 const ConversationHeader: FC<Props> = ({ selectedConversation }) => {
@@ -22,14 +22,14 @@ const ConversationHeader: FC<Props> = ({ selectedConversation }) => {
   const [isTyping, setIsTyping] = useState(false);
 
   const [val] = useSearchParams();
-  const cId = val.get("id");
+  const cId = val.get('id');
 
   useEffect(() => {
     setIsTyping(false);
   }, [cId]);
 
   useEffect(() => {
-    socket?.on("setTypingSC", ({ isTyping, chatId }) => {
+    socket?.on('setTypingSC', ({ isTyping, chatId }) => {
       if (cId === chatId) {
         setIsTyping(isTyping);
       } else {
@@ -71,7 +71,7 @@ const ConversationHeader: FC<Props> = ({ selectedConversation }) => {
           />
           <div className="d-flex flex-column">
             <div>{user!.username}</div>
-            <small style={{ color: "#aaa" }}>{isTyping && "typing..."}</small>
+            <small style={{ color: '#aaa' }}>{isTyping && 'typing...'}</small>
           </div>
         </div>
       </div>

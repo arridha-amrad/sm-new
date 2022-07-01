@@ -1,10 +1,10 @@
 import { FilterQuery, QueryOptions, UpdateQuery } from 'mongoose';
-import { IUserModel } from '../types/ModelTypes';
+import { IUser } from '../types/ModelTypes';
 import UserModel from '../models/UserModel';
 import { AnyKeys } from 'mongoose';
 
 class UserServices {
-  async findUser(query: FilterQuery<IUserModel>) {
+  async findUser(query: FilterQuery<IUser>) {
     try {
       return UserModel.findOne(query);
     } catch (err) {
@@ -12,7 +12,7 @@ class UserServices {
     }
   }
 
-  async createUser(user: AnyKeys<IUserModel>) {
+  async createUser(user: AnyKeys<IUser>) {
     try {
       const newUser = new UserModel(user);
       return newUser.save();
@@ -46,7 +46,7 @@ class UserServices {
 
   async findUserByIdAndUpdate(
     id: string,
-    update: UpdateQuery<IUserModel>,
+    update: UpdateQuery<IUser>,
     options?: QueryOptions | null
   ) {
     try {
@@ -59,7 +59,7 @@ class UserServices {
     }
   }
 
-  async findUsers(filter: FilterQuery<IUserModel>) {
+  async findUsers(filter: FilterQuery<IUser>) {
     try {
       return UserModel.find(filter).select('_id username avatarURL fullName');
     } catch (err) {

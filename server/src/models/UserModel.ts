@@ -1,7 +1,7 @@
 import { Model, Schema, model } from 'mongoose';
-import { IUserModel } from '../types/ModelTypes';
+import { IUser } from '../types/ModelTypes';
 
-const UserSchema = new Schema<IUserModel, Model<IUserModel>>(
+const UserSchema = new Schema<IUser, Model<IUser>>(
   {
     fullName: {
       type: String,
@@ -40,6 +40,6 @@ const UserSchema = new Schema<IUserModel, Model<IUserModel>>(
   { timestamps: true }
 );
 
-const UserModel = model<IUserModel>('User', UserSchema);
+const UserModel = model<IUser>('User', UserSchema);
 
 export default UserModel;

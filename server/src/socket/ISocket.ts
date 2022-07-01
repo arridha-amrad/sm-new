@@ -1,44 +1,47 @@
-import {
-  IConversation,
-  IMessage,
-  INotificationModel,
-} from '../types/ModelTypes';
+import { IConversation, IMessage, INotification } from '../types/ModelTypes';
 
-interface ISetTyping {
+interface ISetTypingCS {
   isTyping: boolean;
   chatId: string;
   toUsername: string;
 }
+type ISetTypingSC = Omit<ISetTypingCS, 'toUsername'>;
 
-type ISetTypingSC = Omit<ISetTyping, 'toUsername'>;
+interface ISendMessageCS {
+  conversation: IConversation;
+  message: IMessage;
+  toUsername: string;
+}
+
+interface INotifCS {
+  notification: INotification;
+  toUsername: string;
+}
+
+interface ISendMessageSC {
+  conversation: IConversation;
+  message: IMessage;
+}
 
 export interface ServerToClientEvents {
-  greet: (msg: string) => void;
-  likePostSC: (data: INotificationModel) => void;
-  likeCommentSC: (notification: INotificationModel) => void;
-  likeReplySC: (notification: INotificationModel) => void;
-  createCommentSC: (notification: INotificationModel) => void;
-  createReplySC: (notification: INotificationModel) => void;
-  sendMessageSC: (conversation: IConversation, message: IMessage) => void;
+  likePostSC: (notification: INotification) => void;
+  likeCommentSC: (notification: INotification) => void;
+  likeReplySC: (notification: INotification) => void;
+  createCommentSC: (notification: INotification) => void;
+  createReplySC: (notification: INotification) => void;
+  sendMessageSC: (props: ISendMessageSC) => void;
   setTypingSC: (props: ISetTypingSC) => void;
 }
 
 export interface ClientToServerEvents {
-  setTypingCS: (props: ISetTyping) => void;
-  sendMessageCS: (
-    conversation: IConversation,
-    message: IMessage,
-    toUsername: string
-  ) => void;
   addUserCS: (username: string) => void;
-  likePostCS: (data: INotificationModel, toUsername: string) => void;
-  likeCommentCS: (notification: INotificationModel, toUsername: string) => void;
-  likeReplyCS: (notification: INotificationModel, toUsername: string) => void;
-  createCommentCS: (
-    notification: INotificationModel,
-    toUsername: string
-  ) => void;
-  createReplyCS: (notification: INotificationModel, toUsername: string) => void;
+  setTypingCS: (props: ISetTypingCS) => void;
+  sendMessageCS: (props: ISendMessageCS) => void;
+  likePostCS: (props: INotifCS) => void;
+  likeCommentCS: (props: INotifCS) => void;
+  likeReplyCS: (props: INotifCS) => void;
+  createCommentCS: (props: INotifCS) => void;
+  createReplyCS: (props: INotifCS) => void;
 }
 
 export interface InterServerEvents {

@@ -1,7 +1,7 @@
 import { Schema, Model, model } from 'mongoose';
-import { IPostModel } from '../types/ModelTypes';
+import { IPost } from '../types/ModelTypes';
 
-const PostSchema = new Schema<IPostModel, Model<IPostModel>>(
+const PostSchema = new Schema<IPost, Model<IPost>>(
   {
     images: [String],
     body: {
@@ -31,6 +31,6 @@ const PostSchema = new Schema<IPostModel, Model<IPostModel>>(
   }
 );
 
-const PostModel = model<IPostModel>('Post', PostSchema);
+const PostModel = model<IPost>('Post', PostSchema);
 
 export default PostModel;

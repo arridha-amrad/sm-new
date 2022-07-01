@@ -1,7 +1,7 @@
 import { Schema, Model, model } from 'mongoose';
-import { ICommentModel } from '../types/ModelTypes';
+import { IComment } from '../types/ModelTypes';
 
-const CommentSchema = new Schema<ICommentModel, Model<ICommentModel>>(
+const CommentSchema = new Schema<IComment, Model<IComment>>(
   {
     owner: {
       type: Schema.Types.ObjectId,
@@ -33,6 +33,6 @@ const CommentSchema = new Schema<ICommentModel, Model<ICommentModel>>(
   }
 );
 
-const CommentModel = model<ICommentModel>('Comment', CommentSchema);
+const CommentModel = model<IComment>('Comment', CommentSchema);
 
 export default CommentModel;

@@ -1,10 +1,7 @@
 import { Schema, model, Model } from 'mongoose';
-import { INotificationModel, NotificationType } from '../types/ModelTypes';
+import { INotification, NotificationType } from '../types/ModelTypes';
 
-const NotificationSchema = new Schema<
-  INotificationModel,
-  Model<INotificationModel>
->(
+const NotificationSchema = new Schema<INotification, Model<INotification>>(
   {
     owner: {
       type: Schema.Types.ObjectId,
@@ -51,7 +48,7 @@ const NotificationSchema = new Schema<
   }
 );
 
-const NotificationModel = model<INotificationModel>(
+const NotificationModel = model<INotification>(
   'Notification',
   NotificationSchema
 );

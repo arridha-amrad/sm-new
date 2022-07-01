@@ -1,10 +1,10 @@
 import ReplyModel from '../models/ReplyModel';
 import { AnyKeys } from 'mongoose';
-import { IReplyModel } from '../types/ModelTypes';
+import { IReply } from '../types/ModelTypes';
 import { UpdateQuery } from 'mongoose';
 
 class ReplyServices {
-  async save(data: AnyKeys<IReplyModel>) {
+  async save(data: AnyKeys<IReply>) {
     const newReply = new ReplyModel(data);
     const reply = await newReply.save();
     const populatedReply = await reply.populate('sender', 'username avatarURL');
@@ -27,7 +27,7 @@ class ReplyServices {
     }
   }
 
-  async update(replyId: string, update?: UpdateQuery<IReplyModel>) {
+  async update(replyId: string, update?: UpdateQuery<IReply>) {
     try {
       return ReplyModel.findByIdAndUpdate(replyId, update, { new: true });
     } catch (err) {

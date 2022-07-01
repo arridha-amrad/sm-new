@@ -1,23 +1,26 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { RootState } from "../../app/store";
-import { getSocket } from "../../socket/mySocket";
-import { removeComment, setComment, setLikeComment } from "../post/postSlice";
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { RootState } from '../../app/store';
+import { getSocket } from '../../socket/mySocket';
+import { removeComment, setComment, setLikeComment } from '../post/postSlice';
 import {
   createCommentAPI,
   deleteCommentAPI,
   likeCommentAPI,
-} from "./commentApi";
-import { CreateCommentDTO, DeleteCommentDTO, LikeCommentDTO } from "./IComment";
+} from './commentApi';
+import { CreateCommentDTO, DeleteCommentDTO, LikeCommentDTO } from './IComment';
 
 export const likeCommentAction = createAsyncThunk(
-  "comment/like",
+  'comment/like',
   async (props: LikeCommentDTO, thunkAPI) => {
     const socket = getSocket();
     try {
       const { data } = await likeCommentAPI(props.comment._id);
       thunkAPI.dispatch(setLikeComment(props));
       if (data.notification) {
-        socket?.emit("likeCommentCS", data.notification, props.toUsername);
+        socket?.emit('likeCommentCS', {
+          notification: data.notification,
+          toUsername: props.toUsername,
+        });
       }
       return data.comment;
     } catch (err: any) {
@@ -27,14 +30,17 @@ export const likeCommentAction = createAsyncThunk(
 );
 
 export const createCommentAction = createAsyncThunk(
-  "comment/create",
+  'comment/create',
   async (dto: CreateCommentDTO, thunkAPI) => {
     const socket = getSocket();
     try {
       const { data } = await createCommentAPI(dto);
       thunkAPI.dispatch(setComment(data.comment));
       if (data.notification) {
-        socket?.emit("createCommentCS", data.notification, dto.toUsername);
+        socket?.emit('createCommentCS', {
+          notification: data.notification,
+          toUsername: dto.toUsername,
+        });
       }
       return data.comment;
     } catch (err: any) {
@@ -44,7 +50,7 @@ export const createCommentAction = createAsyncThunk(
 );
 
 export const deleteCommentAction = createAsyncThunk(
-  "comment/delete",
+  'comment/delete',
   async (dto: DeleteCommentDTO, thunkAPI) => {
     try {
       await deleteCommentAPI(dto.commentId);
@@ -56,7 +62,7 @@ export const deleteCommentAction = createAsyncThunk(
 );
 
 export const commentSlice = createSlice({
-  name: "comment",
+  name: 'comment',
   initialState: {},
   reducers: {},
 });

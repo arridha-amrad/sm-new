@@ -1,15 +1,15 @@
-import { useEffect, useState } from "react";
-import { Spinner } from "react-bootstrap";
-import { useSearchParams } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { getSocket } from "../../socket/mySocket";
-import useFormHooks from "../../utils/useFormHooks";
+import { useEffect, useState } from 'react';
+import { Spinner } from 'react-bootstrap';
+import { useSearchParams } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { getSocket } from '../../socket/mySocket';
+import useFormHooks from '../../utils/useFormHooks';
 import {
   sendMessageAction,
   selectChatState,
   updateConversations,
-} from "./chatSlice";
-import "./style.css";
+} from './chatSlice';
+import './style.css';
 
 const SendMessageFeature = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -20,8 +20,8 @@ const SendMessageFeature = () => {
 
   const checkField = () => {
     let errors: { message?: string } = {};
-    if (state.message.trim() === "") {
-      errors.message = "Message is required";
+    if (state.message.trim() === '') {
+      errors.message = 'Message is required';
     }
     return {
       isValid: Object.keys(errors).length > 0,
@@ -40,7 +40,7 @@ const SendMessageFeature = () => {
       })
     );
 
-    if (res.meta.requestStatus === "fulfilled") {
+    if (res.meta.requestStatus === 'fulfilled') {
       if (!selectedConversation?._id) {
         dispatch(
           updateConversations({
@@ -51,7 +51,7 @@ const SendMessageFeature = () => {
       }
       setState({
         ...state,
-        message: "",
+        message: '',
       });
     }
     setIsLoading(false);
@@ -59,35 +59,36 @@ const SendMessageFeature = () => {
 
   const { onChange, onSubmit, state, setState } = useFormHooks(
     {
-      message: "",
+      message: '',
     },
     sendChat,
     checkField
   );
 
   const [val] = useSearchParams();
-  const chatId = val.get("id");
+  const chatId = val.get('id');
 
   useEffect(() => {
     setState({
       ...state,
-      message: "",
+      message: '',
     });
+    // eslint-disable-next-line
   }, [chatId]);
 
   const setTyping = () => {
-    socket?.emit("setTypingCS", {
+    socket?.emit('setTypingCS', {
       isTyping: true,
-      chatId,
-      toUsername: selectedReceiverUsername,
+      chatId: chatId ?? '',
+      toUsername: selectedReceiverUsername ?? '',
     });
   };
 
   const unsetTyping = () => {
-    socket?.emit("setTypingCS", {
+    socket?.emit('setTypingCS', {
       isTyping: false,
-      chatId,
-      toUsername: selectedReceiverUsername,
+      chatId: chatId ?? '',
+      toUsername: selectedReceiverUsername ?? '',
     });
   };
 
@@ -111,7 +112,7 @@ const SendMessageFeature = () => {
         type="submit"
         className="btn btn-primary"
       >
-        {isLoading ? <Spinner size="sm" animation="border" /> : "Send"}
+        {isLoading ? <Spinner size="sm" animation="border" /> : 'Send'}
       </button>
     </form>
   );

@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { selectAuthState } from '../../features/authentication/authSlice';
 import { selectChatState, setMessages } from '../../features/chats/chatSlice';
-import { Message } from '../../features/chats/IChat';
+import { IMessage } from '../../features/chats/IChat';
 
 import timeSetter from '../../utils/timeSetter';
 
@@ -51,7 +51,7 @@ const Messages = () => {
     });
   }, [chatId]);
 
-  const isSentByMe = (message: Message) =>
+  const isSentByMe = (message: IMessage) =>
     message.sender._id === loginUser?._id;
 
   if (isValidating) {

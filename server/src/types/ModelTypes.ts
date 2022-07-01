@@ -1,6 +1,6 @@
 import { Types } from 'mongoose';
 
-export interface IUserModel {
+export interface IUser {
   fullName?: string;
   username: string;
   strategy: 'default' | 'google';
@@ -14,28 +14,28 @@ export interface IUserModel {
   updatedAt: Date;
 }
 
-export interface IReplyModel {
+export interface IReply {
   sender: Types.ObjectId;
   receiver: Types.ObjectId;
   body: string;
   comment: Types.ObjectId;
-  likes: Types.DocumentArray<IUserModel>;
+  likes: Types.DocumentArray<IUser>;
   createdAt: Date;
   updatedAt: Date;
 }
 
-export interface ICommentModel {
+export interface IComment {
   owner: Types.ObjectId;
   post: Types.ObjectId;
   body: string;
-  likes: Types.DocumentArray<IUserModel>;
-  replies: Types.DocumentArray<IReplyModel>;
+  likes: Types.DocumentArray<IUser>;
+  replies: Types.DocumentArray<IReply>;
   createdAt: Date;
   updatedAt: Date;
 }
 
 export interface IConversation {
-  users: Types.DocumentArray<IUserModel>;
+  users: Types.DocumentArray<IUser>;
   lastMessage: Types.ObjectId;
   groupName: string;
   isGroup: boolean;
@@ -43,12 +43,12 @@ export interface IConversation {
   updatedAt: Date;
 }
 
-export interface IPostModel {
+export interface IPost {
   owner: Types.ObjectId;
   images: Types.Array<string>;
   body: string;
-  comments: Types.DocumentArray<ICommentModel>;
-  likes: Types.DocumentArray<IUserModel>;
+  comments: Types.DocumentArray<IComment>;
+  likes: Types.DocumentArray<IUser>;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -62,7 +62,7 @@ export enum NotificationType {
   REPLY_REPLY = 'replyOfReply',
 }
 
-export interface INotificationModel {
+export interface INotification {
   type: NotificationType;
   post: Types.ObjectId;
   comment: Types.ObjectId;

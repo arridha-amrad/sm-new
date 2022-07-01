@@ -1,6 +1,6 @@
 import NotificationModel from '../models/NotificationModel';
 import { AnyKeys, FilterQuery, UpdateQuery } from 'mongoose';
-import { INotificationModel } from '../types/ModelTypes';
+import { INotification } from '../types/ModelTypes';
 
 class NotificationServices {
   async findMany(userId: string) {
@@ -17,7 +17,7 @@ class NotificationServices {
     }
   }
 
-  async findOne(filter: FilterQuery<INotificationModel>) {
+  async findOne(filter: FilterQuery<INotification>) {
     try {
       return NotificationModel.findOne(filter)
         .populate('sender', 'username avatarURL')
@@ -29,7 +29,7 @@ class NotificationServices {
     }
   }
 
-  async create(data: AnyKeys<INotificationModel>) {
+  async create(data: AnyKeys<INotification>) {
     try {
       const newNotification = new NotificationModel(data);
       const result = await newNotification.save();
@@ -44,7 +44,7 @@ class NotificationServices {
     }
   }
 
-  async update(notifId: string, update: UpdateQuery<INotificationModel>) {
+  async update(notifId: string, update: UpdateQuery<INotification>) {
     try {
       return NotificationModel.findByIdAndUpdate(notifId, update);
     } catch (err) {
@@ -52,7 +52,7 @@ class NotificationServices {
     }
   }
 
-  async delete(filter: FilterQuery<INotificationModel>) {
+  async delete(filter: FilterQuery<INotification>) {
     try {
       return NotificationModel.findOneAndDelete(filter);
     } catch (err) {
@@ -60,7 +60,7 @@ class NotificationServices {
     }
   }
 
-  async deleteMany(filter: FilterQuery<INotificationModel>) {
+  async deleteMany(filter: FilterQuery<INotification>) {
     try {
       return NotificationModel.deleteMany(filter);
     } catch (err) {

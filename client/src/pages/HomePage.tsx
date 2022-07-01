@@ -1,11 +1,17 @@
-import { Container } from "react-bootstrap";
-import HomeProfile from "../components/HomeProfile";
-import HomePosts from "../components/HomePosts";
-import PostMaker from "../features/post/CreatePostFeature";
-import { ToastContainer } from "react-toastify";
-import "./style.css";
+import { Container } from 'react-bootstrap';
+import HomeProfile from '../components/HomeProfile';
+import HomePosts from '../components/HomePosts';
+import PostMaker from '../features/post/CreatePostFeature';
+import { ToastContainer } from 'react-toastify';
+import './style.css';
+import { getSocket } from '../socket/mySocket';
+import { useEffect } from 'react';
 
 const Home = () => {
+  const socket = getSocket();
+  useEffect(() => {
+    console.log('socket : ', socket);
+  }, [socket]);
   return (
     <section className="home-page">
       <Container>

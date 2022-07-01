@@ -1,9 +1,9 @@
-import { IPostModel } from '../types/ModelTypes';
+import { IPost } from '../types/ModelTypes';
 import PostModel from '../models/PostModel';
 import { AnyKeys, UpdateQuery } from 'mongoose';
 
 class PostServices {
-  async save(data: AnyKeys<IPostModel>) {
+  async save(data: AnyKeys<IPost>) {
     try {
       const newPost = new PostModel(data);
       const savedPost = await newPost.save();
@@ -82,7 +82,7 @@ class PostServices {
     }
   }
 
-  async update(postId: string, update?: UpdateQuery<IPostModel> | undefined) {
+  async update(postId: string, update?: UpdateQuery<IPost> | undefined) {
     try {
       return PostModel.findByIdAndUpdate(postId, update, { new: true })
         .populate('likes', 'username avatarURL')
